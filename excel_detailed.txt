@@ -1,0 +1,12 @@
+﻿=== STARTING EXCEL ANALYSIS ===
+Timestamp: 06/27/2026 11:14:36
+File: e:\ProjectWebKonservasiMangrove\mangrove-carbon-webgis\data\Dashboard.xlsx
+File exists: True
+
+Creating Excel COM object...
+Excel COM object created
+ERROR: Exception setting "Visible": "Unable to cast COM object of type 'Microsoft.Office.Interop.Excel.ApplicationClass' to interface type 'Microsoft.Office.Interop.Excel._Application'. This operation failed because the QueryInterface call on the COM component for the interface with IID '{000208D5-0000-0000-C000-000000000046}' failed due to the following error: Error loading type library/DLL. (Exception from HRESULT: 0x80029C4A (TYPE_E_CANTLOADLIBRARY))."
+Stack:    at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)
+   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)
+   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)

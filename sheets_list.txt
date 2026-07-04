@@ -1,0 +1,11 @@
+﻿=== SHEETS IN DASHBOARD.XLSX ===
+Total sheets: 8
+
+Sheet Name: 2026Mangrove
+Sheet Name: LajuForestasiKab
+Sheet Name: LajuForestasiDesa
+Sheet Name: 2016Mangrove
+Sheet Name: ZonaKawasan
+Sheet Name: StokKarbonDesa
+Sheet Name: MatrixPerubahan
+Sheet Name: PerubahanTuplah

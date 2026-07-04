@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd e:\\\\ProjectWebKonservasiMangrove\\\\mangrove-carbon-webgis ; node server\\.js$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

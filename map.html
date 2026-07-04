@@ -1,838 +1,2886 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>WebGIS Mangrove Kerapatan</title>
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-/>
-<link rel="stylesheet" href="css/map-style.css" />
-
-  <link rel="icon" href="images/logo_mangrove.png" type="image/png">
-  <link rel="shortcut icon" href="images/logo_mangrove.png" type="image/png">
-
-<style>
-  html,
-  body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  #map {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-  }
-
-  /* Sidebar kanan */
-  #sidebar-dashboard {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 320px;
-    max-height: 95vh;
-    background: rgba(18, 53, 28, 0.95);
-    backdrop-filter: blur(8px);
-    box-shadow: -4px 0 20px rgba(15, 65, 26, 0.9);
-    border-left: 2px solid #1abb3c;
-    padding: 20px 15px;
-    overflow-y: auto;
-    color: #d0f0bb;
-    font-size: 14px;
-    border-radius: 8px;
-    z-index: 1100;
-  }
-
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  .sidebar-header img {
-    height: 38px;
-    border-radius: 6px;
-    margin-right: 10px;
-  }
-  .sidebar-header span {
-    font-weight: 700;
-    font-size: 1.7rem;
-    color: #caf2b6;
-  }
-
-  .filter-panel label {
-    display: block;
-    margin-top: 12px;
-    margin-bottom: 5px;
-    font-weight: 600;
-  }
-  .filter-panel select {
-    width: 100%;
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    color: #23571e;
-    background-color: #cbeac0;
-    box-shadow: inset 0 0 6px #88bd7f;
-  }
-  .filter-panel select:hover,
-  .filter-panel select:focus {
-    background-color: #d3f4b4;
-    outline: none;
-  }
-
-  .layer-control label {
-    display: flex;
-    align-items: center;
-    margin-top: 12px;
-    font-weight: 600;
-  }
-  .layer-control input[type="checkbox"] {
-    margin-right: 7px;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-  }
-
-  .upload-panel label {
-    font-weight: 600;
-    margin-top: 15px;
-  }
-  .upload-panel input[type="file"] {
-    width: 100%;
-    padding: 6px 12px;
-    font-size: 14px;
-    margin-top: 8px;
-    border-radius: 8px;
-    border: none;
-    background: #cbeac0;
-    cursor: pointer;
-    box-shadow: inset 0 0 5px #94c290;
-  }
-  .button-panel {
-    margin-top: 15px;
-    display: flex;
-    gap: 12px;
-  }
-  .btn-green,
-  .btn-blue {
-    flex-grow: 1;
-    border-radius: 25px;
-    padding: 9px 12px;
-    border: none;
-    font-weight: 600;
-    font-size: 15px;
-    color: #0f2c18;
-    cursor: pointer;
-    box-shadow: 0 0 12px #31c82f8d;
-    transition: background-color 0.3s, box-shadow 0.3s;
-  }
-  .btn-green:hover {
-    background-color: #54b447;
-    box-shadow: 0 0 22px #42e438cc;
-  }
-  .btn-blue {
-    background-color: #3a82bd;
-  }
-  .btn-blue:hover {
-    background-color: #4ea8e8;
-    box-shadow: 0 0 22px #56a3e7cc;
-  }
-
-  /* Legenda */
-  #legend-tab h4 {
-    margin-bottom: 10px;
-    font-weight: 700;
-    color: #cde6b9;
-  }
-  #legend-tab ul {
-    list-style: none;
-    padding-left: 15px;
-  }
-  #legend-tab ul li {
-    margin: 10px 0;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    color: #a9d49f;
-  }
-  #legend-tab ul li span {
-    min-width: 22px;
-    min-height: 22px;
-    margin-right: 14px;
-    border-radius: 5px;
-  }
-
-  /* Sidebar Kiri - Informasi Luasan */
-  #sidebar-left {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    width: 280px;
-    max-height: 95vh;
-    background: rgba(18, 53, 28, 0.95);
-    backdrop-filter: blur(8px);
-    box-shadow: 4px 0 20px rgba(15, 65, 26, 0.9);
-    border-right: 2px solid #1abb3c;
-    padding: 20px 15px;
-    overflow-y: auto;
-    color: #d0f0bb;
-    font-size: 13px;
-    border-radius: 8px;
-    z-index: 1100;
-  }
-
-  #sidebar-left h3 {
-    margin: 0 0 15px 0;
-    font-weight: 700;
-    color: #caf2b6;
-    font-size: 1.2rem;
-    border-bottom: 2px solid #1abb3c;
-    padding-bottom: 10px;
-  }
-
-  .kerapatan-item {
-    background: rgba(26, 187, 60, 0.15);
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    border-left: 4px solid #1abb3c;
-  }
-
-  .kerapatan-item .label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-
-  .kerapatan-item .color-box {
-    width: 18px;
-    height: 18px;
-    border-radius: 3px;
-    margin-right: 8px;
-  }
-
-  .kerapatan-item .value {
-    color: #8ef67d;
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .kerapatan-item .subtext {
-    font-size: 11px;
-    color: #a9d49f;
-    margin-top: 5px;
-  }
-
-  /* Toolbar kiri */
-  .toolbar-left {
-    position: fixed;
-    top: 50px;
-    left: 10px;
-    background: rgba(27, 55, 43, 0.78);
-    border-radius: 16px;
-    padding: 12px 6px;
-    box-shadow: 0 0 24px #1de98e4d;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 1150;
-  }
-  .toolbar-left button {
-    width: 44px;
-    height: 44px;
-    background: #1de98e;
-    border: none;
-    border-radius: 50%;
-    color: #0b3d22;
-    font-size: 1.4rem;
-    cursor: pointer;
-    outline: none;
-    box-shadow: 0 0 20px #29e464af;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  .toolbar-left button:hover {
-    background-color: #15be74;
-    box-shadow: 0 0 28px #22e964dd;
-    transform: scale(1.15);
-  }
-
-  /* Comprehensive Responsive Design */
-
-  /* Large desktops and laptops */
-  @media (max-width: 1200px) {
-    #sidebar-dashboard {
-      width: 300px;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mangrove WebGIS - Peta Interaktif</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    #sidebar-left {
-      width: 260px;
-    }
-  }
-
-  /* Medium desktops and laptops */
-  @media (max-width: 1024px) {
-    #sidebar-dashboard {
-      width: 280px;
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #07152f 0%, #0f3065 30%, #e8f3ff 100%);
+      color: #102a43;
     }
 
-    #sidebar-left {
-      width: 240px;
+    body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
-    .sidebar-header span {
-      font-size: 1.5rem;
-    }
-  }
-
-  /* Tablets */
-  @media (max-width: 768px) {
-    #sidebar-dashboard {
-      width: 90vw;
-      max-height: 45vh;
-      top: auto;
-      bottom: 10px;
-      right: 5vw;
-      left: 5vw;
-      border-radius: 15px;
-      padding: 15px 12px;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.14), transparent 16%),
+        radial-gradient(circle at 90% 15%, rgba(255,255,255,0.08), transparent 12%),
+        radial-gradient(circle at 50% 95%, rgba(255,255,255,0.08), transparent 18%);
+      pointer-events: none;
+      z-index: -1;
     }
 
-    #sidebar-left {
-      width: 90vw;
-      max-height: 35vh;
-      top: 10px;
-      left: 5vw;
-      right: 5vw;
-      border-radius: 15px;
-      padding: 15px 12px;
+    /* HEADER - FIXED 70px */
+    .map-header {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.19);
+      z-index: 1000;
+      height: 70px;
+      flex-shrink: 0;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     }
 
-    #map {
-      height: calc(100vh - 50vh - 20px);
-      top: 40vh;
+    .map-header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0.03em;
+      text-shadow: 0 10px 20px rgba(3, 25, 68, 0.22);
     }
 
-    .toolbar-left {
-      top: 45vh;
-      left: 5px;
-      gap: 8px;
+    .header-btn {
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.22);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      font-size: 0.9rem;
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(10px);
     }
 
-    .toolbar-left button {
-      width: 40px;
-      height: 40px;
-      font-size: 1.2rem;
-    }
-
-    .toolbar-right {
-      top: 45vh;
-      right: 5px;
-    }
-
-    .sidebar-header span {
-      font-size: 1.3rem;
-    }
-
-    .filter-panel select,
-    .upload-panel input[type="file"] {
-      font-size: 13px;
-      padding: 5px 8px;
-    }
-
-    .btn-green,
-    .btn-blue {
-      font-size: 14px;
+    .btn-story {
+      display: inline-block;
       padding: 8px 10px;
-    }
-
-    #summary-table {
-      width: 90vw;
-      left: 5vw;
-      bottom: 55vh;
-    }
-
-    #summary-table h4 {
-      font-size: 0.9rem;
-    }
-
-    .kerapatan-item {
-      padding: 10px;
-      margin-bottom: 8px;
-    }
-
-    .kerapatan-item .value {
-      font-size: 13px;
-    }
-
-    .kerapatan-item .subtext {
-      font-size: 10px;
-    }
-  }
-
-  /* Mobile landscape */
-  @media (max-width: 640px) {
-    #sidebar-dashboard {
-      width: 95vw;
-      max-height: 40vh;
-      right: 2.5vw;
-      left: 2.5vw;
-      padding: 12px 10px;
-    }
-
-    #sidebar-left {
-      width: 95vw;
-      max-height: 30vh;
-      right: 2.5vw;
-      left: 2.5vw;
-      padding: 12px 10px;
-    }
-
-    #map {
-      height: calc(100vh - 45vh - 15px);
-      top: 35vh;
-    }
-
-    .toolbar-left {
-      top: 40vh;
-      gap: 6px;
-    }
-
-    .toolbar-left button {
-      width: 36px;
-      height: 36px;
-      font-size: 1.1rem;
-    }
-
-    .toolbar-right {
-      top: 40vh;
-    }
-
-    .sidebar-header span {
-      font-size: 1.2rem;
-    }
-
-    .filter-panel select,
-    .upload-panel input[type="file"] {
-      font-size: 12px;
-      padding: 4px 6px;
-    }
-
-    .btn-green,
-    .btn-blue {
-      font-size: 13px;
-      padding: 6px 8px;
-    }
-
-    #summary-table {
-      width: 95vw;
-      left: 2.5vw;
-      bottom: 50vh;
-    }
-
-    #summary-table h4 {
+      background: linear-gradient(90deg,#ff7043,#ff5722);
+      color: white;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
       font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255,87,34,0.18);
     }
-
-    .kerapatan-item {
-      padding: 8px;
-    }
-
-    .kerapatan-item .value {
+    .btn-story:hover { transform: translateY(-2px); }
+    .hiliriset-label {
+      background: rgba(255,255,255,0.95);
+      color: #16324a;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(20,50,70,0.08);
+      box-shadow: 0 6px 14px rgba(6,22,34,0.12);
+      font-weight: 700;
       font-size: 12px;
     }
-  }
+    .leaflet-tooltip.hiliriset-label.leaflet-tooltip-right { margin-left: 8px; }
+    .popup-card { font-size:13px; color:#142533 }
+    .popup-card .title { font-weight:800; font-size:14px; margin-bottom:6px }
+    .popup-card .meta { color:#4b6b82; font-size:12px; margin-top:4px }
 
-  /* Mobile portrait */
-  @media (max-width: 480px) {
-    #sidebar-dashboard {
-      width: 98vw;
-      max-height: 35vh;
-      right: 1vw;
-      left: 1vw;
-      padding: 10px 8px;
+    .hiliriset-marker-icon-wrapper {
+      display: block;
+      width: 30px;
+      height: 30px;
+      transform: translate(-50%, -50%);
     }
 
-    #sidebar-left {
-      width: 98vw;
-      max-height: 25vh;
-      right: 1vw;
-      left: 1vw;
-      padding: 10px 8px;
+    .hiliriset-marker-icon {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffd178, #ff5722 65%);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.8);
+      animation: hiliriset-pulse 2.2s infinite ease-out;
     }
 
-    #map {
-      height: calc(100vh - 40vh - 10px);
-      top: 30vh;
+    .hiliriset-marker-icon::after {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
     }
 
-    .toolbar-left {
-      top: 35vh;
-      left: 3px;
-      gap: 4px;
+    @keyframes hiliriset-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.8);
+      }
+      70% {
+        box-shadow: 0 0 0 18px rgba(255, 87, 34, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+      }
     }
 
-    .toolbar-left button {
-      width: 32px;
-      height: 32px;
-      font-size: 1rem;
+    .hiliriset-popup {
+      width: 100%;
+      min-width: 300px;
+      max-width: 360px;
+      max-height: 520px;
+      padding: 14px;
+      color: #142533;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
-    .toolbar-right {
-      top: 35vh;
-      right: 3px;
+    .hiliriset-popup-header {
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(16, 42, 67, 0.1);
     }
 
-    .sidebar-header span {
-      font-size: 1.1rem;
-    }
-
-    .sidebar-header img {
-      height: 32px;
-    }
-
-    .filter-panel select,
-    .upload-panel input[type="file"] {
-      font-size: 11px;
-      padding: 3px 5px;
-    }
-
-    .btn-green,
-    .btn-blue {
-      font-size: 12px;
-      padding: 5px 7px;
-    }
-
-    #summary-table {
-      width: 98vw;
-      left: 1vw;
-      bottom: 45vh;
-    }
-
-    #summary-table h4 {
-      font-size: 0.8rem;
-    }
-
-    .kerapatan-item {
-      padding: 6px;
-      margin-bottom: 6px;
-    }
-
-    .kerapatan-item .value {
-      font-size: 11px;
-    }
-
-    .kerapatan-item .subtext {
-      font-size: 9px;
-    }
-
-    #sidebar-left h3 {
-      font-size: 1.1rem;
-    }
-  }
-
-  /* Small mobile devices */
-  @media (max-width: 360px) {
-    #sidebar-dashboard {
-      width: 99vw;
-      max-height: 30vh;
-      right: 0.5vw;
-      left: 0.5vw;
-      padding: 8px 6px;
-    }
-
-    #sidebar-left {
-      width: 99vw;
-      max-height: 20vh;
-      right: 0.5vw;
-      left: 0.5vw;
-      padding: 8px 6px;
-    }
-
-    #map {
-      height: calc(100vh - 35vh - 5px);
-      top: 25vh;
-    }
-
-    .toolbar-left {
-      top: 30vh;
-      gap: 3px;
-    }
-
-    .toolbar-left button {
-      width: 28px;
-      height: 28px;
-      font-size: 0.9rem;
-    }
-
-    .toolbar-right {
-      top: 30vh;
-    }
-
-    .sidebar-header span {
-      font-size: 1rem;
-    }
-
-    .sidebar-header img {
-      height: 28px;
-    }
-
-    .filter-panel select,
-    .upload-panel input[type="file"] {
-      font-size: 10px;
-      padding: 2px 4px;
-    }
-
-    .btn-green,
-    .btn-blue {
-      font-size: 11px;
-      padding: 4px 6px;
-    }
-
-    #summary-table {
-      width: 99vw;
-      left: 0.5vw;
-      bottom: 40vh;
-    }
-
-    #summary-table h4 {
-      font-size: 0.75rem;
-    }
-
-    .kerapatan-item {
-      padding: 4px;
+    .hiliriset-popup-header .title {
+      font-weight: 800;
+      font-size: 15px;
       margin-bottom: 4px;
     }
 
-    .kerapatan-item .value {
-      font-size: 10px;
+    .hiliriset-popup-meta {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 10px;
+      color: #31445f;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    .kerapatan-item .subtext {
-      font-size: 8px;
+    .hiliriset-popup-meta strong {
+      color: #0b66d1;
+      font-weight: 600;
     }
 
-    #sidebar-left h3 {
-      font-size: 1rem;
-    }
-  }
-
-  /* Touch devices optimization */
-  @media (hover: none) and (pointer: coarse) {
-    .toolbar-left button:hover,
-    .toolbar-right-btn:hover,
-    .btn-green:hover,
-    .btn-blue:hover {
-      transform: none;
+    .hiliriset-popup-image {
+      width: 100%;
+      height: 160px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 1px solid rgba(16, 42, 67, 0.08);
+      background: #f5f7fb;
     }
 
-    .toolbar-left button,
-    .toolbar-right-btn {
-      width: 48px;
-      height: 48px;
+    .hiliriset-popup-gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
     }
 
-    .toolbar-left button {
-      font-size: 1.5rem;
+    .hiliriset-popup-gallery-section {
+      max-height: 280px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding-right: 4px;
     }
 
-    .toolbar-right-btn {
-      font-size: 1.4rem;
-    }
-  }
-
-  /* High DPI displays */
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .sidebar-header img,
-    .kerapatan-item .color-box {
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-    }
-  }
-
-  /* Landscape orientation adjustments */
-  @media (max-height: 500px) and (orientation: landscape) {
-    #sidebar-dashboard,
-    #sidebar-left {
-      max-height: 60vh;
+    .hiliriset-popup-gallery-section::-webkit-scrollbar {
+      width: 7px;
     }
 
+    .hiliriset-popup-gallery-section::-webkit-scrollbar-thumb {
+      background: rgba(11, 102, 209, 0.25);
+      border-radius: 999px;
+    }
+
+    .hiliriset-popup-gallery-section::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .hiliriset-popup-gallery-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0b66d1;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hiliriset-popup-gallery img {
+      width: 100%;
+      height: auto;
+      max-height: 220px;
+      object-fit: contain;
+      border-radius: 16px;
+      border: 1px solid rgba(16, 42, 67, 0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: zoom-in;
+      background: #f8f9fc;
+      display: block;
+    }
+
+    .hiliriset-popup-gallery img:first-child {
+      max-height: 260px;
+    }
+
+    .hiliriset-popup-gallery img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 24px rgba(10, 70, 120, 0.18);
+    }
+
+    .hiliriset-lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(3, 16, 40, 0.85);
+      z-index: 100000;
+      padding: 24px;
+    }
+
+    .hiliriset-lightbox-overlay.visible {
+      display: flex;
+    }
+
+    .hiliriset-lightbox-content {
+      position: relative;
+      width: 100%;
+      max-width: 920px;
+      max-height: 90vh;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .hiliriset-lightbox-image {
+      width: 100%;
+      height: auto;
+      max-height: calc(90vh - 40px);
+      border-radius: 18px;
+      object-fit: contain;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+      display: block;
+    }
+
+    .hiliriset-lightbox-overlay.zoomed .hiliriset-lightbox-image {
+      transform: scale(1.35);
+      cursor: zoom-out;
+    }
+
+    .hiliriset-lightbox-close {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.96);
+      color: #0b66d1;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    .hiliriset-lightbox-caption {
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .hiliriset-popup-link {
+      display: inline-flex;
+      width: 100%;
+      justify-content: center;
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #0b66d1, #3fa1ff);
+      color: white;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .hiliriset-popup-link:hover {
+      opacity: 0.95;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.38);
+      transform: translateY(-1px);
+    }
+
+    /* MAIN CONTAINER - ArcGIS Dashboard Style */
+    .main-container {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 16px;
+      padding: 22px;
+      flex: 1;
+      height: calc(100vh - 70px);
+      overflow: hidden;
+      min-height: 0;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(18px);
+      border-radius: 32px;
+      box-shadow: 0 30px 80px rgba(2, 27, 68, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .main-container::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 24px;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle at 30% 30%, rgba(0, 166, 255, 0.16), transparent 42%);
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
+    .main-container.analysis-collapsed {
+      grid-template-rows: minmax(0, 1fr) 56px;
+    }
+
+    /* MAP - Top Left */
     #map {
-      height: calc(100vh - 70vh);
-      top: 65vh;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      position: relative;
+      background: radial-gradient(circle at 20% 20%, rgba(0, 102, 255, 0.18), transparent 30%),
+                  radial-gradient(circle at 80% 30%, rgba(0, 179, 216, 0.14), transparent 24%),
+                  linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.3));
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0, 37, 78, 0.14);
+      z-index: 100;
+      min-height: 0;
+      overflow: hidden;
     }
 
-    .toolbar-left,
-    .toolbar-right {
-      top: 70vh;
+    /* RIGHT PANEL - Filter + Layer Control */
+    .right-panel {
+      grid-column: 2 / 3;
+      grid-row: 1 / 3;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: 26px;
+      box-shadow: 0 24px 70px rgba(1, 14, 41, 0.12);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(16px);
     }
-  }
-</style>
+
+    .right-panel-section {
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      border-bottom: 1px solid rgba(255,255,255,0.45);
+      padding: 0;
+      min-height: 0;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(12px);
+    }
+
+    .right-panel-section.filter-section {
+      flex: 1.1;
+      min-height: 0;
+    }
+
+    .right-panel-section.layer-section {
+      flex: 0.9;
+      min-height: 0;
+    }
+
+    .right-panel-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-header {
+      background: linear-gradient(135deg, #0b66d1 0%, #3fa1ff 100%);
+      color: white;
+      padding: 14px 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .section-content {
+      padding: 10px 14px 12px;
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      max-height: calc(100vh - 220px);
+    }
+
+    /* FILTER CONTENT */
+    .filter-group {
+      margin-bottom: 8px;
+    }
+
+    .filter-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #0066ff;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(11, 102, 209, 0.2);
+      border-radius: 16px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85rem;
+      color: #102a43;
+      background: rgba(255, 255, 255, 0.96);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: inset 0 1px 2px rgba(16, 42, 67, 0.08);
+    }
+
+    .filter-select:hover {
+      border-color: rgba(11, 102, 209, 0.35);
+      background: rgba(255,255,255,1);
+    }
+
+    .filter-select:disabled {
+      background: #f5f5f5;
+      color: #999;
+    }
+
+    .btn-apply, .btn-reset {
+      width: 100%;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.25s ease;
+      margin-top: 10px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-apply {
+      background: linear-gradient(135deg, #0b66d1 0%, #3fa1ff 100%);
+      color: white;
+    }
+
+    .btn-apply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(11, 102, 209, 0.22);
+    }
+
+    .btn-reset {
+      background: rgba(11, 102, 209, 0.08);
+      color: #0b66d1;
+      border: 1px solid rgba(11, 102, 209, 0.22);
+    }
+
+    .btn-reset:hover {
+      background: rgba(11, 102, 209, 0.14);
+      transform: translateY(-1px);
+    }
+
+    /* LAYER ITEMS */
+    .layer-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      font-size: 0.84rem;
+      border-bottom: 1px solid rgba(11, 102, 209, 0.1);
+    }
+
+    .layer-item:last-child {
+      border-bottom: none;
+    }
+
+    .layer-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      margin-right: 8px;
+      accent-color: #0066ff;
+    }
+
+    .layer-item label {
+      cursor: pointer;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #102a43;
+      font-weight: 600;
+    }
+
+    .layer-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      margin-right: 10px;
+      accent-color: #0b66d1;
+    }
+
+    .layer-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+
+    /* ANALYSIS PANEL - Bottom Left */
+    .analysis-panel {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(1, 14, 41, 0.12);
+      overflow: hidden;
+      transition: max-height 0.35s ease, box-shadow 0.35s ease;
+      position: relative;
+      z-index: 140;
+      width: 100%;
+      max-width: none;
+      height: auto;
+      max-height: 560px;
+      align-self: end;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(18px);
+    }
+
+    .analysis-panel:not(.collapsed) {
+      min-height: 220px;
+    }
+
+    .analysis-panel.collapsed {
+      height: 56px;
+      max-height: 56px;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.14);
+    }
+
+    .analysis-panel.collapsed .analysis-content {
+      opacity: 0;
+      pointer-events: none;
+      height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      display: none;
+    }
+
+    .analysis-toggle {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0b66d1 0%, #3fa1ff 100%);
+      color: white;
+      box-shadow: 0 6px 14px rgba(0, 102, 255, 0.22);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .analysis-panel.collapsed .analysis-toggle i {
+      transform: rotate(180deg);
+    }
+
+    .basemap-control {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 8px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      z-index: 1100;
+      font-size: 0.82rem;
+    }
+
+    .basemap-control button {
+      border: none;
+      background: transparent;
+      color: #0f172a;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      font-weight: 700;
+      min-width: 44px;
+    }
+
+    .basemap-control button:hover,
+    .basemap-control button.active {
+      background: #0066ff;
+      color: white;
+    }
+
+    .analysis-header {
+      background: linear-gradient(135deg, #0c4b9d 0%, #1788cf 100%);
+      color: white;
+      padding: 16px 18px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .analysis-content {
+      flex: 1;
+      overflow: hidden;
+      padding: 18px 18px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(240px, 0.95fr);
+      gap: 18px;
+      align-items: stretch;
+      min-height: 340px;
+    }
+
+    .analysis-chart {
+      position: relative;
+      min-width: 0;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(238,244,255,0.96));
+      border: 1px solid rgba(0, 102, 255, 0.12);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .analysis-chart canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      max-height: 100%;
+    }
+
+    .comparison-chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .comparison-chart-card {
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 102, 255, 0.14);
+      border-radius: 20px;
+      padding: 14px;
+      min-height: 260px;
+      height: 100%;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.85);
+    }
+
+    .comparison-chart-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #0c4b9d;
+      margin-bottom: 12px;
+    }
+
+    .comparison-chart-card canvas {
+      width: 100% !important;
+      height: calc(100% - 28px) !important;
+      max-height: 260px;
+      display: block;
+    }
+
+    .comparison-chart-canvas-wrap {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .comparison-chart-canvas-wrap canvas {
+      max-width: 260px;
+      max-height: 260px;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .comparison-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .analysis-stats {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      overflow-y: auto;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(239,248,255,0.94));
+      border: 1px solid rgba(11, 102, 209, 0.12);
+      border-radius: 22px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+    }
+
+    .analysis-stats strong {
+      color: #0066ff;
+    }
+
+    /* LEGEND PANEL - Shared with Analysis */
+    .legend-section {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 0.75rem;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      margin-right: 6px;
+      flex-shrink: 0;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* SCROLLBAR */
+    .section-content::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .section-content::-webkit-scrollbar-track {
+      background: rgba(0, 102, 255, 0.05);
+    }
+
+    .section-content::-webkit-scrollbar-thumb {
+      background: rgba(0, 102, 255, 0.2);
+      border-radius: 2px;
+    }
+
+    .analysis-stats::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .analysis-stats::-webkit-scrollbar-thumb {
+      background: rgba(0, 102, 255, 0.2);
+      border-radius: 2px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+      .main-container {
+        grid-template-columns: minmax(0, 1fr) 300px;
+      }
+      
+      .right-panel-section {
+        flex: 0 0 auto;
+      }
+
+      .section-content {
+        max-height: 200px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto auto;
+      }
+
+      .right-panel {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        flex-direction: row;
+      }
+
+      .right-panel-section {
+        flex: 1;
+        border-right: 1px solid rgba(0, 102, 255, 0.1);
+        border-bottom: none;
+      }
+
+      .right-panel-section:last-child {
+        border-right: none;
+      }
+
+      .analysis-panel {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 8px;
+      }
+
+      .right-panel {
+        flex-direction: column;
+      }
+
+      .right-panel-section {
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 102, 255, 0.1);
+        flex: 0 0 auto;
+        max-height: 150px;
+      }
+
+      .section-content {
+        max-height: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Sidebar dashboard -->
-  <aside id="sidebar-dashboard">
-    <div class="sidebar-header">
-      <div style="display: flex; align-items: center; flex: 1;">
-        <img src="images/logo_mangrove.png" alt="Logo" />
-        <span>WEBGIS CARBON </span>
-      </div>
-      <button id="btn-hide-sidebar" class="sidebar-hide-btn" title="Hide"><i class="fa-solid fa-times"></i></button>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="data-tab">Data</button>
-      <button class="tab-btn" data-tab="legend-tab">Legenda</button>
-    </div>
-    <div id="data-tab" class="tab-content active">
-      <div class="filter-panel">
-        <label for="wilayah">Pilih Wilayah:</label>
-        <select id="wilayah">
-          <option value="semua">Semua</option>
-          <option value="makassar">Makassar</option>
-          <option value="takalar">Takalar</option>
-          <option value="maros">Maros</option>
-        </select>
-      </div>
-      <hr />
-      <div class="layer-control">
-        <label><input type="checkbox" checked id="agc-layer" /> Sebaran Mangrove</label>
-        <label><input type="checkbox" checked id="lokasi-layer" /> Layer Lokasi</label>
-      </div>
-      <hr />
-      <div class="upload-panel">
-        <label for="geojson-upload">Upload GeoJSON:</label>
-        <input type="file" id="geojson-upload" accept=".geojson" />
-      </div>
-      <!-- Download buttons removed per request -->
+  <!-- HEADER -->
+  <div class="map-header">
+    <h1><i class="fas fa-map"></i> Peta Interaktif Mangrove</h1>
+    <button class="header-btn" onclick="location.href='index.html'">
+      <i class="fas fa-chevron-left"></i> Kembali Dashboard
+    </button>
+  </div>
 
-      </div>
-    </div>
-      <!-- Right toolbar with basemap button (visible) -->
-      <div class="toolbar-right" style="position:fixed; top:50px; right:10px; z-index:1200;">
-        <div class="basemap-dropdown">
-          <button title="Change Basemap" id="btn-basemap-toggle-right" class="toolbar-right-btn"><i class="fa-solid fa-layer-group"></i></button>
-          <div class="basemap-menu" id="basemap-menu-right">
-            <div class="basemap-item" data-basemap="osm"><i class="fa-solid fa-map"></i><span>OpenStreetMap</span></div>
-            <div class="basemap-item" data-basemap="topo"><i class="fa-solid fa-mountain"></i><span>OpenTopoMap</span></div>
-            <div class="basemap-item" data-basemap="satellite"><i class="fa-solid fa-satellite"></i><span>ESRI Satellite</span></div>
+  <!-- MAIN CONTAINER -->
+  <div class="main-container">
+    <!-- MAP -->
+    <div id="map"></div>
+
+    <!-- RIGHT PANEL: Filter + Layer Control -->
+    <div class="right-panel">
+      <!-- FILTER SECTION -->
+      <div class="right-panel-section filter-section">
+        <div class="section-header"><i class="fas fa-filter"></i> Filter Wilayah</div>
+        <div class="section-content">
+          <div class="filter-group">
+            <label class="filter-label">Provinsi</label>
+            <select id="filter-provinsi" class="filter-select">
+              <option value="">-- Pilih Provinsi --</option>
+            </select>
           </div>
+          <div class="filter-group">
+            <label class="filter-label">Kabupaten</label>
+            <select id="filter-kabupaten" class="filter-select" disabled>
+              <option value="">-- Pilih Kabupaten --</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Kecamatan</label>
+            <select id="filter-kecamatan" class="filter-select" disabled>
+              <option value="">-- Pilih Kecamatan --</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Desa</label>
+            <select id="filter-desa" class="filter-select" disabled>
+              <option value="">-- Pilih Desa --</option>
+            </select>
+          </div>
+          <button class="btn-apply" onclick="applyFilters()"><i class="fas fa-check"></i> Terapkan</button>
+          <button class="btn-reset" onclick="resetFilters()"><i class="fas fa-redo"></i> Reset</button>
         </div>
       </div>
-    <div id="legend-tab" class="tab-content">
-      <h4>Legenda Kerapatan Mangrove</h4>
-      <ul>
-        <li>
-          <span
-            style="
-              background: #2ecc40;
-              display: inline-block;
-              width: 20px;
-              height: 20px;
-              margin-right: 8px;
-              border-radius: 4px;
-            "
-          ></span>
-          Lebat
-        </li>
-        <li>
-          <span
-            style="
-              background: #a4e69b;
-              display: inline-block;
-              width: 20px;
-              height: 20px;
-              margin-right: 8px;
-              border-radius: 4px;
-            "
-          ></span>
-          Sedang
-        </li>
-        <li>
-          <span
-            style="
-              background: #f3ffbd;
-              display: inline-block;
-              width: 20px;
-              height: 20px;
-              margin-right: 8px;
-              border-radius: 4px;
-            "
-          ></span>
-          Jarang
-        </li>
-        <li>
-          <span style="background: #1abb3c; display: inline-block; width: 14px; height: 14px; margin-right: 8px; border-radius: 50%; border: 2px solid #0f4c23;"></span>
-          Lokasi Survey
-        </li>
-      </ul>
-    </div>
-  </aside>
 
-  <div id="sidebar-tools" class="toolbar-left">
-    <button title="Zoom In" id="btn-zoomin"><i class="fa-solid fa-plus"></i></button>
-    <button title="Zoom Out" id="btn-zoomout"><i class="fa-solid fa-minus"></i></button>
-    <button title="Extent" id="btn-extent"><i class="fa-solid fa-globe"></i></button>
-    <button title="Draw Polygon" id="btn-draw-polygon"><i class="fa-solid fa-draw-polygon"></i></button>
-    <button title="Measure" id="btn-measure"><i class="fa-solid fa-ruler-horizontal"></i></button>
-    <button title="Pan" id="btn-pan"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
-    
-  </div>
-
-
-
-  </div>
-
-  <div id="map"></div>
-
-  <!-- Show Panels button removed per request -->
-  <div id="summary-table" class="data-table">
-      <div class="table-header">
-      <h4 style="margin: 0; font-size: 0.95rem; color: #8ef67d;">📊 Statistik Kerapatan</h4>
+      <!-- LAYER CONTROL SECTION -->
+      <div class="right-panel-section layer-section">
+        <div class="section-header"><i class="fas fa-layer-group"></i> Layers</div>
+        <div class="section-content" id="layer-control-content">
+          <p style="color: #999; font-size: 0.8rem;">Loading...</p>
+        </div>
       </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Jenis Kerapatan</th>
-          <th>Luas (ha)</th>
-          <th>%</th>
-          <th>Visualisasi</th>
-        </tr>
-      </thead>
-      <tbody id="kerapatan-table-body">
-        <tr>
-          <td colspan="4" style="text-align: center; padding: 20px; color: #999;">Memuat data...</td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
+
+    <!-- ANALYSIS PANEL: Bottom Left -->
+    <div class="analysis-panel" id="analysis-panel">
+      <button class="analysis-toggle" id="analysis-toggle" type="button" aria-label="Toggle panel analisis">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <div class="analysis-header">
+        <i class="fas fa-chart-bar"></i> Panel Analisis & Legend
+      </div>
+      <div class="analysis-content">
+        <div class="analysis-chart" id="analysis-chart"></div>
+        <div class="analysis-stats" id="analysis-stats"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Hidden select untuk sync basemap -->
-  <select id="basemap-select-right" style="display: none;">
-    <option value="osm">OpenStreetMap</option>
-    <option value="topo">OpenTopoMap</option>
-    <option value="satellite">ESRI Satellite</option>
+  <!-- CORE MODULES -->
+  <script src="js/core-state-manager.js"></script>
+  <script src="js/data-utilities.js"></script>
+  <script src="js/statistics-calculator.js"></script>
 
-  </select>
+  <!-- APPLICATION -->
+  <script>
+    const AppState = {
+      map: null,
+      stateManager: null,
+      statsCalculator: null,
+      excelData: {},
+      geoJsonLayers: {},
+      activeLayer: null,
+      currentFilter: { provinsi: '', kabupaten: '', kecamatan: '', desa: '' },
+      charts: {},
+      baseLayers: {},
+      currentBasemap: 'osm'
+    };
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
-  <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-  <script src="js/map.js"></script>
+    const LayerConfigs = {
+      mangrove2016: {
+        name: 'Mangrove 2016',
+        file: 'data/2016Mangrove.geojson',
+        visible: false,
+        field: 'Ket',
+        type: 'discrete',
+        dataField: 'mangrove2016'
+      },
+      mangrove2026: {
+        name: 'Mangrove 2026',
+        file: 'data/2026Mangrove.geojson',
+        visible: true,
+        field: 'Ket',
+        type: 'discrete',
+        dataField: 'mangrove2026'
+      },
+      zona: {
+        name: 'Zona Kawasan',
+        file: 'data/ZonaKawasan.geojson',
+        visible: false,
+        field: 'Zona',
+        type: 'discrete',
+        dataField: 'zona'
+      },
+      laju: {
+        name: 'Laju Forestasi',
+        file: 'data/LajuForestasi.geojson',
+        visible: false,
+        field: 'Persntahun',
+        type: 'continuous',
+        min: -7,
+        max: 3,
+        classes: 10,
+        palette: ['#2c7bb6','#5a92c7','#87b0d7','#add0e6','#d1e7f0','#fcebcf','#f7c971','#f4a441','#e6782d','#c43d16'],
+        dataField: 'laju'
+      },
+      perubahan: {
+        name: 'Perubahan 2016-2026',
+        file: 'data/PerubahanLahan.geojson',
+        visible: false,
+        field: 'Ketereanga',
+        type: 'discrete',
+        dataField: 'tutupan'
+      },
+      karbon: {
+        name: 'Stok Karbon',
+        file: 'data/StokKarbon.geojson',
+        visible: false,
+        field: 'TotStock',
+        type: 'continuous',
+        min: 0,
+        max: 45,
+        dataField: 'karbon'
+      }
+    };
+
+    function toggleAnalysisPanel() {
+      const panel = document.getElementById('analysis-panel');
+      const toggle = document.getElementById('analysis-toggle');
+      const container = document.querySelector('.main-container');
+      if (!panel || !toggle) return;
+
+      const isCollapsed = panel.classList.toggle('collapsed');
+      if (container) {
+        container.classList.toggle('analysis-collapsed', isCollapsed);
+      }
+
+      toggle.setAttribute('aria-expanded', String(!isCollapsed));
+      toggle.title = isCollapsed ? 'Buka panel' : 'Tutup panel';
+
+      setTimeout(() => {
+        if (AppState.map && typeof AppState.map.invalidateSize === 'function') {
+          AppState.map.invalidateSize();
+        }
+      }, 360);
+    }
+
+    // ============= INITIALIZATION =============
+    async function initializeApp() {
+      try {
+        console.log('Initializing app...');
+
+        // Map
+        AppState.map = L.map('map').setView([-5.2, 119.5], 8);
+        initializeBasemapLayers();
+        createBasemapControl();
+
+        // State manager
+        AppState.stateManager = new CoreStateManager();
+        AppState.statsCalculator = new StatisticsCalculator(AppState.stateManager);
+
+        // Load Excel
+        console.log('Loading Excel...');
+        await AppState.stateManager.loadExcelData('data/Dashboard.xlsx');
+        
+        // Cache all sheets
+        AppState.excelData = {
+          mangrove2016: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('2016Mangrove') || []),
+          mangrove2026: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('2026Mangrove') || []),
+          zona: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('ZonaKawasan') || []),
+          laju: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('LajuForestasiDesa') || AppState.stateManager.getSheetData('LajuForestasi') || []),
+          lajuKab: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('LajuForestasiKab') || []),
+          perubahan: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('PerubahanTuplah') || AppState.stateManager.getSheetData('PerubahanTutupan') || []),
+          karbon: filterRowsByAllowedKabupaten(AppState.stateManager.getSheetData('StokKarbonDesa') || [])
+        };
+
+        console.log('Excel data cached');
+
+        // Load layers & filters
+        await loadAllLayers();
+        populateFilters();
+        createLayerControls();
+        updateAnalysisPanel();
+        // Load Hiliriset points from Excel and add to map
+        await loadHilirisetPoints();
+
+        const toggleBtn = document.getElementById('analysis-toggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', toggleAnalysisPanel);
+        }
+
+        console.log('App initialized');
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // ============= FILTER SYSTEM =============
+    function getProperty(source, names) {
+      if (!source || !names) return undefined;
+      const keys = Object.keys(source || {});
+      const normalizedNames = names.map(name => String(name).toLowerCase());
+
+      for (const key of keys) {
+        const lowerKey = String(key).toLowerCase();
+        if (normalizedNames.includes(lowerKey)) {
+          return source[key];
+        }
+      }
+
+      for (const key of keys) {
+        const lowerKey = String(key).toLowerCase();
+        for (const name of normalizedNames) {
+          if (lowerKey === name || lowerKey.endsWith(`.${name}`) || lowerKey.includes(name)) {
+            return source[key];
+          }
+        }
+      }
+
+      return undefined;
+    }
+
+    function parseNumeric(value) {
+      if (value === null || value === undefined) return NaN;
+      if (typeof value === 'number') return value;
+      let s = String(value).trim();
+      if (s === '') return NaN;
+      // Handle parentheses for negative numbers: (123) -> -123
+      const isParenNegative = /^\(.*\)$/.test(s);
+      if (isParenNegative) {
+        s = s.replace(/^\(|\)$/g, '');
+      }
+      // Remove percent sign
+      s = s.replace(/%/g, '');
+      // If both '.' and ',' exist, assume '.' is thousand separator and remove it
+      if (s.indexOf('.') !== -1 && s.indexOf(',') !== -1) {
+        s = s.replace(/\./g, '');
+        s = s.replace(/,/g, '.');
+      } else if (s.indexOf(',') !== -1 && s.indexOf('.') === -1) {
+        // assume comma is decimal separator
+        s = s.replace(/,/g, '.');
+      }
+      // Remove any characters except digits, dot and minus
+      s = s.replace(/[^0-9.\-]/g, '');
+      let n = parseFloat(s);
+      if (isParenNegative && Number.isFinite(n)) n = -n;
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function normalizeText(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function normalizeKabupaten(value) {
+      return normalizeText(value)
+        .replace(/^(kabupaten|kab\.?)\s*/i, '')
+        .replace(/^(kota|kot\.?)\s*/i, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    const ALLOWED_KABUPATEN = ['Jeneponto', 'Maros', 'Barru', 'Sinjai'].map(normalizeKabupaten);
+
+    function isAllowedKabupaten(value) {
+      if (!value && value !== 0) return false;
+      const normalized = normalizeKabupaten(value);
+      return ALLOWED_KABUPATEN.includes(normalized);
+    }
+
+    function getRowKabupaten(row) {
+      return getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'KabKota', 'kabkota', 'KABUPATEN']) || '';
+    }
+
+    function filterRowsByAllowedKabupaten(rows) {
+      return (rows || []).filter(row => isAllowedKabupaten(getRowKabupaten(row)));
+    }
+
+    function getFeatureKabupaten(feature) {
+      return getFeatureProperty(feature, ['Kabupaten', 'kabupaten', 'WADMKK', 'KabKota', 'kabkota', 'KABUPATEN']) || '';
+    }
+
+    function isAllowedFeatureKabupaten(feature) {
+      return isAllowedKabupaten(getFeatureKabupaten(feature));
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    const HILIRISET_IMAGE_MANIFEST = {
+      'monro monro': {
+        folder: '1. Monro Monro Jeneponto',
+        peta: 'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro01.jpg',
+          'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro02.jpg',
+          'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro03.jpg'
+        ]
+      },
+      'balang baru': {
+        folder: '2. Balang Baru Jeneponto',
+        peta: 'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru01.jpg',
+          'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru02.jpg',
+          'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru03.jpg'
+        ]
+      },
+      'bontomarannu': {
+        folder: '3. Bontomarannu Jeneponto',
+        peta: 'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu01.jpg',
+          'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu02.jpg',
+          'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu03.jpg'
+        ]
+      },
+      'bonto bahari': {
+        folder: '4. Bontobahari maros',
+        peta: 'images/WEBIMG/Hiliriset/4. Bontobahari maros/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari01.jpg',
+          'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari02.jpg',
+          'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari03.jpg'
+        ]
+      },
+      'binanga sangkara': {
+        folder: '5. BinangaSangkara Maros',
+        peta: 'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara01.jpg',
+          'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara02.jpg',
+          'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara03.jpg'
+        ]
+      },
+      'coppo': {
+        folder: '7. Coppo Barru',
+        peta: 'images/WEBIMG/Hiliriset/7. Coppo Barru/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo01.jpg',
+          'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo02.jpg',
+          'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo03.jpg'
+        ]
+      },
+      'garongkong': {
+        folder: '8. Garongkong Barru',
+        peta: 'images/WEBIMG/Hiliriset/8. Garongkong Barru/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong01.jpg',
+          'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong02.jpg',
+          'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong03.jpg'
+        ]
+      },
+      'pannikiang': {
+        folder: '9. Pannikiang Barru',
+        peta: 'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang01.jpg',
+          'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang02.jpg',
+          'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang03.jpg'
+        ]
+      },
+      'hubat': {
+        folder: '10. Hubat Sinjai',
+        peta: 'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Hubat01.jpg',
+          'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Hubat02.jpg',
+          'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Hubat03.jpg'
+        ]
+      },
+      'lappa': {
+        folder: '11. Lappa Sinjai',
+        peta: 'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa01.jpg',
+          'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa02.jpg',
+          'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa03.jpg'
+        ]
+      },
+      'tongke tongke': {
+        folder: '12. Tongke Tongke Sinjai',
+        peta: 'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke01.jpg',
+          'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke02.jpg',
+          'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke03.jpg'
+        ]
+      },
+      'panaikang': {
+        folder: '13. Panaikang Sinjai',
+        peta: 'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang01.jpg',
+          'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang02.jpg',
+          'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang03.jpg'
+        ]
+      },
+      'pannikikang': {
+        folder: '9. Pannikiang Barru',
+        peta: 'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Peta.jpg',
+        images: [
+          'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang01.jpg',
+          'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang02.jpg',
+          'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang03.jpg'
+        ]
+      }
+    };
+
+    function getHilirisetManifestKey(value) {
+      const key = normalizeText(value || '');
+      if (!key) return '';
+      return key.replace(/[^a-z0-9]/g, '');
+    }
+
+    function applyHilirisetImageManifest(entry) {
+      const nameKey = normalizeText(entry.name || '');
+      const compactKey = getHilirisetManifestKey(entry.name || '');
+      const manifest = HILIRISET_IMAGE_MANIFEST[nameKey] || HILIRISET_IMAGE_MANIFEST[compactKey];
+      if (!manifest) return entry;
+      return {
+        ...entry,
+        folder: manifest.folder,
+        peta: manifest.peta,
+        images: Array.isArray(manifest.images) ? manifest.images : []
+      };
+    }
+
+    function createHilirisetIcon() {
+      return L.divIcon({
+        className: 'hiliriset-marker-icon-wrapper',
+        html: '<div class="hiliriset-marker-icon"></div>',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -32],
+        tooltipAnchor: [10, -16]
+      });
+    }
+
+    function renderHilirisetGallery(entry) {
+      const galleryImages = [];
+      if (entry.peta) galleryImages.push(entry.peta);
+      if (Array.isArray(entry.images) && entry.images.length > 0) {
+        galleryImages.push(...entry.images);
+      }
+      const uniqueImages = [...new Set(galleryImages)].filter(Boolean);
+      const selectedImages = uniqueImages.slice(0, 3);
+      if (!selectedImages.length) return '';
+      return `
+        <div class="hiliriset-popup-gallery-section">
+          <div class="hiliriset-popup-gallery-title">Galeri Foto</div>
+          <div class="hiliriset-popup-gallery">
+            ${selectedImages.map((src) => `
+              <img src="${escapeHtml(src)}" alt="Foto lokasi" loading="lazy" onclick="window.openHilirisetImagePreview('${escapeHtml(src)}')" />
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function openHilirisetImagePreview(src) {
+      let overlay = document.getElementById('hiliriset-lightbox-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'hiliriset-lightbox-overlay';
+        overlay.className = 'hiliriset-lightbox-overlay';
+        overlay.innerHTML = `
+          <div class="hiliriset-lightbox-content" onclick="event.stopPropagation()">
+            <button class="hiliriset-lightbox-close" type="button" onclick="window.closeHilirisetImagePreview()">×</button>
+            <img class="hiliriset-lightbox-image" src="" alt="Preview foto" />
+            <div class="hiliriset-lightbox-caption">Klik gambar untuk memperbesar/mengecilkan</div>
+          </div>
+        `;
+        overlay.onclick = window.closeHilirisetImagePreview;
+        document.body.appendChild(overlay);
+        const image = overlay.querySelector('.hiliriset-lightbox-image');
+        image.addEventListener('click', (event) => {
+          event.stopPropagation();
+          overlay.classList.toggle('zoomed');
+        });
+      }
+      const image = overlay.querySelector('.hiliriset-lightbox-image');
+      if (image) {
+        image.src = src;
+      }
+      overlay.classList.add('visible');
+      overlay.classList.remove('zoomed');
+    }
+
+    function closeHilirisetImagePreview() {
+      const overlay = document.getElementById('hiliriset-lightbox-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('zoomed');
+      overlay.classList.remove('visible');
+    }
+
+    function renderHilirisetPopupHtml(entry) {
+      const { name, kabupaten, coords } = entry;
+      const coordText = Array.isArray(coords) && coords.length === 2 ? `${coords[0].toFixed(6)}, ${coords[1].toFixed(6)}` : 'Koordinat tidak tersedia';
+      const detailsLink = `story.html?loc=${encodeURIComponent(String(name || '').trim())}`;
+
+      return `
+        <div class="hiliriset-popup">
+          <div class="hiliriset-popup-header">
+            <div class="title">${escapeHtml(name || 'Hiliriset')}</div>
+            <div class="hiliriset-popup-meta">
+              ${kabupaten ? `<div><strong>Kabupaten:</strong> ${escapeHtml(kabupaten)}</div>` : ''}
+              <div><strong>Koordinat:</strong> ${escapeHtml(coordText)}</div>
+            </div>
+          </div>
+          ${renderHilirisetGallery(entry)}
+          <a class="hiliriset-popup-link" href="${detailsLink}" target="_blank">Lihat detail lokasi</a>
+        </div>
+      `;
+    }
+
+    function matchText(value, filter) {
+      const a = normalizeText(value);
+      const b = normalizeText(filter);
+      if (!a || !b) return false;
+      if (a === b) return true;
+      // tolerant check: allow substring matches in either direction
+      if (a.includes(b) || b.includes(a)) return true;
+      return false;
+    }
+
+    function getRowValue(row, names) {
+      return getProperty(row, names);
+    }
+
+    function getFeatureProperty(feature, names) {
+      return getProperty(feature.properties || {}, names);
+    }
+
+    function getAllExcelRows() {
+      return [
+        ...(AppState.excelData.mangrove2016 || []),
+        ...(AppState.excelData.mangrove2026 || []),
+        ...(AppState.excelData.zona || []),
+        ...(AppState.excelData.laju || []),
+        ...(AppState.excelData.perubahan || []),
+        ...(AppState.excelData.karbon || [])
+      ];
+    }
+
+    function populateFilters() {
+      const rows = getAllExcelRows();
+      const provinsiSet = new Set();
+
+      rows.forEach(row => {
+        const prov = getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']);
+        if (prov) provinsiSet.add(String(prov).trim());
+      });
+
+      const select = document.getElementById('filter-provinsi');
+      Array.from(provinsiSet).sort().forEach(prov => {
+        const opt = document.createElement('option');
+        opt.value = prov;
+        opt.textContent = prov;
+        select.appendChild(opt);
+      });
+
+      document.getElementById('filter-provinsi').addEventListener('change', updateKabupaten);
+      document.getElementById('filter-kabupaten').addEventListener('change', updateKecamatan);
+      document.getElementById('filter-kecamatan').addEventListener('change', updateDesa);
+    }
+
+    function updateKabupaten() {
+      const prov = document.getElementById('filter-provinsi').value;
+      const select = document.getElementById('filter-kabupaten');
+      select.innerHTML = '<option value="">-- Pilih Kabupaten --</option>';
+      document.getElementById('filter-kecamatan').innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+      document.getElementById('filter-desa').innerHTML = '<option value="">-- Pilih Desa --</option>';
+      document.getElementById('filter-kecamatan').disabled = true;
+      document.getElementById('filter-desa').disabled = true;
+
+      if (prov) {
+        const rows = getAllExcelRows();
+        const kabSet = new Set();
+        rows.forEach(row => {
+          if (matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) {
+            const kab = getRowValue(row, ['WADMKK', 'KabKota', 'kabkota']);
+            if (kab) kabSet.add(String(kab).trim());
+          }
+        });
+        Array.from(kabSet).sort().forEach(kab => {
+          const opt = document.createElement('option');
+          opt.value = kab;
+          opt.textContent = kab;
+          select.appendChild(opt);
+        });
+        select.disabled = false;
+      } else {
+        select.disabled = true;
+      }
+    }
+
+    function updateKecamatan() {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const select = document.getElementById('filter-kecamatan');
+      select.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+      document.getElementById('filter-desa').innerHTML = '<option value="">-- Pilih Desa --</option>';
+      document.getElementById('filter-desa').disabled = true;
+
+      if (kab) {
+        const rows = getAllExcelRows();
+        const kecSet = new Set();
+        rows.forEach(row => {
+          if (matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov) &&
+              matchText(getRowValue(row, ['WADMKK', 'KabKota', 'kabkota']), kab)) {
+            const kec = getRowValue(row, ['WADMKC', 'Kecamatan', 'kecamatan']);
+            if (kec) kecSet.add(String(kec).trim());
+          }
+        });
+        Array.from(kecSet).sort().forEach(kec => {
+          const opt = document.createElement('option');
+          opt.value = kec;
+          opt.textContent = kec;
+          select.appendChild(opt);
+        });
+        select.disabled = false;
+      } else {
+        select.disabled = true;
+      }
+    }
+
+    function updateDesa() {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const select = document.getElementById('filter-desa');
+      select.innerHTML = '<option value="">-- Pilih Desa --</option>';
+
+      if (kec) {
+        const rows = getAllExcelRows();
+        const desSet = new Set();
+        rows.forEach(row => {
+          if (matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov) &&
+              matchText(getRowValue(row, ['WADMKK', 'KabKota', 'kabkota']), kab) &&
+              matchText(getRowValue(row, ['WADMKC', 'Kecamatan', 'kecamatan']), kec)) {
+            const des = getRowValue(row, ['WADMKD', 'Desa', 'desa']);
+            if (des) desSet.add(String(des).trim());
+          }
+        });
+        Array.from(desSet).sort().forEach(des => {
+          const opt = document.createElement('option');
+          opt.value = des;
+          opt.textContent = des;
+          select.appendChild(opt);
+        });
+        select.disabled = false;
+      } else {
+        select.disabled = true;
+      }
+    }
+
+    function getFilterMatcher() {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+
+      return (feature) => {
+        const props = feature.properties || {};
+        if (prov && !matchText(getProperty(props, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+        if (kab && !matchText(getProperty(props, ['WADMKK', 'KabKota', 'kabkota']), kab)) return false;
+        if (kec && !matchText(getProperty(props, ['WADMKC', 'Kecamatan', 'kecamatan']), kec)) return false;
+        if (des && !matchText(getProperty(props, ['WADMKD', 'Desa', 'desa']), des)) return false;
+        return true;
+      };
+    }
+
+    function getFeatureFilter(layerId) {
+      const baseMatcher = getFilterMatcher();
+      return (feature) => {
+        if (!isAllowedFeatureKabupaten(feature)) return false;
+        if (!baseMatcher(feature)) return false;
+
+        if (layerId === 'zona') {
+          const zona = getFeatureProperty(feature, ['Zona', 'zona', 'zona_kawasan', 'jenis']);
+          const normalized = String(zona || '').trim().toLowerCase();
+          if (normalized !== 'konservasi' && normalized !== 'rehabilitasi') return false;
+        }
+
+        if (layerId === 'laju') {
+          const row = findMatchingLajuRow(feature);
+          if (!row) return false;
+          return matchRowAgainstFilters(row);
+        }
+
+        return true;
+      };
+    }
+
+    function getSqHa(row) {
+      const v = parseNumeric(getRowValue(row, ['sq_ha', 'sq ha', 'sq_km', 'sq km', 'hektar', 'luas', 'area']));
+      return Number.isFinite(v) ? v : 0;
+    }
+
+    function getNormalizedTutupanCategory(value) {
+      const normalized = String(value || '').trim().toLowerCase();
+      const categoryMap = {
+        'non vegetasi': 'Non Vegetasi',
+        'non vegetasi ': 'Non Vegetasi',
+        'non vegetasi\u00fd': 'Non Vegetasi',
+        'permukiman': 'Permukiman',
+        'tambak': 'Tambak',
+        'badan air': 'Badan Air',
+        'pertanian lainnya': 'Pertanian Lainnya',
+        'sawah': 'Sawah',
+        'tumbuhan non hutan': 'Tumbuhan Non Hutan',
+        'tumbuhan non hutan ': 'Tumbuhan Non Hutan',
+        'tnh': 'Tumbuhan Non Hutan',
+        'mangrove': 'Mangrove',
+        'hutan mangrove': 'Mangrove',
+        'hutan mangroves': 'Mangrove'
+      };
+      return categoryMap[normalized] || (normalized ? normalized.charAt(0).toUpperCase() + normalized.slice(1) : 'Tidak diketahui');
+    }
+
+    function getTutupanColor(category) {
+      const colorMap = {
+        'Non Vegetasi': '#e74c3c',
+        'Permukiman': '#27ae60',
+        'Tambak': '#2d9cdb',
+        'Badan Air': '#2980b9',
+        'Pertanian Lainnya': '#f1c40f',
+        'Sawah': '#9b59b6',
+        'Tumbuhan Non Hutan': '#f39c12',
+        'Mangrove': '#16a085',
+        'Tidak diketahui': '#95a5a6'
+      };
+      return colorMap[getNormalizedTutupanCategory(category)] || '#95a5a6';
+    }
+
+    function getPerubahanCategory(row) {
+      return getRowValue(row, ['2026', '2026 (Ha)', 'Luas 2026', 'Luas2026', 'Area2026', 'Penggunaan Lahan 2026', 'Ketereanga', 'ketereanga', 'Keterangan', 'keterangan', 'Ket', 'ket', 'kategori', 'Jenis', 'jenis', 'Perubahan', 'perubahan']) || 'Tidak diketahui';
+    }
+
+    function matchRowAgainstFilters(row) {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+
+      if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+      if (kab && !matchText(getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']), kab)) return false;
+      if (kec && !matchText(getRowValue(row, ['Kecamatan', 'kecamatan', 'WADMKC']), kec)) return false;
+      if (des && !matchText(getRowValue(row, ['Desa', 'desa', 'WADMKD']), des)) return false;
+      return true;
+    }
+
+    function findMatchingLajuRow(feature) {
+      const rows = AppState.excelData.laju || [];
+      const props = feature.properties || {};
+      const featureProv = getProperty(props, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']);
+      const featureKab = getProperty(props, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']);
+      const featureKec = getProperty(props, ['Kecamatan', 'kecamatan', 'WADMKC']);
+      const featureDesa = getProperty(props, ['Desa', 'desa', 'WADMKD']);
+
+      return rows.find(row => {
+        if (featureProv && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), featureProv)) return false;
+        if (featureKab && !matchText(getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']), featureKab)) return false;
+        if (featureKec && !matchText(getRowValue(row, ['Kecamatan', 'kecamatan', 'WADMKC']), featureKec)) return false;
+        if (featureDesa && !matchText(getRowValue(row, ['Desa', 'desa', 'WADMKD']), featureDesa)) return false;
+        return true;
+      }) || null;
+    }
+
+    function getLajuBuckets(values = []) {
+      const numericValues = values.filter(v => Number.isFinite(v));
+      const config = LayerConfigs.laju;
+      let min = numericValues.length ? Math.min(...numericValues) : (config.min ?? -7);
+      let max = numericValues.length ? Math.max(...numericValues) : (config.max ?? 3);
+
+      if (!Number.isFinite(min) || !Number.isFinite(max)) {
+        min = config.min ?? -7;
+        max = config.max ?? 3;
+      }
+      if (min === max) {
+        min -= 0.25;
+        max += 0.25;
+      }
+
+      const step = 0.5;
+      const lowerBound = Math.floor(min / step) * step;
+      const upperBound = Math.ceil(max / step) * step;
+      const totalSteps = Math.max(1, Math.round((upperBound - lowerBound) / step));
+
+      const palette = ['#2c7fb8', '#41b6c4', '#7fcdbb', '#c7e9b4', '#ffffcc', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000'];
+      return Array.from({ length: totalSteps }, (_, i) => {
+        const lower = lowerBound + i * step;
+        const upper = lowerBound + (i + 1) * step;
+        return {
+          lower,
+          upper,
+          label: `${lower.toFixed(1)} s.d. ${upper.toFixed(1)}`,
+          color: palette[i % palette.length]
+        };
+      });
+    }
+
+    function getLajuPercentValue(row) {
+      const percentVal = parseNumeric(getRowValue(row, [
+        'Perubahan Pertahun %', 'PerubahanPertahun%', 'Perubahan Pertahun',
+        'Persntahun', 'Persntahun%', 'Persen', 'presentase'
+      ]));
+      if (!Number.isNaN(percentVal)) return percentVal;
+
+      const areaVal = parseNumeric(getRowValue(row, [
+        'PerubahanPertahun(Ha)', 'PerubahanPertahun', 'Perubahan Pertahun (Ha)',
+        'Perubahan_Pertahun_Ha', 'Perubahan Pertahun Ha', 'PerubahanPertahunHa', 'Ha/tahun'
+      ]));
+      if (!Number.isNaN(areaVal)) return areaVal;
+
+      return NaN;
+    }
+
+    function getLajuAreaValue(row) {
+      return getLajuPercentValue(row);
+    }
+
+    function getKarbonTotalStockValue(row) {
+      return parseNumeric(getRowValue(row, [
+        'TotStock', 'totstock', 'Tot Stock', 'tot stock',
+        'Total Stock (C Ton)', 'Total Stock', 'total_stock_c_ton', 'Total_Stock_C_Ton',
+        'total stock (c ton)', 'total stock c ton'
+      ]));
+    }
+
+    function getLajuClass(value, rows = []) {
+      const numeric = parseFloat(value);
+      if (Number.isNaN(numeric)) {
+        return { label: 'Tidak ada data', color: '#dce6f0', range: 'Tidak ada data' };
+      }
+      const values = rows.length ? rows.map(row => getLajuPercentValue(row)).filter(v => Number.isFinite(v)) : [numeric];
+      const buckets = getLajuBuckets(values);
+      const bucket = buckets.find(b => numeric >= b.lower && numeric < b.upper) || buckets[buckets.length - 1];
+      return { label: bucket.label, color: bucket.color, range: bucket.label };
+    }
+
+    function getLajuColor(value, rows = []) {
+      return getLajuClass(value, rows).color;
+    }
+
+    function getGeojsonLajuValue(feature) {
+      const props = feature.properties || {};
+      const direct = parseNumeric(getFeatureProperty(feature, ['Persntahun', 'persntahun', 'Persen', 'presentase']));
+      if (!Number.isNaN(direct)) return direct;
+      return parseNumeric(props.Persntahun) || 0;
+    }
+
+    function getLayerExcelRows(layerId) {
+      switch (layerId) {
+        case 'mangrove2016': return AppState.excelData.mangrove2016 || [];
+        case 'mangrove2026': return AppState.excelData.mangrove2026 || [];
+        case 'zona': return AppState.excelData.zona || [];
+        case 'laju': return AppState.excelData.laju || [];
+        case 'perubahan': return AppState.excelData.perubahan || [];
+        case 'karbon': return AppState.excelData.karbon || [];
+        default: return [];
+      }
+    }
+
+    function getFilteredExcelRows(layerId) {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+
+      if (layerId === 'laju') {
+        if (des) {
+          return (AppState.excelData.laju || []).filter(row => {
+            if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+            if (kab && !matchText(getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']), kab)) return false;
+            if (kec && !matchText(getRowValue(row, ['Kecamatan', 'kecamatan', 'WADMKC']), kec)) return false;
+            if (des && !matchText(getRowValue(row, ['Desa', 'desa', 'WADMKD']), des)) return false;
+            return true;
+          });
+        }
+        if (kec) {
+          return (AppState.excelData.laju || []).filter(row => {
+            if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+            if (kab && !matchText(getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']), kab)) return false;
+            if (kec && !matchText(getRowValue(row, ['Kecamatan', 'kecamatan', 'WADMKC']), kec)) return false;
+            return true;
+          });
+        }
+        if (kab) {
+          return (AppState.excelData.laju || []).filter(row => {
+            if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+            if (kab && !matchText(getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']), kab)) return false;
+            return true;
+          });
+        }
+        if (prov) {
+          return (AppState.excelData.lajuKab || []).filter(row => {
+            if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+            return true;
+          });
+        }
+        return (AppState.excelData.lajuKab || []);
+      }
+
+      const rows = filterRowsByAllowedKabupaten(getLayerExcelRows(layerId));
+      return rows.filter(row => {
+        if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+        if (kab && !matchText(getRowValue(row, ['WADMKK', 'KabKota', 'kabkota']), kab)) return false;
+        if (kec && !matchText(getRowValue(row, ['WADMKC', 'Kecamatan', 'kecamatan']), kec)) return false;
+        if (des && !matchText(getRowValue(row, ['WADMKD', 'Desa', 'desa']), des)) return false;
+
+        if (layerId === 'zona') {
+          const zona = getRowValue(row, ['Zona', 'zona', 'zona_kawasan', 'jenis']);
+          if (zona && !['konservasi', 'rehabilitasi'].includes(String(zona).trim().toLowerCase())) {
+            return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    function getFilteredExcelRowsForSheet(sheetId) {
+      const rows = filterRowsByAllowedKabupaten(getLayerExcelRows(sheetId));
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+
+      return rows.filter(row => {
+        if (prov && !matchText(getRowValue(row, ['Provinsi', 'provinsi', 'WADMPR', 'wadmpr']), prov)) return false;
+        if (kab && !matchText(getRowValue(row, ['WADMKK', 'KabKota', 'kabkota']), kab)) return false;
+        if (kec && !matchText(getRowValue(row, ['WADMKC', 'Kecamatan', 'kecamatan']), kec)) return false;
+        if (des && !matchText(getRowValue(row, ['WADMKD', 'Desa', 'desa']), des)) return false;
+        return true;
+      });
+    }
+
+    function renderPerubahanComparisonCharts(container, statsContainer) {
+      const rows = getFilteredExcelRowsForSheet('perubahan');
+      const rows2016 = rows;
+      const rows2026 = rows;
+
+      container.innerHTML = `
+        <div class="comparison-chart-grid">
+          <div class="comparison-chart-card">
+            <div class="comparison-chart-title">Penggunaan Lahan 2016</div>
+            <div class="comparison-chart-canvas-wrap"><canvas id="chart-perubahan-2016"></canvas></div>
+          </div>
+          <div class="comparison-chart-card">
+            <div class="comparison-chart-title">Penggunaan Lahan 2026</div>
+            <div class="comparison-chart-canvas-wrap"><canvas id="chart-perubahan-2026"></canvas></div>
+          </div>
+        </div>
+      `;
+      statsContainer.innerHTML = '<div style="color:#999; padding: 16px;">Memuat statistik...</div>';
+
+      if (AppState.charts['perubahan-2016']) {
+        AppState.charts['perubahan-2016'].destroy();
+      }
+      if (AppState.charts['perubahan-2026']) {
+        AppState.charts['perubahan-2026'].destroy();
+      }
+
+      setTimeout(() => {
+        const ctx2016 = document.getElementById('chart-perubahan-2016');
+        const ctx2026 = document.getElementById('chart-perubahan-2026');
+        if (ctx2016) renderPerubahanYearDonutChart(ctx2016, rows2016, '2016');
+        if (ctx2026) renderPerubahanYearDonutChart(ctx2026, rows2026, '2026');
+        renderPerubahanComparisonStats(rows2016, rows2026, statsContainer);
+      }, 50);
+    }
+
+    function getPerubahanYearGroups(rows, yearKey) {
+      const totals = {};
+      rows.forEach(row => {
+        const category = getRowValue(row, [yearKey, `${yearKey} (Ha)`, `Luas ${yearKey}`, `Luas${yearKey}`, `Area${yearKey}`]);
+        const label = getNormalizedTutupanCategory(category);
+        const area = getSqHa(row);
+        if (!Number.isNaN(area) && area > 0) {
+          totals[label] = (totals[label] || 0) + area;
+        }
+      });
+      return totals;
+    }
+
+    function renderPerubahanYearDonutChart(ctx, rows, yearLabel) {
+      const yearGroups = getPerubahanYearGroups(rows, yearLabel);
+      const labels = Object.keys(yearGroups).sort((a, b) => {
+        const order = ['Mangrove', 'Tumbuhan Non Hutan', 'Sawah', 'Pertanian Lainnya', 'Tambak', 'Permukiman', 'Badan Air', 'Non Vegetasi', 'Tidak diketahui'];
+        return order.indexOf(a) - order.indexOf(b);
+      });
+      const values = labels.map(label => yearGroups[label]);
+      const backgroundColor = labels.map(label => getTutupanColor(label));
+
+      AppState.charts[`perubahan-${yearLabel}`] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: backgroundColor,
+            borderColor: '#ffffff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          radius: '95%',
+          cutout: '55%',
+          plugins: {
+            title: { display: false },
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed.toFixed(2)} ha` } },
+            percentageLabels: {
+              color: '#ffffff',
+              font: { family: 'Poppins', size: 11, weight: '700' }
+            }
+          }
+        },
+        plugins: [{
+          id: 'percentageLabels',
+          afterDatasetsDraw(chart) {
+            const ctx = chart.ctx;
+            const dataset = chart.data.datasets[0];
+            const total = dataset.data.reduce((sum, v) => sum + v, 0);
+            ctx.save();
+            ctx.font = '700 11px Poppins, sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            chart.getDatasetMeta(0).data.forEach((arc, index) => {
+              const value = dataset.data[index];
+              if (!value || total === 0) return;
+              const center = arc.getCenterPoint();
+              const percentage = ((value / total) * 100).toFixed(1) + '%';
+              ctx.fillText(percentage, center.x, center.y);
+            });
+            ctx.restore();
+          }
+        }]
+      });
+    }
+
+    function renderPerubahanComparisonStats(rows2016, rows2026, container) {
+      const totals = {
+        '2016': rows2016.reduce((sum, row) => sum + getSqHa(row), 0),
+        '2026': rows2026.reduce((sum, row) => sum + getSqHa(row), 0)
+      };
+
+      const groups2016 = getPerubahanYearGroups(rows2016, '2016');
+      const groups2026 = getPerubahanYearGroups(rows2026, '2026');
+      const categories = Array.from(new Set([...Object.keys(groups2016), ...Object.keys(groups2026)])).sort((a, b) => {
+        const order = ['Mangrove', 'Tumbuhan Non Hutan', 'Sawah', 'Pertanian Lainnya', 'Tambak', 'Permukiman', 'Badan Air', 'Non Vegetasi', 'Tidak diketahui'];
+        return order.indexOf(a) - order.indexOf(b);
+      });
+
+      let html = `<strong>Perbandingan Perubahan</strong><br/>`;
+      html += `Total luas pada sheet PerubahanTuplah:<br/>2016: ${totals['2016'].toFixed(2)} ha<br/>2026: ${totals['2026'].toFixed(2)} ha<br/><br/>`;
+      html += `<div class="legend-section"><strong>Legenda</strong><br/>`;
+      categories.forEach(category => {
+        const color = getTutupanColor(category);
+        html += `<div class="legend-item"><div class="legend-color" style="background: ${color};"></div> ${category}</div>`;
+      });
+      html += `</div>`;
+
+      html += `<div class="comparison-summary">
+        <div><strong>2016</strong><br/>${categories.map(category => `${category}: ${((groups2016[category] || 0).toFixed(2))} ha`).join('<br/>')}</div>
+        <div><strong>2026</strong><br/>${categories.map(category => `${category}: ${((groups2026[category] || 0).toFixed(2))} ha`).join('<br/>')}</div>
+      </div>`;
+
+      container.innerHTML = html;
+    }
+
+    // ============= LAYER LOADING =============
+    async function loadAllLayers() {
+      console.log('Loading GeoJSON layers...');
+
+      for (const [layerId, config] of Object.entries(LayerConfigs)) {
+        try {
+          const response = await fetch(config.file);
+          const geojson = await response.json();
+
+          const layer = L.geoJSON(geojson, {
+            style: (feature) => getStyle(layerId, feature),
+            onEachFeature: (feature, leafletLayer) => {
+              leafletLayer.bindPopup(formatPopup(feature));
+              leafletLayer.on('mouseover', function() {
+                this.setStyle({ weight: 3, opacity: 0.9, color: '#000000' });
+              });
+              leafletLayer.on('mouseout', function() {
+                this.setStyle(getStyle(layerId, feature));
+              });
+            },
+            filter: (feature) => getFeatureFilter(layerId)(feature)
+          });
+
+          AppState.geoJsonLayers[layerId] = {
+            layer: layer,
+            config: config,
+            data: geojson,
+            isVisible: config.visible
+          };
+
+          if (config.visible) {
+            layer.addTo(AppState.map);
+          }
+
+          console.log(`Loaded: ${config.name}`);
+        } catch (error) {
+          console.error(`Error loading ${config.file}:`, error);
+        }
+      }
+    }
+
+    function getStyle(layerId, feature) {
+      const config = LayerConfigs[layerId];
+      const props = feature.properties || {};
+      let color = '#0066ff';
+
+      if (config.type === 'discrete') {
+        let fieldValue = '';
+        if (layerId.includes('mangrove')) {
+          fieldValue = getFeatureProperty(feature, ['Ket', 'ket', 'kelas_ndvi', 'Keterangan', 'keterangan']) || props[config.field] || '';
+          const colorMap = { 'Lebat': '#00b300', 'Sedang': '#ffaa00', 'Jarang': '#ff6600', 'Rusak': '#ff3333' };
+          color = colorMap[fieldValue] || colorMap[fieldValue?.toString().trim()] || '#0066ff';
+        } else if (layerId === 'zona') {
+          fieldValue = getFeatureProperty(feature, ['Zona', 'zona', 'zona_kawasan', 'jenis']) || props[config.field] || '';
+          const normalized = String(fieldValue || '').trim().toLowerCase();
+          if (normalized.includes('konservasi')) color = '#27ae60';
+          else if (normalized.includes('rehabilitasi')) color = '#f39c12';
+          else color = '#0066ff';
+        } else if (layerId === 'perubahan') {
+          fieldValue = getFeatureProperty(feature, ['Ketereanga', 'ketereanga', 'Keterangan', 'keterangan', 'Ket', 'ket', 'K_2016', 'k_2016']) || props[config.field] || '';
+          color = getTutupanColor(fieldValue);
+        }
+      } else if (config.type === 'continuous') {
+        const value = parseFloat(getFeatureProperty(feature, [
+          'ChgTahunHa', 'PerubahanPertahun(Ha)', 'PerubahanPertahun', 'Perubahan Pertahun (Ha)', 'Perubahan_Pertahun_Ha',
+          'Persntahun', 'persntahun', 'Persen', 'presentase',
+          'TotStock', 'totstock', 'Total Stock (C Ton)', 'Total Stock', 'total_stock_c_ton', 'Total_Stock_C_Ton',
+          'Stock', 'stock', 'stok'
+        ]) || props[config.field]) || 0;
+
+        if (layerId === 'laju') {
+          const geojsonValue = getGeojsonLajuValue(feature);
+          const rows = AppState.excelData.laju || [];
+          const matchingRow = findMatchingLajuRow(feature);
+          const lajuValue = matchingRow ? getLajuPercentValue(matchingRow) : geojsonValue;
+          const filteredRows = rows.filter(row => matchRowAgainstFilters(row));
+          color = getLajuColor(lajuValue, filteredRows.length ? filteredRows : rows);
+        } else if (layerId === 'karbon') {
+          const max = 45;
+          const interval = max / 5;
+          if (value < interval) color = '#fff9e6';
+          else if (value < interval * 2) color = '#ffe082';
+          else if (value < interval * 3) color = '#ffd54f';
+          else if (value < interval * 4) color = '#ffb74d';
+          else color = '#ff6f00';
+        }
+      }
+
+      return {
+        color: 'rgba(255,255,255,0.2)',
+        weight: 0,
+        opacity: 0.25,
+        fillOpacity: 0.78,
+        fillColor: color
+      };
+    }
+
+    function formatPopup(feature) {
+      const labelMap = {
+        wadmkc: 'Kecamatan',
+        wadmkd: 'Desa/Kelurahan',
+        wadmkk: 'Kabupaten/Kota',
+        wadmpr: 'Provinsi',
+        sq_ha: 'Luasan',
+        'sq ha': 'Luasan',
+        sq_km: 'Luasan',
+        luas: 'Luasan',
+        area: 'Luasan',
+        fid: 'FID',
+        shape_area: 'Shape Area',
+        shape_leng: 'Shape Length',
+        intersect: 'Perubahan 2016-2026',
+        chgtahunha: 'Laju Ha/tahun',
+        'chg_tahun_ha': 'Laju Ha/tahun',
+        'persntahun': 'Laju %/tahun',
+        'persen': 'Laju %/tahun',
+        'presentase': 'Laju %/tahun',
+        tahun2016: 'Luas 2016',
+        tahun2026: 'Luas 2026',
+        k_2016: 'Penggunaan Lahan 2016',
+        ketereanga: 'Penggunaan Lahan 2026',
+        ket_1: 'Status 2026'
+      };
+
+      const hiddenKeys = new Set(['geometry', 'fid', 'fid_2026', 'fid_lajufo', 'shape_area', 'shape_leng', 'keterangan', 'ket', 'ndvi', 'kelas_ndvi']);
+      const numericAreaProps = new Set(['sq_ha','sq ha','sq_km','luas','area','tahun2016','tahun2026']);
+      let html = '<div style="max-width: 320px; font-size: 12px; color: #222;"><table style="width: 100%; border-collapse: collapse;">';
+      if (feature.properties) {
+        Object.entries(feature.properties)
+          .filter(([key]) => !hiddenKeys.has(String(key).trim().toLowerCase()))
+          .sort(([a], [b]) => a.localeCompare(b))
+          .forEach(([key, val]) => {
+            const normalizedKey = String(key).trim();
+            const label = labelMap[normalizedKey.toLowerCase()] || labelMap[normalizedKey] || normalizedKey;
+            let display = val;
+            if (val !== null && val !== undefined && numericAreaProps.has(normalizedKey.toLowerCase())) {
+              const numeric = parseFloat(val);
+              display = `${Number.isNaN(numeric) ? val : numeric.toLocaleString('id', { maximumFractionDigits: 2 })} Ha`;
+            }
+            if (normalizedKey.toLowerCase() === 'totstock' || normalizedKey.toLowerCase() === 'total stock (c ton)' || normalizedKey.toLowerCase() === 'total_stock_c_ton' || normalizedKey.toLowerCase() === 'total_stock') {
+              const numeric = parseFloat(val);
+              display = Number.isNaN(numeric) ? val : `${numeric.toLocaleString('id', { maximumFractionDigits: 2 })} C Ton`;
+            }
+            if (normalizedKey.toLowerCase() === 'zona' || normalizedKey.toLowerCase() === 'zona_kawasan' || normalizedKey.toLowerCase() === 'jenis') {
+              const zonaText = String(display || '').trim();
+              const normalizedZona = zonaText.toLowerCase();
+              let zonaColor = '#0066ff';
+              if (normalizedZona.includes('konservasi')) zonaColor = '#27ae60';
+              else if (normalizedZona.includes('rehabilitasi')) zonaColor = '#f39c12';
+              display = `<strong style="color: ${zonaColor};">${zonaText}</strong>`;
+            }
+            html += `<tr><td style="font-weight: 700; padding: 4px 6px; vertical-align: top; width: 35%;">${label}</td><td style="padding: 4px 6px; vertical-align: top;">${display}</td></tr>`;
+          });
+      }
+      html += '</table></div>';
+      return html;
+    }
+
+    // ============= LAYER CONTROLS =============
+    function createLayerControls() {
+      let html = '';
+      for (const [layerId, config] of Object.entries(LayerConfigs)) {
+        const color = getLayerColor(layerId);
+        html += `
+          <div class="layer-item">
+            <input type="checkbox" id="layer-${layerId}" ${config.visible ? 'checked' : ''} onchange="toggleLayer('${layerId}')">
+            <label for="layer-${layerId}">
+              ${config.name}
+              <div class="layer-color" style="background: ${color};"></div>
+            </label>
+          </div>
+        `;
+      }
+      document.getElementById('layer-control-content').innerHTML = html;
+    }
+
+    function getLayerColor(layerId) {
+      if (layerId.includes('mangrove')) return '#00b300';
+      if (layerId === 'zona') return '#27ae60';
+      if (layerId === 'laju') return '#ff6f00';
+      if (layerId === 'perubahan') return '#e74c3c';
+      if (layerId === 'karbon') return '#f39c12';
+      return '#0066ff';
+    }
+
+    function toggleLayer(layerId) {
+      const checkbox = document.getElementById(`layer-${layerId}`);
+      const layerObj = AppState.geoJsonLayers[layerId];
+
+      if (!layerObj) return;
+
+      if (checkbox.checked && !layerObj.isVisible) {
+        AppState.map.addLayer(layerObj.layer);
+        layerObj.isVisible = true;
+        AppState.activeLayer = layerId;
+      } else if (!checkbox.checked && layerObj.isVisible) {
+        AppState.map.removeLayer(layerObj.layer);
+        layerObj.isVisible = false;
+      }
+
+      updateAnalysisPanel();
+    }
+
+    function initializeBasemapLayers() {
+      AppState.baseLayers = {
+        osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap',
+          maxZoom: 19
+        }),
+        topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenTopoMap, CC-BY-SA',
+          maxZoom: 17
+        }),
+        satellite: L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+          attribution: '© Google',
+          maxZoom: 20,
+          subdomains: ['mt0','mt1','mt2','mt3']
+        }),
+        terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenTopoMap, CC-BY-SA',
+          maxZoom: 17
+        })
+      };
+
+      AppState.baseLayers[AppState.currentBasemap].addTo(AppState.map);
+    }
+
+    function createBasemapControl() {
+      const container = document.createElement('div');
+      container.className = 'basemap-control';
+      container.innerHTML = `
+        <button type="button" data-basemap="osm" class="active">OSM</button>
+        <button type="button" data-basemap="topo">Topo</button>
+        <button type="button" data-basemap="satellite">Sat</button>
+      `;
+
+      container.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const basemap = btn.getAttribute('data-basemap');
+          switchBasemap(basemap);
+        });
+      });
+
+      document.getElementById('map').appendChild(container);
+    }
+
+    function switchBasemap(basemapId) {
+      if (!AppState.baseLayers[basemapId] || basemapId === AppState.currentBasemap) return;
+      AppState.map.removeLayer(AppState.baseLayers[AppState.currentBasemap]);
+      AppState.baseLayers[basemapId].addTo(AppState.map);
+      AppState.currentBasemap = basemapId;
+
+      document.querySelectorAll('.basemap-control button').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-basemap') === basemapId);
+      });
+    }
+
+    // ============= ANALYSIS PANEL =============
+    function updateAnalysisPanel() {
+      // Use active layer if it's visible, otherwise find first visible
+      let activeLayerId = AppState.activeLayer;
+      
+      if (!activeLayerId || !AppState.geoJsonLayers[activeLayerId]?.isVisible) {
+        activeLayerId = Object.entries(AppState.geoJsonLayers).find(([id, obj]) => obj.isVisible)?.[0];
+      }
+
+      if (!activeLayerId) {
+        document.getElementById('analysis-chart').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;"><p>Tidak ada layer aktif</p></div>';
+        document.getElementById('analysis-stats').innerHTML = '';
+        return;
+      }
+
+      renderAnalysis(activeLayerId);
+    }
+
+    function renderAnalysis(layerId) {
+      const layerObj = AppState.geoJsonLayers[layerId];
+      if (!layerObj.layer) return;
+
+      const filteredRows = getFilteredExcelRows(layerId);
+      const config = LayerConfigs[layerId];
+
+      const chartContainer = document.getElementById('analysis-chart');
+      const statsContainer = document.getElementById('analysis-stats');
+
+      chartContainer.innerHTML = '';
+      statsContainer.innerHTML = '';
+
+      if (AppState.charts[layerId]) {
+        AppState.charts[layerId].destroy();
+      }
+      if (layerId === 'perubahan') {
+        ['perubahan-2016', 'perubahan-2026'].forEach(key => {
+          if (AppState.charts[key]) {
+            AppState.charts[key].destroy();
+          }
+        });
+      }
+
+      setTimeout(() => {
+        if (layerId === 'perubahan') {
+          renderPerubahanComparisonCharts(chartContainer, statsContainer);
+          return;
+        }
+
+        chartContainer.innerHTML = '<canvas id="chart-' + layerId + '"></canvas>';
+        const ctx = document.getElementById('chart-' + layerId);
+        if (!ctx) {
+          statsContainer.innerHTML = '<div style="color:#999; padding: 16px;">Statistik tidak tersedia.</div>';
+          return;
+        }
+
+        if (layerId.includes('mangrove')) {
+          renderMangroveChart(ctx, filteredRows, layerId);
+          renderMangroveStats(filteredRows, statsContainer, config);
+        } else if (layerId === 'zona') {
+          renderZonaChart(ctx, filteredRows);
+          renderZonaStats(filteredRows, statsContainer);
+        } else if (layerId === 'laju') {
+          renderLajuChart(ctx, filteredRows);
+          renderLajuStats(filteredRows, statsContainer);
+        } else if (layerId === 'karbon') {
+          renderKarbonChart(ctx, filteredRows);
+          renderKarbonStats(filteredRows, statsContainer);
+        }
+      }, 50);
+    }
+
+    // MANGROVE CHARTS
+    function renderMangroveChart(ctx, rows, layerId) {
+      const ketAreas = { 'Lebat': 0, 'Sedang': 0, 'Jarang': 0, 'Rusak': 0 };
+      rows.forEach(row => {
+        const ket = getRowValue(row, ['Ket', 'kelas_ndvi', 'ndvi', 'Kelas']) || 'Unknown';
+        const area = getSqHa(row);
+        if (ketAreas[ket] !== undefined) ketAreas[ket] += area;
+      });
+
+      AppState.charts[layerId] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(ketAreas),
+          datasets: [{
+            label: 'Luas (ha)',
+            data: Object.values(ketAreas),
+            backgroundColor: ['#00b300', '#ffaa00', '#ff6600', '#ff3333'],
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Luas (ha)' } },
+            x: { title: { display: true, text: 'Kelas NDVI' } }
+          }
+        }
+      });
+    }
+
+    function renderMangroveStats(rows, container, config) {
+      const ketAreas = { 'Lebat': 0, 'Sedang': 0, 'Jarang': 0, 'Rusak': 0 };
+      let totalArea = 0;
+      rows.forEach(row => {
+        const ket = getRowValue(row, ['Ket', 'kelas_ndvi', 'ndvi', 'Kelas']) || 'Unknown';
+        const area = getSqHa(row);
+        if (ketAreas[ket] !== undefined) ketAreas[ket] += area;
+        totalArea += area;
+      });
+
+      let html = `<strong>Statistik</strong><br/>Luas total: ${totalArea.toFixed(2)} ha<br/>`;
+      for (const [ket, area] of Object.entries(ketAreas)) {
+        const pct = totalArea > 0 ? ((area / totalArea) * 100).toFixed(1) : '0.0';
+        html += `${ket}: ${area.toFixed(2)} ha (${pct}%)<br/>`;
+      }
+
+      html += `<div class="legend-section"><strong>Legend</strong><br/>`;
+      const colorMap = { 'Lebat': '#00b300', 'Sedang': '#ffaa00', 'Jarang': '#ff6600', 'Rusak': '#ff3333' };
+      for (const [ket, color] of Object.entries(colorMap)) {
+        html += `<div class="legend-item"><div class="legend-color" style="background: ${color};"></div> ${ket}</div>`;
+      }
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    // ZONA CHARTS
+    function renderZonaChart(ctx, rows) {
+      const zonaAreas = { 'Konservasi': 0, 'Rehabilitasi': 0 };
+      rows.forEach(row => {
+        const zona = getRowValue(row, ['Zona', 'zona', 'zona_kawasan', 'jenis']) || 'Unknown';
+        const area = getSqHa(row);
+        if (zonaAreas[zona] !== undefined) zonaAreas[zona] += area;
+      });
+
+      AppState.charts['zona'] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(zonaAreas),
+          datasets: [{
+            data: Object.values(zonaAreas),
+            backgroundColor: ['#27ae60', '#f39c12'],
+            borderWidth: 2,
+            borderColor: 'white'
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    function renderZonaStats(rows, container) {
+      const zonaAreas = { 'Konservasi': 0, 'Rehabilitasi': 0 };
+      let totalArea = 0;
+      rows.forEach(row => {
+        const zona = getRowValue(row, ['Zona', 'zona', 'zona_kawasan', 'jenis']) || 'Unknown';
+        const area = getSqHa(row);
+        if (zonaAreas[zona] !== undefined) zonaAreas[zona] += area;
+        totalArea += area;
+      });
+
+      let html = `<strong>Zona</strong><br/>Luas total: ${totalArea.toFixed(2)} ha<br/>`;
+      for (const [zona, area] of Object.entries(zonaAreas)) {
+        const pct = totalArea > 0 ? ((area / totalArea) * 100).toFixed(1) : '0.0';
+        html += `${zona}: ${area.toFixed(2)} ha (${pct}%)<br/>`;
+      }
+
+      html += `<div class="legend-section"><strong>Legend</strong><br/>`;
+      const colorMap = { 'Konservasi': '#27ae60', 'Rehabilitasi': '#f39c12' };
+      for (const [zona, color] of Object.entries(colorMap)) {
+        html += `<div class="legend-item"><div class="legend-color" style="background: ${color};"></div> ${zona}</div>`;
+      }
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    // LAJU CHARTS
+    function getLajuChartSeries(rows) {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+      const validRows = (rows || []).filter(row => Number.isFinite(getLajuPercentValue(row)));
+
+      if (!validRows.length) return [];
+
+      if (des) {
+        const row = validRows[0];
+        const label = getRowValue(row, ['Desa', 'desa', 'WADMKD']) || des;
+        return [{ label, value: getLajuPercentValue(row) }];
+      }
+
+      if (kec) {
+        const groups = {};
+        validRows.forEach(row => {
+          const label = getRowValue(row, ['Desa', 'desa', 'WADMKD']) || 'Tidak diketahui';
+          if (!groups[label]) groups[label] = [];
+          groups[label].push(getLajuPercentValue(row));
+        });
+        return Object.entries(groups).map(([label, values]) => ({
+          label,
+          value: values.reduce((sum, value) => sum + value, 0) / values.length
+        }));
+      }
+
+      if (kab) {
+        const groups = {};
+        validRows.forEach(row => {
+          const label = getRowValue(row, ['Kecamatan', 'kecamatan', 'WADMKC']) || 'Tidak diketahui';
+          if (!groups[label]) groups[label] = [];
+          groups[label].push(getLajuPercentValue(row));
+        });
+        return Object.entries(groups).map(([label, values]) => ({
+          label,
+          value: values.reduce((sum, value) => sum + value, 0) / values.length
+        }));
+      }
+
+      const groups = {};
+      validRows.forEach(row => {
+        const label = getRowValue(row, ['Kabupaten', 'kabupaten', 'WADMKK', 'kabkota']) || 'Tidak diketahui';
+        if (!groups[label]) groups[label] = [];
+        groups[label].push(getLajuPercentValue(row));
+      });
+      return Object.entries(groups).map(([label, values]) => ({
+        label,
+        value: values.reduce((sum, value) => sum + value, 0) / values.length
+      }));
+    }
+
+    function renderLajuChart(ctx, rows) {
+      const series = getLajuChartSeries(rows);
+      if (!series.length) {
+        ctx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#999;">Tidak ada data sesuai filter</div>';
+        return;
+      }
+
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+      const xAxisLabel = des ? 'Desa' : (kec ? 'Desa' : (kab ? 'Kecamatan' : 'Kabupaten'));
+
+      const labels = series.map(item => item.label);
+      const data = series.map(item => item.value);
+      const backgroundColor = labels.map((_, index) => ['#2c7fb8', '#41b6c4', '#7fcdbb', '#c7e9b4', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000'][index % 9]);
+
+      AppState.charts['laju'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Perubahan Pertahun (%)',
+            data,
+            backgroundColor,
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: false, title: { display: true, text: 'Perubahan Pertahun (%)' } },
+            x: { title: { display: true, text: xAxisLabel } }
+          }
+        }
+      });
+    }
+
+    function renderLajuStats(rows, container) {
+      const series = getLajuChartSeries(rows);
+      const values = series.map(item => item.value);
+      const totalChange = values.reduce((sum, value) => sum + value, 0);
+      const min = values.length > 0 ? Math.min(...values) : 0;
+      const max = values.length > 0 ? Math.max(...values) : 0;
+      const avg = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : '0.00';
+
+      let html = `<strong>Laju Forestasi</strong><br/>Total perubahan: ${totalChange.toFixed(2)} %<br/>Min: ${min.toFixed(2)} %<br/>Max: ${max.toFixed(2)} %<br/>Avg: ${avg} %<br/>`;
+      if (series.length) {
+        html += '<br/><strong>Detail per unit</strong><br/>';
+        series.forEach(item => {
+          html += `${item.label}: ${item.value.toFixed(2)}%<br/>`;
+        });
+      }
+      container.innerHTML = html;
+    }
+
+    // PERUBAHAN CHARTS
+    function renderPerubahanChart(ctx, rows) {
+      const perubahanAreas = {};
+      rows.forEach(row => {
+        const perubahan = getPerubahanCategory(row);
+        const area = getSqHa(row);
+        if (area > 0) {
+          const category = getNormalizedTutupanCategory(perubahan);
+          perubahanAreas[category] = (perubahanAreas[category] || 0) + area;
+        }
+      });
+
+      AppState.charts['perubahan'] = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(perubahanAreas),
+          datasets: [{
+            data: Object.values(perubahanAreas),
+            backgroundColor: Object.keys(perubahanAreas).map(k => getTutupanColor(k)),
+            borderWidth: 2,
+            borderColor: 'white'
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    function renderPerubahanStats(rows, container) {
+      const perubahanAreas = {};
+      let totalArea = 0;
+      rows.forEach(row => {
+        const perubahan = getPerubahanCategory(row);
+        const area = getSqHa(row);
+        if (area > 0) {
+          const category = getNormalizedTutupanCategory(perubahan);
+          perubahanAreas[category] = (perubahanAreas[category] || 0) + area;
+          totalArea += area;
+        }
+      });
+
+      let html = `<strong>Perubahan 2016-2026</strong><br/>Luas total: ${totalArea.toFixed(2)} ha<br/>`;
+      for (const [type, area] of Object.entries(perubahanAreas)) {
+        const pct = totalArea > 0 ? ((area / totalArea) * 100).toFixed(1) : '0.0';
+        html += `${type}: ${area.toFixed(2)} ha (${pct}%)<br/>`;
+      }
+
+      html += `<div class="legend-section"><strong>Legend</strong><br/>`;
+      for (const [type, area] of Object.entries(perubahanAreas)) {
+        const color = getTutupanColor(type);
+        html += `<div class="legend-item"><div class="legend-color" style="background: ${color};"></div> ${type}</div>`;
+      }
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    // KARBON CHARTS
+    function renderKarbonChart(ctx, rows) {
+      const ranges = { '<9': 0, '9-18': 0, '18-27': 0, '27-36': 0, '>36': 0 };
+      const max = 45;
+      const interval = max / 5;
+
+      rows.forEach(row => {
+        const val = getKarbonTotalStockValue(row) || 0;
+        const area = getSqHa(row);
+        if (val < interval) ranges['<9'] += area;
+        else if (val < interval * 2) ranges['9-18'] += area;
+        else if (val < interval * 3) ranges['18-27'] += area;
+        else if (val < interval * 4) ranges['27-36'] += area;
+        else ranges['>36'] += area;
+      });
+
+      AppState.charts['karbon'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(ranges),
+          datasets: [{
+            label: 'Luas (ha)',
+            data: Object.values(ranges),
+            backgroundColor: ['#fff9e6', '#ffe082', '#ffd54f', '#ffb74d', '#ff6f00'],
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Luas (ha)' } },
+            x: { title: { display: true, text: 'Total Stock C' } }
+          }
+        }
+      });
+    }
+
+    function renderKarbonStats(rows, container) {
+      const values = rows.map(row => getKarbonTotalStockValue(row) || 0).sort((a, b) => a - b);
+      const totalArea = rows.reduce((sum, row) => sum + getSqHa(row), 0);
+      const min = values.length > 0 ? Math.min(...values) : 0;
+      const max = values.length > 0 ? Math.max(...values) : 0;
+      const avg = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : '0.00';
+
+      let html = `<strong>Stok Karbon</strong><br/>Luas total: ${totalArea.toFixed(2)} ha<br/>Min: ${min.toFixed(2)}<br/>Max: ${max.toFixed(2)}<br/>Avg: ${avg}<br/>Unit: Total Stock (C Ton)<br/>`;
+
+      html += `<div class="legend-section"><strong>Legend</strong><br/>`;
+      const ranges = [
+        { label: '< 9', color: '#fff9e6' },
+        { label: '9-18', color: '#ffe082' },
+        { label: '18-27', color: '#ffd54f' },
+        { label: '27-36', color: '#ffb74d' },
+        { label: '> 36', color: '#ff6f00' }
+      ];
+      ranges.forEach(r => {
+        html += `<div class="legend-item"><div class="legend-color" style="background: ${r.color};"></div> ${r.label}</div>`;
+      });
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    // ============= FILTER APPLICATION =============
+    function zoomToFilteredLayers() {
+      if (!AppState.map) return;
+      let combinedBounds = null;
+      for (const [layerId, layerObj] of Object.entries(AppState.geoJsonLayers)) {
+        try {
+          if (layerObj.isVisible && layerObj.layer && typeof layerObj.layer.getBounds === 'function') {
+            const bounds = layerObj.layer.getBounds();
+            if (bounds && typeof bounds.isValid === 'function' && bounds.isValid()) {
+              combinedBounds = combinedBounds ? combinedBounds.extend(bounds) : bounds;
+            }
+          }
+        } catch (e) {
+          // ignore layers that cannot provide bounds
+        }
+      }
+
+      if (combinedBounds && typeof combinedBounds.isValid === 'function' && combinedBounds.isValid()) {
+        try {
+          AppState.map.fitBounds(combinedBounds.pad(0.1));
+        } catch (e) {
+          console.warn('zoomToFilteredLayers: fitBounds failed', e);
+        }
+      }
+    }
+
+    // ============= HILIRISET POINTS (LOAD FROM EXCEL) =============
+    async function loadHilirisetPoints() {
+      const apiUrl = '/api/hiliriset-story';
+      const fallbackUrl = 'images/WEBIMG/Hiliriset/Hiliriset.xlsx';
+
+      const createMarker = (entry) => {
+        const marker = L.marker(entry.coords, { icon: createHilirisetIcon() });
+        marker.bindPopup(renderHilirisetPopupHtml(entry));
+        marker.bindTooltip(escapeHtml(entry.name || ''), {
+          permanent: false,
+          direction: 'right',
+          className: 'hiliriset-label'
+        });
+        return marker;
+      };
+
+      const createLayer = (entries) => {
+        const layerGroup = L.layerGroup();
+        (entries || []).filter(entry => isAllowedKabupaten(entry.kabupaten)).forEach((entry) => {
+          if (Array.isArray(entry.coords) && entry.coords.length === 2) {
+            const resolvedEntry = applyHilirisetImageManifest(entry);
+            const marker = createMarker(resolvedEntry);
+            marker.addTo(layerGroup);
+          }
+        });
+        return layerGroup;
+      };
+
+      const addLayerControl = (layerGroup) => {
+        const container = document.getElementById('layer-control-content');
+        if (!container) return;
+        const html = `
+          <div class="layer-item">
+            <input type="checkbox" id="layer-hiliriset" checked onchange="toggleHilirisetLayer(this)">
+            <label for="layer-hiliriset">Lokasi Kegiatan<div class="layer-color" style="background:#ff5722"></div></label>
+          </div>
+        `;
+        container.insertAdjacentHTML('afterbegin', html);
+        window.toggleHilirisetLayer = function(cb) {
+          if (cb.checked) {
+            AppState.map.addLayer(layerGroup);
+            AppState.hilirisetLayer.isVisible = true;
+            layerGroup.eachLayer(layer => { try { if (typeof layer.openTooltip === 'function') layer.openTooltip(); } catch (ignore) {} });
+          } else {
+            layerGroup.eachLayer(layer => { try { if (typeof layer.closeTooltip === 'function') layer.closeTooltip(); } catch (ignore) {} });
+            AppState.map.removeLayer(layerGroup);
+            AppState.hilirisetLayer.isVisible = false;
+          }
+          updateAnalysisPanel();
+        };
+      };
+
+      const addHilirisetLayer = (layerGroup) => {
+        if (!layerGroup) return;
+        layerGroup.addTo(AppState.map);
+        layerGroup.eachLayer(layer => { try { if (typeof layer.openTooltip === 'function') layer.openTooltip(); } catch (ignore) {} });
+        AppState.hilirisetLayer = { layer: layerGroup, name: 'Hiliriset Points', isVisible: true };
+      };
+
+      try {
+        let entries = [];
+        const apiResponse = await fetch(apiUrl);
+        if (apiResponse.ok) {
+          entries = await apiResponse.json();
+          if (Array.isArray(entries)) {
+            entries = entries.map((entry) => applyHilirisetImageManifest(entry));
+          }
+        } else {
+          throw new Error('API request failed');
+        }
+
+        if (!Array.isArray(entries) || entries.length === 0) {
+          throw new Error('No Hiliriset entries returned from API');
+        }
+
+        const layerGroup = createLayer(entries);
+        if (layerGroup.getLayers().length > 0) {
+          addHilirisetLayer(layerGroup);
+          addLayerControl(layerGroup);
+        }
+      } catch (apiError) {
+        console.warn('Hiliriset API failed, falling back to workbook:', apiError);
+        try {
+          const res = await fetch(fallbackUrl);
+          if (!res.ok) throw new Error('Failed to fetch ' + fallbackUrl);
+          const ab = await res.arrayBuffer();
+          const workbook = XLSX.read(ab, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+          let entries = rows.map((row) => {
+            const kawasan = row['Kawasan'] || row['kawasan'] || row['Nama'] || '';
+            const kabupaten = row['Kabupaten'] || row['kabupaten'] || row['Kab'] || '';
+            const kecamatan = row['Kecamatan'] || row['kecamatan'] || '';
+            const kelurahan = row['Kelurahan'] || row['kelurahan'] || row['Desa'] || '';
+            const lon = parseFloat(row['Longitude'] || row['Lon'] || row['LONG'] || row['LONGITUDE'] || row['long']);
+            const lat = parseFloat(row['Latitude'] || row['Lat'] || row['LAT'] || row['LATITUDE'] || row['lat']);
+            return {
+              name: String(kawasan || `${kabupaten} ${kecamatan} ${kelurahan}`).trim(),
+              kabupaten: String(kabupaten || '').trim(),
+              coords: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null,
+              images: [],
+              peta: ''
+            };
+          }).filter(entry => Array.isArray(entry.coords) && entry.coords.length === 2)
+            .map((entry) => applyHilirisetImageManifest(entry));
+
+          const layerGroup = createLayer(entries);
+          if (layerGroup.getLayers().length > 0) {
+            addHilirisetLayer(layerGroup);
+            addLayerControl(layerGroup);
+          }
+        } catch (fallbackError) {
+          console.warn('loadHilirisetPoints fallback error:', fallbackError);
+        }
+      }
+    }
+
+    function applyFilters() {
+      const prov = document.getElementById('filter-provinsi').value;
+      const kab = document.getElementById('filter-kabupaten').value;
+      const kec = document.getElementById('filter-kecamatan').value;
+      const des = document.getElementById('filter-desa').value;
+
+      console.log('Applying filters:', { prov, kab, kec, des });
+
+      // Refilter all layers
+      for (const [layerId, layerObj] of Object.entries(AppState.geoJsonLayers)) {
+        if (AppState.map.hasLayer(layerObj.layer)) {
+          AppState.map.removeLayer(layerObj.layer);
+        }
+
+        // Recreate layer with new filter
+        const newLayer = L.geoJSON(layerObj.data, {
+          style: (feature) => getStyle(layerId, feature),
+          onEachFeature: (feature, leafletLayer) => {
+            leafletLayer.bindPopup(formatPopup(feature));
+            leafletLayer.on('mouseover', function() {
+              this.setStyle({ weight: 3, opacity: 0.9, color: '#000000' });
+            });
+            leafletLayer.on('mouseout', function() {
+              this.setStyle(getStyle(layerId, feature));
+            });
+          },
+          filter: (feature) => getFeatureFilter(layerId)(feature)
+        });
+
+        AppState.geoJsonLayers[layerId].layer = newLayer;
+
+        if (layerObj.isVisible) {
+          newLayer.addTo(AppState.map);
+        }
+      }
+
+      updateAnalysisPanel();
+      // Zoom otomatis ke hasil filter pada layer yang terlihat
+      zoomToFilteredLayers();
+      console.log('Filters applied to all layers');
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-provinsi').value = '';
+      document.getElementById('filter-kabupaten').value = '';
+      document.getElementById('filter-kecamatan').value = '';
+      document.getElementById('filter-desa').value = '';
+      document.getElementById('filter-kabupaten').disabled = true;
+      document.getElementById('filter-kecamatan').disabled = true;
+      document.getElementById('filter-desa').disabled = true;
+
+      applyFilters();
+    }
+
+    // ============= INIT =============
+    document.addEventListener('DOMContentLoaded', initializeApp);
+  </script>
 </body>
 </html>
+

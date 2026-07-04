@@ -3,639 +3,1558 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mangrove Carbon StoryMap</title>
+  <title>Mangrove Carbon WebGIS - Dashboard Lengkap</title>
+  
+  <!-- Bootstrap (optional, for responsive) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  
+  <!-- XLSX Library -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="css/theme-blue-modern.css" />
+  <link rel="stylesheet" href="css/dashboard-components.css" />
+  
   <link rel="icon" href="images/logo_mangrove.png" type="image/png">
-  <link rel="shortcut icon" href="images/logo_mangrove.png" type="image/png">
-  <!-- Preload critical images to reduce perceived load time -->
-  <link rel="preload" as="image" href="images/screen-demo.png">
-  <link rel="preload" as="image" href="images/laptop.png">
-  <link rel="preload" as="image" href="images/logo_mangrove.png">
-  <link rel="preload" as="image" href="images/Peta/Peta Makassar.jpg">
-  <link rel="preload" as="image" href="images/Peta/Peta Takalar.jpg">
-  <link rel="preload" as="image" href="images/Peta/Peta Maros.jpeg">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  
   <style>
-    /* ===== Perbaikan Video Background ===== */
-    .hero iframe {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 120vw;   /* sedikit lebih besar agar menutupi area penuh */
-      height: 67.5vw; /* proporsi 16:9 */
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      pointer-events: none; /* video tidak interaktif */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #1a1a1a;
+    }
+    
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, #002c5f 0%, #0056b8 100%);
+      padding: 22px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 110;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+    }
+    
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    
+    .logo {
+      height: 48px;
+      width: 48px;
+      border-radius: 16px;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .header-title {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 0.02em;
+    }
+    
+    .header-subtitle {
+      margin: 0;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.76);
+      font-weight: 500;
+    }
+    
+    .header-menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: flex-end;
+    }
+    
+    .header-menu .nav-item {
+      color: rgba(255, 255, 255, 0.82);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    
+    .header-menu .nav-item:hover,
+    .header-menu .nav-item.active {
+      color: white;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .header-theme,
+    .header-login {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    /* Overlay hijau statis di atas video */
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 50, 0, 0.45); /* hijau transparan */
-      z-index: 1;
-      pointer-events: none; /* overlay statis, tidak bereaksi pada kursor */
-      transition: none !important; /* pastikan tidak ada animasi saat kursor bergerak */
-      transform: none !important; /* cegah perubahan transform */
+    /* Hero sublogo (placed under "Hiliriset" badge and above title) */
+    .hero-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 18px;
+      margin-bottom: 20px;
     }
 
-    /* Pastikan lapisan after tidak menutupi video */
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: transparent;
-      z-index: 0;
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      backdrop-filter: blur(10px);
     }
 
-    /* Pastikan konten hero tetap di atas overlay */
-    .hero-text,
-    .hero-image {
+    .hero-sublogo {
+      display: block;
+      margin: 0;
+      width: auto;
+      max-width: 320px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      background: none;
+      padding: 0;
+      box-shadow: none;
+    }
+    
+    .header-theme:hover,
+    .header-login:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    
+    /* ===== HERO PANEL ===== */
+    .dashboard-hero {
       position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 30px;
+      background: url('images/wallpaper.png') center/contain no-repeat;
+      background-size: 100% auto;
+      margin-bottom: 48px;
+      box-shadow: 0 36px 100px rgba(0, 28, 72, 0.12);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 52px;
+      padding: 64px 64px 64px;
+      min-height: 640px;
+    }
+    
+    .dashboard-hero::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 120%;
+      height: 260px;
+      background: none;
+      transform: translateX(-15%);
+      z-index: 1;
+    }
+    
+    .dashboard-hero::after {
+      display: none;
+    }
+
+    .about-page {
+      display: none;
+      background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+      border-radius: 32px;
+      padding: 32px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.08);
+      margin-bottom: 32px;
+      border: 1px solid rgba(0, 102, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .about-page.active {
+      display: block;
+    }
+
+    .about-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 8px;
+    }
+
+    .about-header {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 1040px;
+    }
+
+    .about-media {
+      width: 100%;
+    }
+
+    .about-slider {
+      position: relative;
+      width: min(100%, 1280px);
+      aspect-ratio: 16 / 10;
+      max-height: min(82vh, 780px);
+      min-height: 420px;
+      margin: 0 auto;
+      border-radius: 28px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f7fbff 0%, #e8f4ff 100%);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(0, 102, 255, 0.16);
+      padding: 16px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      background: #ffffff;
+      border-radius: 18px;
+      transition: opacity 0.35s ease;
+    }
+
+    .about-slider-controls {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+      gap: 10px;
       z-index: 2;
     }
 
-    /* Pastikan konten teks sejajar ke kiri sehingga badge mengikuti margin teks */
-    .hero-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    /* Gallery Peta styling */
-    .gallery-card {
-      background: rgba(255,255,255,0.92);
-      border-left: 5px solid #198754;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(16, 93, 45, 0.08);
-    }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-      align-items: stretch;
-    }
-    .gallery-item {
-      overflow: hidden;
-      border-radius: 10px;
-      border: 1px solid rgba(25,135,84,0.08);
-      background: #fff;
+    .about-slider-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
       cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-    .gallery-item img { width:100%; height:160px; object-fit:cover; display:block; }
-    .gallery-item:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(14,82,39,0.12); }
-    .gallery-caption { padding: 8px 10px; font-weight:700; color:#155835; font-size:0.95rem; text-align:center; }
-
-    /* Single transparent badge that groups all logos */
-    .hero-logos {
       display: inline-flex;
-      gap: 14px;
       align-items: center;
-      margin-bottom: 14px;
-      background: rgba(255,255,255,0.66); /* agak transparan */
-      padding: 8px 12px;
+      justify-content: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .about-slider-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(0, 0, 0, 0.78);
+    }
+
+    .about-slider-dots {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .about-slider-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .about-slider-dot.active {
+      transform: scale(1.2);
+      background: white;
+    }
+
+    .about-header h2 {
+      color: #00478c;
+      font-size: clamp(1.5rem, 2.3vw, 2.2rem);
+      margin: 0;
+      line-height: 1.25;
+      font-weight: 800;
+      text-align: justify;
+      text-align-last: left;
+    }
+
+    .about-header p,
+    .about-header li,
+    .about-summary {
+      color: #425066;
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .about-intro {
+      font-size: 1.04rem;
+      max-width: 980px;
+      margin: 0;
+    }
+
+    .about-header ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    .about-description {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .about-card {
+      background: linear-gradient(135deg, #f6fbff 0%, #eef7ff 100%);
+      border: 1px solid rgba(0, 102, 255, 0.12);
       border-radius: 18px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.10);
-      border: 1px solid rgba(25,135,84,0.08);
-      backdrop-filter: blur(4px);
-      max-width: 420px; /* batasi lebar agar tidak terlalu panjang */
-      white-space: nowrap;
-      justify-content: flex-start;
-      align-self: flex-start; /* pastikan badge berada di sisi terluar teks */
-      overflow: hidden;
-      text-overflow: ellipsis;
+      padding: 20px;
+      box-shadow: 0 10px 24px rgba(0, 102, 255, 0.06);
     }
 
-    .hero-logos img {
-      height: auto;
-      max-height: 36px;
-      max-width: 90px;
-      width: auto;
-      display: block;
-      opacity: 0.96;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
-    }
-    @media (max-width: 768px) {
-      .hero-logos {
-        justify-content: center;
-        gap: 12px;
-        padding: 8px 12px;
-        align-self: center;
-      }
-
-      .hero-text {
-        align-items: center;
-        text-align: center;
-      }
-
-      .hero-logos img {
-        height: 28px;
-      }
-    }
-    /* Layout: sticky footer setup */
-    html, body { height: 100%; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
-    #page-wrapper { flex: 1 0 auto; }
-    /* Make carousel images fully visible (contain) */
-    .peta-carousel-img { width:100%; height:520px; object-fit:contain; background:#fff; display:block; }
-
-    /* Balanced two-column gallery */
-    .gallery-card { padding:18px; }
-    .gallery-row { display:flex; gap:16px; align-items:stretch; }
-    .gallery-main { flex: 0 0 60%; min-height:520px; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; background:#fff; }
-    .gallery-side { flex: 1 1 40%; display:flex; flex-direction:column; gap:12px; }
-    .gallery-side .side-item { flex:1 1 50%; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; background:#fff; }
-    .gallery-thumb { width:100%; height:100%; object-fit:cover; cursor:zoom-in; transition: transform 0.22s ease; display:block; }
-    .gallery-thumb:hover { transform: scale(1.02); }
-
-    @media (max-width: 992px) {
-      .gallery-main { min-height:420px; }
-      .peta-carousel-img { height:420px; }
-    }
-    @media (max-width: 768px) {
-      .gallery-row { flex-direction:column; }
-      .gallery-main { min-height:360px; }
-      .gallery-side { flex-direction:column; }
-      .gallery-side .side-item { min-height:160px; }
-      .gallery-thumb { object-fit:contain; }
+    .about-summary {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #f3f9ff 0%, #eaf5ff 100%);
+      border: 1px solid rgba(0, 102, 255, 0.14);
+      border-radius: 18px;
+      padding: 20px;
+      margin: 0;
+      box-shadow: 0 10px 24px rgba(0, 102, 255, 0.06);
     }
 
-    /* Quick image placeholder + fade-in */
-    img.img-placeholder { display:block; width:100%; height:100%; object-fit:cover; background: linear-gradient(180deg,#eaf6ea,#d7efdb); opacity:0; transition: opacity .36s ease; }
-    img.img-placeholder.loaded { opacity:1; }
-
+    .about-card h3 {
+      color: #00478c;
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
     
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 min(100%, 820px);
+      max-width: 820px;
+      min-width: 320px;
+    }
+    
+    .hero-headline {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 18px;
+      display: inline-block;
+      text-align: left;
+      width: auto;
+      max-width: 100%;
+    }
+
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 4vw, 4.4rem);
+      line-height: 1.02;
+      margin-bottom: 18px;
+      letter-spacing: -0.03em;
+      color: white;
+      font-weight: 800;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+      position: relative;
+      z-index: 60;
+    }
+    
+    .hero-copy {
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin-bottom: 28px;
+      color: white;
+      line-height: 1.75;
+      position: relative;
+      z-index: 60;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .hero-main-buttons {
+      margin-bottom: 0;
+    }
+
+    .dashboard-menu-wrapper {
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    .dashboard-action-btn {
+      min-width: 110px;
+      max-width: 160px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      flex: 0 1 auto;
+      border-radius: 999px;
+    }
+
+    .hero-buttons::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .hero-buttons::-webkit-scrollbar-thumb {
+      background: rgba(56, 178, 255, 0.6);
+      border-radius: 999px;
+    }
+
+    .hero-buttons::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    @media (max-width: 1100px) {
+      .hero-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .dashboard-menu-wrapper {
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .dashboard-menu-wrapper {
+        flex: 1 1 100%;
+      }
+      .dashboard-action-btn {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 140px;
+      }
+    }
+
+    .dashboard-menu-wrapper {
+      position: relative;
+      display: inline-block;
+      z-index: 40;
+    }
+
+    .dashboard-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      width: min(max-content, 210px);
+      min-width: 180px;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
+      z-index: 60;
+    }
+
+    .dashboard-menu.open {
+      display: flex;
+    }
+
+    .dashboard-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: #00478c;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .dashboard-dropdown-item:hover,
+    .dashboard-dropdown-item.active {
+      background: linear-gradient(135deg, #f0f8ff, #eaf5ff);
+      transform: translateX(2px);
+    }
+
+    .header-nav-dropdown {
+      position: relative;
+      display: inline-flex;
+      z-index: 20;
+    }
+
+    .header-nav-dropdown .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.82);
+      font: inherit;
+      padding: 0;
+    }
+
+    .header-nav-dropdown .nav-item i {
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    .header-nav-dropdown.open .nav-item i {
+      transform: rotate(180deg);
+    }
+
+    .header-submenu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 220px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+      z-index: 30;
+    }
+
+    .header-nav-dropdown.open .header-submenu,
+    .header-submenu.open {
+      display: flex;
+    }
+
+    .header-submenu-item {
+      border: none;
+      background: transparent;
+      color: #00478c;
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .header-submenu-item:hover {
+      background: linear-gradient(135deg, #f0f8ff, #eaf5ff);
+    }
+
+    .dashboard-focus-toolbar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      margin: 12px 0 24px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 102, 255, 0.12);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.06);
+    }
+
+    .dashboard-focus-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #00478c;
+    }
+
+    .dashboard-focus-toolbar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      margin: 12px 0 24px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 102, 255, 0.12);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.06);
+    }
+
+    .dashboard-focus-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #00478c;
+    }
+
+    .dashboard-focus-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .dashboard-focus-buttons .dashboard-action-btn {
+      padding: 12px 20px;
+      min-width: 180px;
+      background: linear-gradient(135deg, #f4faff, #eaf5ff);
+      color: #00478c;
+      border: 1px solid rgba(0, 102, 255, 0.16);
+      box-shadow: none;
+    }
+
+    .dashboard-focus-buttons .dashboard-action-btn.active,
+    .dashboard-focus-buttons .dashboard-action-btn:hover {
+      background: linear-gradient(135deg, #0066ff, #00b4d8);
+      color: white;
+    }
+    
+    .dashboard-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: linear-gradient(135deg, rgba(13, 76, 141, 0.92), rgba(23, 135, 255, 0.88));
+      color: white;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 18px 42px rgba(14, 83, 152, 0.24);
+      backdrop-filter: blur(16px);
+      min-width: 150px;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    
+    .dashboard-action-btn:hover,
+    .dashboard-action-btn.active {
+      background: linear-gradient(135deg, #4db7ff, #0077ff);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.65);
+      transform: translateY(-2px);
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.24);
+    }
+    
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(210px, 1fr));
+      gap: 26px;
+      margin-top: 24px;
+      width: 100%;
+    }
+    
+    .hero-metric-card {
+      flex: 1 1 240px;
+      min-width: 220px;
+      background: linear-gradient(180deg, rgba(33, 105, 211, 0.20), rgba(12, 57, 130, 0.12));
+      border-radius: 24px;
+      border: 1px solid rgba(56, 156, 255, 0.24);
+      padding: 24px;
+      box-shadow: 0 18px 42px rgba(1, 29, 66, 0.20);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+      color: #f8fbff;
+      min-height: 180px;
+    }
+
+    .hero-metric-card:hover::before {
+      transform: translateX(120%);
+    }
+    
+    .hero-metric-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.76);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .hero-metric-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+    }
+    
+    .hero-metric-note {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.72);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    
+    .accent-pill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 30px;
+      max-width: 760px;
+      z-index: 2;
+      position: relative;
+    }
+    
+    .accent-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.16);
+      color: white;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      font-weight: 700;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .accent-pill:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.26);
+    }
+    
+    .quick-menu {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 3;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 20px 38px rgba(0, 0, 0, 0.16);
+      padding: 16px 18px;
+      backdrop-filter: blur(16px);
+      min-width: 220px;
+    }
+
+    .quick-menu-title {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 14px;
+    }
+
+    .quick-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 0.92rem;
+      margin-bottom: 12px;
+      opacity: 0.96;
+    }
+
+    .quick-menu-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .quick-menu-item i {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-illustration {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-illustration img {
+      width: 120%;
+      height: 120%;
+      display: block;
+      object-fit: cover;
+      object-position: right 50%;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      opacity: 1;
+      transform: translateX(18%);
+    }
+
+    .hero-illustration::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.66) 14%, rgba(0,0,0,0.42) 30%, rgba(0,0,0,0.24) 48%, rgba(0,0,0,0.12) 64%, transparent 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-illustration::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: none;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-bottom-wave {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 190px;
+      background: linear-gradient(180deg, rgba(10, 48, 96, 0.08) 0%, rgba(10, 48, 96, 0.12) 38%, rgba(255, 255, 255, 0.08) 72%, rgba(255, 255, 255, 0.14) 100%);
+      clip-path: polygon(0 42%, 14% 36%, 28% 48%, 42% 42%, 56% 55%, 68% 47%, 82% 54%, 100% 46%, 100% 100%, 0 100%);
+      z-index: 1;
+      filter: blur(0.2px);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      max-width: 1400px;
+      margin: 30px auto;
+      padding: 0 30px;
+      width: 100%;
+    }
+
+    .dashboard-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .dashboard-section.active {
+      display: block;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-hero {
+        padding: 32px 24px 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.1rem;
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* ===== FOOTER ===== */
+    footer {
+      background: white;
+      border-top: 1px solid rgba(0, 102, 255, 0.1);
+      padding: 30px;
+      margin-top: 60px;
+      text-align: center;
+      color: #999;
+      font-size: 0.85rem;
+    }
+    
+    /* ===== LOADING STATE ===== */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(0, 102, 255, 0.1);
+      border-top-color: #0066ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      header .container,
+      .dashboard-nav .container,
+      main {
+        padding: 0 20px;
+      }
+      
+      header,
+      .dashboard-nav {
+        padding: 0 20px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header .container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .about-page {
+        padding: 20px;
+      }
+
+      .about-slider {
+        height: min(60vh, 360px);
+        min-height: 260px;
+      }
+
+      .about-description {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      
+      .nav-item {
+        padding: 12px 16px;
+        font-size: 0.85rem;
+      }
+      
+      main {
+        padding: 0 16px;
+      }
+    }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
-  <header class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow-sm">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="images/logo_mangrove.png" alt="Logo Proyek" class="logo me-2">
-        <span>Mangrove Carbon Maminasata</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Beranda</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="map.html">WebGIS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="storymaps.html">Story Maps</a>
-          </li>
-        </ul>
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="header-left">
+        <div class="header-brand">
+          <img src="images/logo_mangrove.png" alt="Logo" class="logo">
+          <div>
+            <h1 class="header-title">Sistem Informasi Monitoring Mangrove</h1>
+            <p class="header-subtitle">Analisis Mangrove 2016-2026 Dengan Peta dan Dashboard Interaktif</p>
+          </div>
+        </div>
       </div>
+      <nav class="header-menu">
+        <div class="nav-item active" data-section="beranda">Beranda</div>
+        <div class="header-nav-dropdown">
+          <button class="nav-item" data-section="dashboard-menu" type="button">
+            Dashboard <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="header-submenu">
+            <button class="header-submenu-item" data-section="laju-forestasi" type="button"><i class="fas fa-chart-line"></i> Laju Forestasi</button>
+            <button class="header-submenu-item" data-section="stok-karbon" type="button"><i class="fas fa-database"></i> Stok Karbon</button>
+            <button class="header-submenu-item" data-section="zona-kawasan" type="button"><i class="fas fa-layer-group"></i> Zona Kawasan</button>
+            <button class="header-submenu-item" data-section="matrix-perubahan" type="button"><i class="fas fa-th-large"></i> Matrix Perubahan</button>
+          </div>
+        </div>
+        <div class="nav-item" data-section="peta">Peta</div>
+        <div class="nav-item" data-section="tentang">Tentang</div>
+      </nav>
     </div>
   </header>
-  <div id="page-wrapper">
-
-  <!-- Hero Section -->
-  <section class="hero d-flex align-items-center justify-content-between px-5">
-
-    <!-- YouTube video background -->
-    <iframe 
-      src="https://www.youtube.com/embed/_xYLooJTRSo?autoplay=1&mute=1&loop=1&playlist=_xYLooJTRSo&controls=0&modestbranding=1&showinfo=0&vq=hd1080" 
-      frameborder="0"
-      allow="autoplay; fullscreen"
-      allowfullscreen>
-    </iframe>
-
-    <div class="hero-text">
-      <div class="hero-logos" aria-hidden="true">
-        <img src="images/logo/logo1.png" alt="Logo 1">
-        <img src="images/logo/logo2.png" alt="Logo 2">
-        <img src="images/logo/logo3.png" alt="Logo 3">
-        <img src="images/logo/logo4.png" alt="Logo 4">
-      </div>
-      <h1>🌿 WebGIS Mangrove Maminasata</h1>
-      <p>Hibah Hilirisasi Riset Sinergi 2025
-      Direktorat Jenderal Riset Dan Pengembangan
-        Kementerian Pendidikan Tinggi, Sains, Dan Teknologi
-.</p>
-      <a href="map.html" class="btn btn-success btn-lg mt-3">Lihat Peta</a>
-    </div>
-
-    <div class="hero-image">
-      <div class="laptop-frame">
-        <img src="images/laptop.png" alt="Laptop Mockup">
-        <div class="laptop-screen">
-          <img id="screen-demo" src="images/screen-demo.png" alt="WebGIS Screenshot" loading="eager" decoding="async" fetchpriority="high" class="img-placeholder">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Charts Section -->
-  <section class="py-5 bg-light">
-    <div class="container">
-      <!-- Main Layout: Left Column (2 charts) + Right Column (1 table) -->
-      <div class="row g-4">
-        <!-- LEFT COLUMN: CO2e Chart + C-Organik Chart -->
-        <div class="col-lg-6">
-          <!-- CO2e Chart -->
-          <div class="card shadow-lg border-0 mb-4" style="background: rgba(255, 255, 255, 0.85); border-left: 5px solid #198754; border-radius: 20px; transition: transform 0.3s ease; overflow: hidden;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-            <div class="card-body p-4">
-              <div style="background: linear-gradient(135deg, #198754, #20a759); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <h2 class="text-center mb-2 text-white fw-bold" style="font-size: 1.3rem;">🌿 CO2e (Ton) per Habitat</h2>
-                <p class="text-center mb-0 text-muted" style="font-size: 0.9rem;">Potensi Emisi CO2 Setara</p>
-              </div>
-              <div class="chart-container" style="position: relative; height: 40vh; width: 100%;">
-                <canvas id="co2eChart"></canvas>
-              </div>
+  
+  <!-- MAIN CONTENT -->
+  <main>
+    <section class="dashboard-hero">
+      <div class="hero-content">
+        <div class="hero-headline">
+          <div class="hero-title-row">
+            <div class="hero-badge">
+              <img src="images/logo/LogoWeb.png" alt="Logo Hiliriset" class="hero-sublogo">
             </div>
           </div>
-
-          <!-- C-Organik Chart -->
-          <div class="card shadow-lg border-0" style="background: rgba(255, 255, 255, 0.85); border-left: 5px solid #198754; border-radius: 20px; transition: transform 0.3s ease; overflow: hidden;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-            <div class="card-body p-4">
-              <div style="background: linear-gradient(135deg, #198754, #20a759); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <h2 class="text-center mb-2 text-white fw-bold" style="font-size: 1.3rem;">🌱 C-Organik Tanah (ton/hektar)</h2>
-                <p class="text-center mb-0 text-muted" style="font-size: 0.9rem;">Konsentrasi Karbon Organik dalam Tanah</p>
-              </div>
-              <div class="chart-container" style="position: relative; height: 40vh; width: 100%;">
-                <canvas id="organicCChart"></canvas>
-              </div>
+          <h1 class="hero-title">GeoMangrove DSS</h1>
+          <p class="hero-copy">(Decision Support System).</p>
+        </div>
+        <div class="hero-buttons hero-main-buttons">
+          <div class="dashboard-menu-wrapper">
+            <button class="dashboard-action-btn dashboard-dropdown-trigger" data-section="dashboard-menu" data-group="hero" type="button">
+              <i class="fas fa-tachometer-alt"></i> Dashboard <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dashboard-menu">
+              <button class="dashboard-dropdown-item" data-section="laju-forestasi" type="button"><i class="fas fa-chart-line"></i> Laju Forestasi</button>
+              <button class="dashboard-dropdown-item" data-section="stok-karbon" type="button"><i class="fas fa-database"></i> Stok Karbon</button>
+              <button class="dashboard-dropdown-item" data-section="zona-kawasan" type="button"><i class="fas fa-layer-group"></i> Zona Kawasan</button>
+              <button class="dashboard-dropdown-item" data-section="matrix-perubahan" type="button"><i class="fas fa-th-large"></i> Matrix Perubahan</button>
             </div>
           </div>
+          <button class="dashboard-action-btn" data-section="peta" data-group="hero">
+            <i class="fas fa-map-location-dot"></i> Peta Interaktif
+          </button>
+          <a class="dashboard-action-btn" href="story.html">
+            <i class="fas fa-map-pin"></i> Lokasi Kegiatan
+          </a>
+          <button class="dashboard-action-btn" data-section="tentang" data-group="hero">
+            <i class="fas fa-info-circle"></i> Tentang
+          </button>
         </div>
+        <div id="hero-summary-container" class="hero-metrics">
+          <div class="hero-metric-card">
+            <div class="hero-metric-label">Total Luas Mangrove</div>
+            <div class="hero-metric-value" id="hero-total-area">-</div>
+            <div class="hero-metric-note">Data referensi 2026.</div>
+          </div>
+          <div class="hero-metric-card">
+            <div class="hero-metric-label">Stok Karbon</div>
+            <div class="hero-metric-value" id="hero-total-carbon">-</div>
+            <div class="hero-metric-note">C Ton terakumulasi.</div>
+          </div>
+          <div class="hero-metric-card">
+            <div class="hero-metric-label">Zona Kawasan</div>
+            <div class="hero-metric-value" id="hero-zone-breakdown">-</div>
+            <div class="hero-metric-note">Proporsi konservasi dan rehabilitasi.</div>
+          </div>
+          <div class="hero-metric-card">
+            <div class="hero-metric-label">Matrix Perubahan</div>
+            <div class="hero-metric-value" id="hero-matrix-summary">2016 → 2026</div>
+            <div class="hero-metric-note">Perubahan tata guna lahan antar kategori.</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-illustration"></div>
+      <div class="hero-bottom-wave"></div>
+    </section>
 
-        <!-- RIGHT COLUMN: Karbon Tersimpan Table -->
-        <div class="col-lg-6">
-          <div class="card shadow-lg border-0" style="background: rgba(255, 255, 255, 0.85); border-left: 5px solid #198754; border-radius: 20px; transition: transform 0.3s ease; overflow: hidden; height: 100%;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-            <div class="card-body p-4 d-flex flex-column" style="height: 100%;">
-              <div style="background: linear-gradient(135deg, #198754, #20a759); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <h2 class="text-center mb-2 text-white fw-bold" style="font-size: 1.3rem;">🌊 Karbon Tersimpan (Ton)</h2>
-                <p class="text-center mb-0 text-muted" style="font-size: 0.9rem;">Total Stok Karbon Organik per Habitat</p>
-              </div>
-              <div style="overflow-y: auto; flex-grow: 1;">
-                <table class="table table-hover table-striped mb-0" style="background: rgba(255,255,255,0.9); border-radius: 10px; overflow: hidden;">
-                  <thead style="background: linear-gradient(135deg, #198754 0%, #155835 100%); color: white; position: sticky; top: 0;">
-                    <tr>
-                      <th style="padding: 15px; font-weight: 700; border: none;">Habitat Mangrove</th>
-                      <th style="padding: 15px; font-weight: 700; text-align: right; border: none;">Karbon (Ton)</th>
-                      <th style="padding: 15px; font-weight: 700; text-align: right; border: none;">Persentase</th>
-                    </tr>
-                  </thead>
-                  <tbody id="carbonTableBody" style="font-size: 0.95rem;">
-                  </tbody>
-                  <tfoot style="background: rgba(25, 135, 84, 0.15); font-weight: 700; border-top: 2px solid #198754; position: sticky; bottom: 0;">
-                    <tr>
-                      <td style="padding: 15px; border: none;">TOTAL</td>
-                      <td style="padding: 15px; text-align: right; border: none;"><span id="carbonTotal">0</span> Ton</td>
-                      <td style="padding: 15px; text-align: right; border: none;">100%</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
+    <section id="tentang" class="about-page" data-section="tentang">
+      <div class="about-hero">
+        <div class="about-header">
+          <div class="hero-badge"><i class="fas fa-seedling"></i> Tentang Penelitian</div>
+          <h2>Pengembangan Model Sistem Informasi Mangrove Berbasis Teknologi Geospasial sebagai Decision Support System dalam Mendukung Strategi Keberlanjutan Ekonomi Biru</h2>
+          <p class="about-intro">Penelitian <strong>Hiliriset Sinergi Luaran Model</strong> ini bertujuan mengembangkan <strong>Sistem Informasi Mangrove berbasis teknologi geospasial</strong> sebagai <em>Decision Support System (DSS)</em> yang mendukung pengambilan keputusan dalam pengelolaan, konservasi, dan pemanfaatan ekosistem mangrove secara berkelanjutan.</p>
+        </div>
+        <div class="about-media">
+          <div class="about-slider">
+            <img id="about-slider-image" src="images/WEBIMG/Tentang/Pengembangan%20Model%20Sistem%20Informasi%20Mangrove%20Berbasis%20Teknologi%20Geospasial%20sebagai%20Decision%20Support%20System%20dalam%20Mendukung%20Strategi%20Keberlanjutan%20Ekonomi%20Biru.jpg" alt="Galeri penelitian mangrove berbasis geospasial" />
+            <div class="about-slider-controls">
+              <button class="about-slider-btn" type="button" data-direction="prev" aria-label="Foto sebelumnya">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="about-slider-btn" type="button" data-direction="next" aria-label="Foto berikutnya">
+                <i class="fas fa-chevron-right"></i>
+              </button>
             </div>
+            <div class="about-slider-dots" id="about-slider-dots"></div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Galeri Peta (dua kolom) -->
-  <section class="container my-4">
-    <div class="card p-3" style="border-left:5px solid #198754;border-radius:14px;">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h3 class="mb-0" style="color:#0f5132">Galeri Peta</h3>
-        <small style="color:#0f5132;opacity:0.8">Klik untuk memperbesar dan zoom</small>
-      </div>
-
-      <div class="gallery-row">
-        <div class="gallery-main">
-          <img src="images/Peta/Peta Makassar.jpg" class="gallery-thumb img-placeholder" data-img="images/Peta/Peta Makassar.jpg" alt="Peta Makassar" loading="eager" decoding="async" fetchpriority="high">
-        </div>
-        <div class="gallery-side">
-          <div class="side-item">
-            <img src="images/Peta/Peta Takalar.jpg" class="gallery-thumb img-placeholder" data-img="images/Peta/Peta Takalar.jpg" alt="Peta Takalar" loading="eager" decoding="async" fetchpriority="high">
+        <div class="about-description">
+          <div class="about-card">
+            <h3>Lokasi Penelitian</h3>
+            <ul>
+              <li>Kabupaten Barru</li>
+              <li>Kabupaten Maros</li>
+              <li>Kabupaten Jeneponto</li>
+              <li>Kabupaten Sinjai</li>
+            </ul>
           </div>
-          <div class="side-item">
-            <img src="images/Peta/Peta Maros.jpeg" class="gallery-thumb img-placeholder" data-img="images/Peta/Peta Maros.jpeg" alt="Peta Maros" loading="eager" decoding="async" fetchpriority="high">
+          <div class="about-card">
+            <h3>Mitra Hiliriset</h3>
+            <p><strong>Kelompok Kerja Mangrove Daerah Provinsi Sulawesi Selatan</strong></p>
           </div>
+          <div class="about-card">
+            <h3>Tim Peneliti</h3>
+            <ul>
+              <li>Amal, S.Pi., M.Si., Ph.D.</li>
+              <li>Prof. Uca, S.Si., M.P., Ph.D.</li>
+              <li>Prof. Drs. H. Sukri Nyompa, S.H., M.Si., Ph.D.</li>
+              <li>Nurul Afdal Haris, S.Si., M.Sc.</li>
+            </ul>
+          </div>
+          <p class="about-summary">Melalui pengembangan platform ini, diharapkan pengelolaan mangrove dapat dilakukan secara lebih efektif, berbasis data, dan kolaboratif sehingga mampu mendukung pelestarian ekosistem pesisir sekaligus meningkatkan kesejahteraan masyarakat melalui pemanfaatan sumber daya pesisir yang berkelanjutan.</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  </div>
+    <!-- Laju Forestasi Section -->
+    <section id="laju-forestasi" class="dashboard-section" data-section="laju-forestasi">
+      <div id="forest-rate-container"></div>
+    </section>
+    
+    <!-- Zona Kawasan Section -->
+    <section id="zona-kawasan" class="dashboard-section" data-section="zona-kawasan">
+      <div id="zone-container"></div>
+    </section>
+    
+    <!-- Stok Karbon Section -->
+    <section id="stok-karbon" class="dashboard-section" data-section="stok-karbon">
+      <div id="carbon-container"></div>
+    </section>
 
-  <footer class="text-center mt-3 py-3 bg-light">
-    <small>© 2025 Aespace Project</small>
+    <!-- Matrix Perubahan Section -->
+    <section id="matrix-perubahan" class="dashboard-section" data-section="matrix-perubahan">
+      <div id="matrix-container"></div>
+    </section>
+    
+    <!-- Peta Section -->
+    <section id="peta" class="dashboard-section" data-section="peta">
+      <div style="padding: 30px; background: white; border-radius: 12px; border: 1px solid rgba(0, 102, 255, 0.1); box-shadow: 0 2px 8px rgba(0, 102, 255, 0.05);">
+        <h2 style="color: #0066ff; margin-bottom: 20px; font-weight: 700;">
+          <i class="fas fa-map-location-dot"></i> Peta Interaktif
+        </h2>
+        <p style="color: #666; margin-bottom: 20px; line-height: 1.6;">
+          Akses peta interaktif dengan layer GeoJSON, filter spatial, time slider untuk analisis perubahan 2016-2026, dan statistik real-time yang komprehensif.
+        </p>
+        <a href="map.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #0066ff, #00b4d8); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);">
+          <i class="fas fa-map"></i> Buka Peta Interaktif →
+        </a>
+      </div>
+    </section>
+  </main>
+  
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Mangrove Carbon WebGIS | Aespace Project</p>
+    <p style="margin-top: 8px; font-size: 0.8rem;">Data: 2016-2026 | Sumber: Hasil Kajian Hiliriset 2026</p>
   </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Modal zoom/pan untuk Galeri Peta -->
-  <div class="modal fade" id="petaModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0" style="background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;">
-          <div id="petaModalContainer" style="position:relative; overflow:hidden; max-width:1200px; width:100%; height:90vh;">
-            <img id="petaModalImg" src="" alt="" style="max-width:100%; max-height:100%; transform-origin:center center; transition:transform .05s ease; display:block; margin:auto;">
-            <button type="button" class="btn btn-light" id="petaModalClose" style="position:absolute; right:14px; top:14px; z-index:40;">Close</button>
-          </div>
-        </div>
-      </div>
+  
+  <!-- LOADING OVERLAY -->
+  <div id="loading-overlay" class="loading-overlay" style="display: flex; align-items: center; justify-content: center;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+      <div class="spinner" style="width: 48px; height: 48px; border: 5px solid rgba(0,102,255,0.15); border-top-color: #0066ff; border-radius: 50%; animation: spin 0.9s linear infinite;"></div>
+      <p style="margin-top: 16px; color: #1f2937; font-weight: 700; letter-spacing: 0.02em;">Memuat data...</p>
     </div>
   </div>
-
-  <!-- Chart.js Script -->
+  
+  <!-- SCRIPTS -->
+  <!-- Core Modules -->
+  <script src="js/core-state-manager.js"></script>
+  <script src="js/data-utilities.js"></script>
+  <script src="js/statistics-calculator.js"></script>
+  <script src="js/chart-renderer.js"></script>
+  
+  <!-- Dashboard Renderers (IMPROVED DATA SOURCES) -->
+  <script src="js/forest-rate-improved.js"></script>
+  <script src="js/zona-kawasan-improved.js"></script>
+  <script src="js/stok-karbon-improved.js"></script>
+  
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // CO2e Chart with new data
-      const ctxCO2e = document.getElementById('co2eChart').getContext('2d');
-      const co2eData = [
-        { habitat: 'Kawasan Silvofishery Marana', co2e: 2.6947088833 },
-        { habitat: 'Kawasan Muara Sungai Binangasangkara', co2e: 3.6749471381 },
-        { habitat: 'Kawasan Karst Rammang-Rammang', co2e: 5.5068781109 },
-        { habitat: 'Kawasan Pantai Puntondo', co2e: 6.1510530939 },
-        { habitat: 'Kawasan Teluk Laikang', co2e: 3.3604298866 },
-        { habitat: 'Kawasan Rehabilitasi dan Ekowisata Lantebung', co2e: 3.0819921096 },
-        { habitat: 'Kawasan Delta Lakkang', co2e: 7.5129478975 },
-        { habitat: 'Kawasan Pulau Tanakeke', co2e: 4.1609279640 }
-      ];
-      
-      const co2eLabels = co2eData.map(item => item.habitat);
-      const co2eValues = co2eData.map(item => item.co2e);
-      const totalCO2e = co2eValues.reduce((a, b) => a + b, 0);
-      
-      const co2eChart = new Chart(ctxCO2e, {
-        type: 'bar',
-        data: {
-          labels: co2eLabels,
-          datasets: [{
-            label: 'CO2e (Ton)',
-            data: co2eValues,
-            backgroundColor: [
-              'rgba(25, 135, 84, 0.8)',
-              'rgba(32, 167, 89, 0.8)',
-              'rgba(21, 88, 53, 0.8)',
-              'rgba(29, 150, 85, 0.8)',
-              'rgba(38, 177, 90, 0.8)',
-              'rgba(25, 135, 84, 0.8)',
-              'rgba(32, 167, 89, 0.8)',
-              'rgba(17, 70, 42, 0.8)'
-            ],
-            borderColor: [
-              'rgba(17, 70, 42, 1)',
-              'rgba(25, 135, 84, 1)',
-              'rgba(21, 88, 53, 1)',
-              'rgba(25, 135, 84, 1)',
-              'rgba(32, 167, 89, 1)',
-              'rgba(25, 135, 84, 1)',
-              'rgba(32, 167, 89, 1)',
-              'rgba(17, 70, 42, 1)'
-            ],
-            borderWidth: 2,
-            borderRadius: 8,
-            borderSkipped: false,
-            hoverBackgroundColor: 'rgba(17, 70, 42, 1)',
-            hoverBorderColor: 'rgba(11, 47, 28, 1)',
-            hoverBorderWidth: 3
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: { duration: 2000, easing: 'easeInOutQuart' },
-          indexAxis: 'y',
-          scales: {
-            x: { 
-              beginAtZero: true, 
-              grid: { color: 'rgba(0, 0, 0, 0.1)' }, 
-              ticks: { callback: value => value.toFixed(2) + ' Ton' }
-            },
-            y: { grid: { display: false } }
-          },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 14, weight: 'bold' } } },
-            title: { display: false },
-            tooltip: { 
-              backgroundColor: 'rgba(0, 0, 0, 0.85)', 
-              titleColor: '#fff', 
-              bodyColor: '#fff',
-              padding: 12,
-              callbacks: { 
-                label: (context) => {
-                  const percentage = ((context.parsed.x / totalCO2e) * 100).toFixed(1);
-                  return context.dataset.label + ': ' + context.parsed.x.toFixed(10) + ' Ton (' + percentage + '%)';
-                }
-              }
-            }
-          }
+    let stateManager, statsCalculator, chartRenderer;
+    let currentSection = 'beranda';
+    const aboutImages = [
+      'images/WEBIMG/Tentang/Pengembangan%20Model%20Sistem%20Informasi%20Mangrove%20Berbasis%20Teknologi%20Geospasial%20sebagai%20Decision%20Support%20System%20dalam%20Mendukung%20Strategi%20Keberlanjutan%20Ekonomi%20Biru.jpg',
+      'images/WEBIMG/Tentang/Tentang01.jpg',
+      'images/WEBIMG/Tentang/Tentang02.jpg',
+      'images/WEBIMG/Tentang/Tentang03.jpg'
+    ];
+    let aboutSliderIndex = 0;
+    let aboutSliderTimer = null;
+
+    function initAboutSlider() {
+      const imageEl = document.getElementById('about-slider-image');
+      const dotsEl = document.getElementById('about-slider-dots');
+      if (!imageEl || !dotsEl) return;
+
+      const updateSlider = (newIndex) => {
+        aboutSliderIndex = (newIndex + aboutImages.length) % aboutImages.length;
+        imageEl.src = aboutImages[aboutSliderIndex];
+        imageEl.alt = `Foto penelitian mangrove ${aboutSliderIndex + 1}`;
+        dotsEl.querySelectorAll('.about-slider-dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === aboutSliderIndex);
+        });
+      };
+
+      const resetSliderTimer = () => {
+        if (aboutSliderTimer) clearInterval(aboutSliderTimer);
+        aboutSliderTimer = setInterval(() => {
+          updateSlider(aboutSliderIndex + 1);
+        }, 5000);
+      };
+
+      if (aboutImages.length > 1) {
+        dotsEl.innerHTML = aboutImages.map((_, index) => `<span class="about-slider-dot${index === 0 ? ' active' : ''}"></span>`).join('');
+        document.querySelectorAll('.about-slider-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const direction = btn.dataset.direction === 'prev' ? -1 : 1;
+            updateSlider(aboutSliderIndex + direction);
+            resetSliderTimer();
+          });
+        });
+        resetSliderTimer();
+      } else {
+        dotsEl.style.display = 'none';
+        document.querySelector('.about-slider-controls').style.display = 'none';
+      }
+
+      updateSlider(0);
+    }
+    
+    // Initialize app
+    async function initializeApp() {
+      try {
+        const loading = document.getElementById('loading-overlay');
+        loading.style.display = 'flex';
+        
+        // Create state manager and load data
+        stateManager = new CoreStateManager();
+        await stateManager.loadExcelData('data/Dashboard.xlsx');
+        
+        // Create calculator and chart renderer
+        statsCalculator = new StatisticsCalculator(stateManager);
+        chartRenderer = new ChartRenderer();
+        window.stateManager = stateManager;
+        window.statsCalculator = statsCalculator;
+        window.chartRenderer = chartRenderer;
+        
+        // Subscribe to state changes
+        stateManager.subscribe('filter-change', () => {
+          renderAllDashboards();
+        });
+        stateManager.subscribe('filters-reset', () => {
+          renderAllDashboards();
+        });
+        
+        loading.style.display = 'none';
+        
+        initAboutSlider();
+
+        // Render initial dashboards
+        renderAllDashboards();
+        const initialSection = document.getElementById(currentSection);
+        if (initialSection) {
+          initialSection.classList.add('active');
         }
-      });
-
-      // Stored Carbon Table Data
-      const carbonData = [
-        { habitat: 'Kawasan Silvofishery Marana', karbon: 0.0007578488 },
-        { habitat: 'Kawasan Muara Sungai Binangasangkara', karbon: 0.0010022492 },
-        { habitat: 'Kawasan Karst Rammang-Rammang', karbon: 0.0034851617 },
-        { habitat: 'Kawasan Pantai Puntondo', karbon: 0.0016775447 },
-        { habitat: 'Kawasan Teluk Laikang', karbon: 0.0009164725 },
-        { habitat: 'Kawasan Rehabilitasi dan Ekowisata Lantebung', karbon: 0.0010506696 },
-        { habitat: 'Kawasan Delta Lakkang', karbon: 0.0025394730 },
-        { habitat: 'Kawasan Pulau Tanakeke', karbon: 0.0011523559 }
-      ];
-      
-      const totalCarbon = carbonData.reduce((sum, item) => sum + item.karbon, 0);
-      
-      // Render table
-      const tableBody = document.getElementById('carbonTableBody');
-      const carbonTotal = document.getElementById('carbonTotal');
-      
-      carbonData.forEach((item, index) => {
-        const percentage = ((item.karbon / totalCarbon) * 100).toFixed(1);
-        const row = document.createElement('tr');
         
-        // Alternate row colors - green success theme
-        const bgColor = index % 2 === 0 ? 'rgba(25, 135, 84, 0.05)' : 'rgba(32, 167, 89, 0.08)';
-        row.style.background = bgColor;
-        
-        row.innerHTML = `
-          <td style="padding: 12px 15px; border: none; border-left: 4px solid #198754;">
-            <strong>${item.habitat}</strong>
-          </td>
-          <td style="padding: 12px 15px; border: none; text-align: right; color: #155835; font-weight: 600;">
-            ${item.karbon.toFixed(10)} Ton
-          </td>
-          <td style="padding: 12px 15px; border: none; text-align: right;">
-            <span style="background: linear-gradient(135deg, #198754, #155835); color: white; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">
-              ${percentage}%
-            </span>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-      
-      carbonTotal.textContent = totalCarbon.toFixed(10);
+        console.log('✅ App initialized successfully');
+      } catch (error) {
+        console.error('❌ Error initializing app:', error);
+        alert('Error: ' + error.message);
+      }
+    }
+    
+    function renderAllDashboards() {
+      renderHeroStats();
+      if (currentSection) {
+        renderDashboardSection(currentSection);
+      }
+    }
+    
+    function animateValue(element, target, formatter, duration = 1400) {
+      if (!element) return;
+      const startTime = performance.now();
+      const startValue = 0;
 
-      // Organic C Chart - Vertical Bar Chart
-      const ctxOrganic = document.getElementById('organicCChart').getContext('2d');
-      const organicCData = [
-        { habitat: 'Marana', nilai: 285.4807473 },
-        { habitat: 'Binangasangkara', nilai: 285.4807473 },
-        { habitat: 'Rammang-Rammang', nilai: 285.4807473 },
-        { habitat: 'Puntondo', nilai: 285.4807473 },
-        { habitat: 'Laikang', nilai: 285.4807473 },
-        { habitat: 'Lantebung', nilai: 285.4807473 },
-        { habitat: 'Lakkang', nilai: 396.1820824 },
-        { habitat: 'Tanakeke', nilai: 292.8608363 }
-      ];
-      
-      const organicLabels = organicCData.map(item => item.habitat);
-      const organicValues = organicCData.map(item => item.nilai);
-      const totalOrganic = organicValues.reduce((a, b) => a + b, 0);
-      
-      const organicCChart = new Chart(ctxOrganic, {
-        type: 'bar',
-        data: {
-          labels: organicLabels,
-          datasets: [{
-            label: 'C-organik (ton/hektar)',
-            data: organicValues,
-            backgroundColor: [
-              'rgba(32, 167, 89, 0.8)',
-              'rgba(38, 177, 90, 0.8)',
-              'rgba(29, 150, 85, 0.8)',
-              'rgba(25, 135, 84, 0.8)',
-              'rgba(32, 167, 89, 0.8)',
-              'rgba(25, 135, 84, 0.8)',
-              'rgba(42, 188, 95, 0.8)',
-              'rgba(38, 177, 90, 0.8)'
-            ],
-            borderColor: [
-              'rgba(21, 88, 53, 1)',
-              'rgba(29, 120, 76, 1)',
-              'rgba(25, 110, 70, 1)',
-              'rgba(21, 88, 53, 1)',
-              'rgba(21, 88, 53, 1)',
-              'rgba(21, 88, 53, 1)',
-              'rgba(32, 167, 89, 1)',
-              'rgba(29, 120, 76, 1)'
-            ],
-            borderWidth: 2,
-            borderRadius: 8,
-            borderSkipped: false,
-            hoverBackgroundColor: 'rgba(21, 88, 53, 1)',
-            hoverBorderColor: 'rgba(11, 47, 28, 1)',
-            hoverBorderWidth: 3
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: { duration: 2000, easing: 'easeInOutQuart' },
-          scales: {
-            y: { 
-              beginAtZero: true, 
-              grid: { color: 'rgba(0, 0, 0, 0.1)' }, 
-              ticks: { callback: value => value.toFixed(0) + ' ton/ha' }
-            },
-            x: { grid: { display: false } }
-          },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 14, weight: 'bold' } } },
-            title: { display: false },
-            tooltip: { 
-              backgroundColor: 'rgba(0, 0, 0, 0.85)', 
-              titleColor: '#fff', 
-              bodyColor: '#fff',
-              padding: 12,
-              callbacks: { 
-                label: (context) => {
-                  const percentage = ((context.parsed.y / Math.max(...organicValues)) * 100).toFixed(1);
-                  return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + ' ton/ha (' + percentage + '%)';
-                }
-              }
-            }
+      const tick = (now) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(startValue + (target - startValue) * eased);
+        element.textContent = formatter(current);
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          element.textContent = formatter(target);
+        }
+      };
+
+      requestAnimationFrame(tick);
+    }
+
+    function renderHeroStats() {
+      const stats = statsCalculator.calculateStatistics();
+      const carbonStats = statsCalculator.getCarbonStockStatistics();
+      const zoneStats = statsCalculator.getZoneStatistics();
+      const konservasi = zoneStats['Konservasi']?.percentage || 0;
+      const rehabilitasi = zoneStats['Rehabilitasi']?.percentage || 0;
+      const matrixSummary = getMatrixSummaryText();
+      const heroContainer = document.getElementById('hero-summary-container');
+      const shouldAnimate = !heroContainer?.dataset.heroAnimated;
+
+      const totalAreaEl = document.getElementById('hero-total-area');
+      const totalCarbonEl = document.getElementById('hero-total-carbon');
+      const zoneBreakdownEl = document.getElementById('hero-zone-breakdown');
+      const matrixSummaryEl = document.getElementById('hero-matrix-summary');
+
+      if (shouldAnimate) {
+        animateValue(totalAreaEl, stats.totalArea, (value) => `${value.toLocaleString('id')} Ha`, 1400);
+        animateValue(totalCarbonEl, carbonStats.totalCarbonStock, (value) => `${value.toLocaleString('id')} C Ton`, 1500);
+        animateValue(zoneBreakdownEl, konservasi, (value) => `K:${value.toFixed(0)}% • R:${rehabilitasi.toFixed(0)}%`, 1450);
+      } else {
+        totalAreaEl.textContent = `${stats.totalArea.toLocaleString('id')} Ha`;
+        totalCarbonEl.textContent = `${carbonStats.totalCarbonStock.toLocaleString('id')} C Ton`;
+        zoneBreakdownEl.textContent = `K:${konservasi.toFixed(0)}% • R:${rehabilitasi.toFixed(0)}%`;
+      }
+
+      matrixSummaryEl.textContent = matrixSummary;
+      if (heroContainer) {
+        heroContainer.dataset.heroAnimated = 'true';
+      }
+    }
+
+    function getMatrixSummaryText() {
+      if (typeof statsCalculator.getLandCoverChangeSummary !== 'function') {
+        return '2016 → 2026';
+      }
+
+      const summary = statsCalculator.getLandCoverChangeSummary();
+      const changes = Object.entries(summary)
+        .map(([kelas, info]) => ({ kelas, change: info.change }))
+        .filter(item => item.change !== 0)
+        .sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
+
+      if (!changes.length) return '2016 → 2026';
+
+      const top = changes[0];
+      const direction = top.change >= 0 ? 'bertambah' : 'berkurang';
+      return `${top.kelas} ${direction} ${Math.abs(top.change).toLocaleString('id')} Ha`;
+    }
+    
+    function renderDashboardSection(sectionId) {
+      switch (sectionId) {
+        case 'laju-forestasi':
+          if (typeof renderForestRateImproved === 'function') {
+            renderForestRateImproved('forest-rate-container', stateManager, statsCalculator);
+          } else {
+            document.getElementById('forest-rate-container').innerHTML = '<p style="color: #e74c3c; padding: 20px;">RenderForestRateImproved belum tersedia.</p>';
           }
+          break;
+        case 'zona-kawasan':
+          if (typeof renderZonaKawasanImproved === 'function') {
+            renderZonaKawasanImproved('zone-container', stateManager, statsCalculator);
+          } else {
+            document.getElementById('zone-container').innerHTML = '<p style="color: #e74c3c; padding: 20px;">RenderZonaKawasanImproved belum tersedia.</p>';
+          }
+          break;
+        case 'stok-karbon':
+          if (typeof renderStokKarbonImproved === 'function') {
+            renderStokKarbonImproved('carbon-container', stateManager, statsCalculator);
+          } else {
+            document.getElementById('carbon-container').innerHTML = '<p style="color: #e74c3c; padding: 20px;">RenderStokKarbonImproved belum tersedia.</p>';
+          }
+          break;
+        case 'matrix-perubahan':
+          renderMatrixPerubahan('matrix-container', stateManager, statsCalculator);
+          break;
+        case 'peta':
+          // No extra render required for the map section beyond static CTA
+          break;
+        default:
+          break;
+      }
+    }
+    
+    function closeDashboardMenus() {
+      document.querySelectorAll('.dashboard-menu, .header-submenu').forEach(menu => menu.classList.remove('open'));
+      document.querySelectorAll('.dashboard-dropdown-trigger, .dashboard-nav-trigger, .nav-item[data-section="dashboard-menu"]').forEach(trigger => trigger.classList.remove('open'));
+      document.querySelectorAll('.dashboard-menu-wrapper, .header-nav-dropdown').forEach(wrapper => wrapper.classList.remove('open'));
+    }
+
+    function toggleDashboardMenu(trigger) {
+      const wrapper = trigger.closest('.dashboard-menu-wrapper, .header-nav-dropdown');
+      const menu = wrapper?.querySelector('.dashboard-menu, .header-submenu');
+      if (!menu) return;
+      const isOpen = menu.classList.contains('open');
+      closeDashboardMenus();
+      if (!isOpen) {
+        menu.classList.add('open');
+        trigger.classList.add('open');
+        wrapper?.classList.add('open');
+      }
+    }
+
+    function activateSection(sectionId) {
+      if (!sectionId) return;
+
+      if (sectionId === 'beranda') {
+        closeDashboardMenus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        currentSection = 'beranda';
+        document.querySelectorAll('.dashboard-section, .about-page').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.dashboard-action-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.section === 'beranda'));
+        return;
+      }
+
+      if (sectionId === 'dashboard-menu') {
+        const trigger = document.querySelector('.dashboard-dropdown-trigger[data-section="dashboard-menu"], .nav-item[data-section="dashboard-menu"]');
+        if (trigger) toggleDashboardMenu(trigger);
+        return;
+      }
+
+      currentSection = sectionId;
+      document.querySelectorAll('.dashboard-action-btn').forEach(btn => {
+        const btnSection = btn.dataset.section;
+        btn.classList.toggle('active', btnSection === sectionId);
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.section === sectionId);
+      });
+      document.querySelectorAll('.dashboard-section, .about-page').forEach(s => s.classList.remove('active'));
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.add('active');
+        if (targetSection.classList.contains('dashboard-section')) {
+          renderDashboardSection(sectionId);
+        }
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      closeDashboardMenus();
+    }
+    
+    // Handle dashboard buttons and dropdown items
+    document.querySelectorAll('.dashboard-action-btn, .header-login, .nav-item, .dashboard-dropdown-item, .header-submenu-item').forEach(item => {
+      item.addEventListener('click', (event) => {
+        const section = item.getAttribute('data-section');
+        if (section === 'dashboard-menu') {
+          event.stopPropagation();
+          toggleDashboardMenu(item);
+          return;
+        }
+        if (section) {
+          event.stopPropagation();
+          activateSection(section);
         }
       });
     });
-  </script>
 
-  <script>
-    // Fade-in loaded images (placeholder -> real)
-    (function(){
-      function markLoaded(img){ img.classList.add('loaded'); }
-      var imgs = Array.from(document.querySelectorAll('img.img-placeholder'));
-      imgs.forEach(function(img){
-        if(img.complete && img.naturalWidth !== 0){ markLoaded(img); return; }
-        img.addEventListener('load', function(){ markLoaded(img); });
-        img.addEventListener('error', function(){ markLoaded(img); });
-      });
-    })();
-  </script>
-
-  <script>
-    // Gallery modal + zoom/pan handlers
-    document.addEventListener('DOMContentLoaded', function(){
-      var thumbs = document.querySelectorAll('.gallery-thumb');
-      var modalEl = document.getElementById('petaModal');
-      var modal = modalEl ? new bootstrap.Modal(modalEl) : null;
-      var modalImg = document.getElementById('petaModalImg');
-      var container = document.getElementById('petaModalContainer');
-      var closeBtn = document.getElementById('petaModalClose');
-
-      var scale = 1, tx = 0, ty = 0;
-      var dragging = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
-
-      function applyTransform(){
-        if(modalImg) modalImg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
-      }
-
-      thumbs.forEach(function(t){
-        t.addEventListener('click', function(){
-          var src = t.dataset.img || t.src;
-          if(!modalImg) return;
-          modalImg.src = src;
-          scale = 1; tx = 0; ty = 0; applyTransform();
-          if(modal) modal.show();
-        });
-      });
-
-      // wheel zoom
-      if(container){
-        container.addEventListener('wheel', function(e){
-          e.preventDefault();
-          var delta = e.deltaY < 0 ? 0.12 : -0.12;
-          var next = Math.max(0.5, Math.min(5, scale + delta));
-          scale = next; applyTransform();
-        }, { passive: false });
-
-        // pan with mouse
-        container.addEventListener('mousedown', function(e){
-          dragging = true; startX = e.clientX; startY = e.clientY; startTx = tx; startTy = ty; container.style.cursor='grabbing';
-        });
-        window.addEventListener('mousemove', function(e){ if(!dragging) return; tx = startTx + (e.clientX - startX); ty = startTy + (e.clientY - startY); applyTransform(); });
-        window.addEventListener('mouseup', function(){ dragging = false; container.style.cursor='default'; });
-
-        // touch pan
-        var lastTouch = null;
-        container.addEventListener('touchstart', function(e){ if(e.touches && e.touches.length===1){ lastTouch = e.touches[0]; startX = lastTouch.clientX; startY = lastTouch.clientY; startTx = tx; startTy = ty; } });
-        container.addEventListener('touchmove', function(e){ if(e.touches && e.touches.length===1 && lastTouch){ e.preventDefault(); var t = e.touches[0]; tx = startTx + (t.clientX - startX); ty = startTy + (t.clientY - startY); applyTransform(); } }, { passive:false });
-        container.addEventListener('touchend', function(){ lastTouch = null; });
-      }
-
-      if(closeBtn){ closeBtn.addEventListener('click', function(){ if(modal) modal.hide(); }); }
-      if(modalEl){ modalEl.addEventListener('hidden.bs.modal', function(){ if(modalImg){ modalImg.src=''; modalImg.style.transform=''; } scale=1; tx=0; ty=0; }); }
+    document.querySelectorAll('.dashboard-menu-wrapper, .header-nav-dropdown').forEach(wrapper => {
+      wrapper.addEventListener('click', event => event.stopPropagation());
     });
-  </script>
 
+    document.addEventListener('click', closeDashboardMenus);
+    
+    // Optional refresh button support
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', async () => {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await stateManager.loadExcelData('data/Dashboard.xlsx');
+        renderAllDashboards();
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = '<i class="fas fa-sync"></i> Refresh';
+      });
+    }
+    
+    // Optional export button support
+    const exportBtn = document.getElementById('export-btn');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        alert('Export functionality will be implemented soon.');
+      });
+    }
+    
+    function renderMatrixPerubahan(containerId, stateManager, statsCalculator) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = `
+        <div style="padding: 24px; background: rgba(255,255,255,0.96); border-radius: 22px; border: 1px solid rgba(0,102,255,0.14); box-shadow: 0 18px 42px rgba(0, 86, 179, 0.08);">
+          <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+            <img src="images/WEBIMG/Matrix Perubahan.png" alt="Matrix Perubahan" style="width: 100%; max-width: 1600px; height: auto; object-fit: contain; border-radius: 18px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08); display: block;" />
+          </div>
+        </div>
+      `;
+    }
+    
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', initializeApp);
+  </script>
 </body>
 </html>
