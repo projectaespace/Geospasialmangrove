@@ -361,9 +361,6 @@ function showKabupatenDetail(kabupaten) {
               <div style="font-size: 1.2rem; font-weight: 700; color: ${isMinus ? '#b71c1c' : '#1a472a'};">${changeHaPerYear.toFixed(2)} Ha/Tahun</div>
             </div>
           </div>
-          <div style="padding: 14px 16px; border-radius: 12px; background: ${isMinus ? '#fff5f5' : '#f4fff7'}; color: ${isMinus ? '#b71c1c' : '#1b5e20'}; font-weight: 600; margin-bottom: 18px;">
-            Informasi ini khusus menampilkan data desa untuk ${title} sesuai pengaturan dashboard yang aktif.
-          </div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px;">
             <div style="background: #f8fbff; border-radius: 12px; padding: 14px;">
               <div style="font-size: 0.75rem; color: #666;">Desa terdeteksi</div>
