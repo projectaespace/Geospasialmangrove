@@ -1,0 +1,189 @@
+[
+  {
+    "id": "lantebung",
+    "name": "Lantebung",
+    "folder": "01. Lantebung Makassar",
+    "kabupaten": "Makassar",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.07833216327299,
+      119.465955202181
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung01.jpg",
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung02.jpg",
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung03.jpg",
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung04.jpg",
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung05.jpg",
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung06.jpg",
+      "images/WEBIMG/Terapan/01. Lantebung Makassar/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/01. Lantebung Makassar/Peta.jpg",
+    "ket": "Kawasan Mangrove Lantebung merupakan salah satu ekowisata mangrove unggulan di Kota Makassar. Ekosistem ini berperan sebagai pelindung pesisir dari abrasi, penyerap karbon biru (blue carbon), serta habitat berbagai jenis burung dan biota pesisir."
+  },
+  {
+    "id": "untia",
+    "name": "Untia",
+    "folder": "02. Untia Makassar",
+    "kabupaten": "Makassar",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.06100210264415,
+      119.477205331289
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/02. Untia Makassar/Topografi.jpg",
+      "images/WEBIMG/Terapan/02. Untia Makassar/Untia01.jpg",
+      "images/WEBIMG/Terapan/02. Untia Makassar/Untia02.jpg",
+      "images/WEBIMG/Terapan/02. Untia Makassar/Untia03.jpg",
+      "images/WEBIMG/Terapan/02. Untia Makassar/Untia04.jpg",
+      "images/WEBIMG/Terapan/02. Untia Makassar/Untia05.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/02. Untia Makassar/Peta.jpg",
+    "ket": "Mangrove Untia merupakan kawasan konservasi pesisir yang berfungsi menjaga stabilitas garis pantai, meningkatkan kualitas lingkungan pesisir, serta menjadi habitat penting bagi ikan, kepiting, dan berbagai organisme laut."
+  },
+  {
+    "id": "ampekale",
+    "name": "Ampekale",
+    "folder": "03. Ampekale Maros",
+    "kabupaten": "Maros",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -4.888602,
+      119.5133
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/03. Ampekale Maros/Ampekale01.jpg",
+      "images/WEBIMG/Terapan/03. Ampekale Maros/Ampekale02.jpg",
+      "images/WEBIMG/Terapan/03. Ampekale Maros/Ampekale03.jpg",
+      "images/WEBIMG/Terapan/03. Ampekale Maros/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/03. Ampekale Maros/Peta.jpg",
+    "ket": "Kawasan mangrove Ampekale berkembang di wilayah muara dan pesisir Maros, berfungsi sebagai pelindung alami pantai, penyimpan karbon, serta habitat berbagai biota yang mendukung produktivitas perikanan pesisir."
+  },
+  {
+    "id": "pajakukang",
+    "name": "Pajakukang",
+    "folder": "04. Pajakukang Maros",
+    "kabupaten": "Maros",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -4.92456,
+      119.52389
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang01.jpg",
+      "images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang02.jpg",
+      "images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang03.jpg",
+      "images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang04.jpg",
+      "images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang05.jpg",
+      "images/WEBIMG/Terapan/04. Pajakukang Maros/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/04. Pajakukang Maros/Peta.jpg",
+    "ket": "Mangrove Pajakukang memiliki peran penting dalam menjaga keseimbangan ekosistem pesisir melalui perlindungan pantai, pengendalian sedimentasi, serta penyedia habitat bagi berbagai spesies flora dan fauna pesisir."
+  },
+  {
+    "id": "kuri-lompo",
+    "name": "Kuri Lompo",
+    "folder": "05. Kuri Lompo Maros",
+    "kabupaten": "Maros",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.018566,
+      119.472262
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/05. Kuri Lompo Maros/Kurilompo01.jpg",
+      "images/WEBIMG/Terapan/05. Kuri Lompo Maros/Kurilompo02.jpg",
+      "images/WEBIMG/Terapan/05. Kuri Lompo Maros/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/05. Kuri Lompo Maros/Peta.jpg",
+    "ket": "Kawasan mangrove Kuri Lompo merupakan bagian penting dari pesisir Maros yang berfungsi sebagai pelindung alami terhadap abrasi, penyerap karbon biru, serta daerah pembesaran berbagai jenis ikan dan kepiting."
+  },
+  {
+    "id": "kuri-caddi",
+    "name": "Kuri Caddi",
+    "folder": "06. Kuri Caddi Maros",
+    "kabupaten": "Maros",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.03378502358571,
+      119.468219
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi01.jpg",
+      "images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi02.jpg",
+      "images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi03.jpg",
+      "images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi04.jpg",
+      "images/WEBIMG/Terapan/06. Kuri Caddi Maros/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/06. Kuri Caddi Maros/Peta.jpg",
+    "ket": "Mangrove Kuri Caddi mendukung kelestarian ekosistem pesisir melalui fungsi perlindungan garis pantai, penyaring alami kualitas air, serta habitat berbagai biota laut yang bernilai ekologis dan ekonomis."
+  },
+  {
+    "id": "paria-lau",
+    "name": "Paria Lau",
+    "folder": "07. Paria Lau Takalar",
+    "kabupaten": "Takalar",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.481309,
+      119.408506
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/07. Paria Lau Takalar/PariaLau01.jpg",
+      "images/WEBIMG/Terapan/07. Paria Lau Takalar/PariaLau02.jpg",
+      "images/WEBIMG/Terapan/07. Paria Lau Takalar/PariaLau03.jpg",
+      "images/WEBIMG/Terapan/07. Paria Lau Takalar/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/07. Paria Lau Takalar/Peta.jpg",
+    "ket": "Kawasan mangrove Paria Lau berperan sebagai benteng alami pesisir Kabupaten Takalar, menjaga stabilitas pantai, mendukung keanekaragaman hayati, serta menjadi penyimpan karbon yang penting bagi mitigasi perubahan iklim."
+  },
+  {
+    "id": "panyangkalang",
+    "name": "Panyangkalang",
+    "folder": "08. Panyangkalan Takalar",
+    "kabupaten": "Takalar",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.5416159065734,
+      119.506383861658
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/08. Panyangkalan Takalar/Panyangkalan01.jpg",
+      "images/WEBIMG/Terapan/08. Panyangkalan Takalar/Panyangkalan02.jpg",
+      "images/WEBIMG/Terapan/08. Panyangkalan Takalar/Panyangkalan03.jpg",
+      "images/WEBIMG/Terapan/08. Panyangkalan Takalar/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/08. Panyangkalan Takalar/Peta.jpg",
+    "ket": "Mangrove Panyangkalang merupakan ekosistem pesisir yang berfungsi melindungi wilayah pantai dari abrasi, mendukung produktivitas perikanan, dan menjadi habitat berbagai jenis biota pesisir serta burung air."
+  },
+  {
+    "id": "bontoloe",
+    "name": "Bontoloe",
+    "folder": "09. Bontoloe Takalar",
+    "kabupaten": "Takalar",
+    "kecamatan": "",
+    "kelurahan": "",
+    "coords": [
+      -5.341477,
+      119.361329
+    ],
+    "images": [
+      "images/WEBIMG/Terapan/09. Bontoloe Takalar/Bontoloe01.jpg",
+      "images/WEBIMG/Terapan/09. Bontoloe Takalar/Bontoloe02.jpg",
+      "images/WEBIMG/Terapan/09. Bontoloe Takalar/Bontoloe03.jpg",
+      "images/WEBIMG/Terapan/09. Bontoloe Takalar/Topografi.jpg"
+    ],
+    "peta": "images/WEBIMG/Terapan/09. Bontoloe Takalar/Peta01.jpg",
+    "ket": "Kawasan mangrove Bontoloe memiliki fungsi ekologis sebagai pelindung pesisir, penyerap karbon biru (blue carbon), serta kawasan penyangga yang menjaga keseimbangan ekosistem pesisir Kabupaten Takalar."
+  }
+]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Informasi Mangrove - Sulawesi Selatan</title>
+  <title>Mangrove Geospasial - Sulawesi Selatan</title>
   
   <!-- Bootstrap (optional, for responsive) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,12 +41,12 @@
     
     /* ===== HEADER ===== */
     header {
-      background: linear-gradient(135deg, #002c5f 0%, #0056b8 100%);
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
       padding: 22px 30px;
       position: sticky;
       top: 0;
       z-index: 110;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+      box-shadow: 0 20px 50px rgba(27, 94, 32, 0.18);
     }
     
     header .container {
@@ -112,7 +112,7 @@
     
     .header-menu .nav-item:hover,
     .header-menu .nav-item.active {
-      color: white;
+      color: #e8f5e9;
     }
     
     .header-right {
@@ -128,8 +128,8 @@
       gap: 10px;
       padding: 10px 18px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.16);
       color: white;
       font-weight: 700;
       font-size: 0.88rem;
@@ -178,7 +178,7 @@
     
     .header-theme:hover,
     .header-login:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.24);
       transform: translateY(-1px);
     }
     
@@ -249,12 +249,12 @@
 
     .about-page {
       display: none;
-      background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #f7fcf8 100%);
       border-radius: 32px;
       padding: 32px;
       box-shadow: 0 22px 60px rgba(0, 0, 0, 0.08);
       margin-bottom: 32px;
-      border: 1px solid rgba(0, 102, 255, 0.12);
+      border: 1px solid rgba(46, 125, 50, 0.12);
       overflow: hidden;
     }
 
@@ -289,9 +289,9 @@
       margin: 0 auto;
       border-radius: 28px;
       overflow: hidden;
-      background: linear-gradient(135deg, #f7fbff 0%, #e8f4ff 100%);
+      background: linear-gradient(135deg, #f7fcf8 0%, #eaf7eb 100%);
       box-shadow: 0 24px 56px rgba(0, 0, 0, 0.16);
-      border: 1px solid rgba(0, 102, 255, 0.16);
+      border: 1px solid rgba(46, 125, 50, 0.16);
       padding: 16px;
       box-sizing: border-box;
       display: flex;
@@ -361,7 +361,7 @@
     }
 
     .about-header h2 {
-      color: #00478c;
+      color: #2e7d32;
       font-size: clamp(1.5rem, 2.3vw, 2.2rem);
       margin: 0;
       line-height: 1.25;
@@ -396,25 +396,25 @@
     }
 
     .about-card {
-      background: linear-gradient(135deg, #f6fbff 0%, #eef7ff 100%);
-      border: 1px solid rgba(0, 102, 255, 0.12);
+      background: linear-gradient(135deg, #f7fcf8 0%, #eef9ee 100%);
+      border: 1px solid rgba(46, 125, 50, 0.12);
       border-radius: 18px;
       padding: 20px;
-      box-shadow: 0 10px 24px rgba(0, 102, 255, 0.06);
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.06);
     }
 
     .about-summary {
       grid-column: 1 / -1;
-      background: linear-gradient(135deg, #f3f9ff 0%, #eaf5ff 100%);
-      border: 1px solid rgba(0, 102, 255, 0.14);
+      background: linear-gradient(135deg, #f7fcf8 0%, #eaf7eb 100%);
+      border: 1px solid rgba(46, 125, 50, 0.14);
       border-radius: 18px;
       padding: 20px;
       margin: 0;
-      box-shadow: 0 10px 24px rgba(0, 102, 255, 0.06);
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.06);
     }
 
     .about-card h3 {
-      color: #00478c;
+      color: #2e7d32;
       font-size: 1.05rem;
       margin-bottom: 10px;
     }
@@ -576,20 +576,21 @@
       padding: 12px 14px;
       border: none;
       border-radius: 12px;
-      background: transparent;
-      color: #00478c;
+      background: linear-gradient(135deg, rgba(46,125,50,0.92), rgba(102,187,106,0.88));
+      color: white;
       font-weight: 700;
       text-align: left;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background 0.15s ease, transform 0.12s ease;
       white-space: nowrap;
       width: 100%;
       box-sizing: border-box;
+      box-shadow: 0 10px 22px rgba(46,125,50,0.12);
     }
 
     .dashboard-dropdown-item:hover,
     .dashboard-dropdown-item.active {
-      background: linear-gradient(135deg, #f0f8ff, #eaf5ff);
+      background: linear-gradient(135deg, #66bb6a, #2e7d32);
       transform: translateX(2px);
     }
 
@@ -641,18 +642,20 @@
 
     .header-submenu-item {
       border: none;
-      background: transparent;
-      color: #00478c;
+      background: linear-gradient(135deg, rgba(46,125,50,0.92), rgba(102,187,106,0.88));
+      color: white;
       font-weight: 700;
       text-align: left;
       padding: 10px 12px;
       border-radius: 10px;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background 0.15s ease, transform 0.12s ease;
+      box-shadow: 0 8px 16px rgba(46,125,50,0.08);
     }
 
     .header-submenu-item:hover {
-      background: linear-gradient(135deg, #f0f8ff, #eaf5ff);
+      background: linear-gradient(135deg, #66bb6a, #2e7d32);
+      transform: translateX(2px);
     }
 
     .dashboard-focus-toolbar {
@@ -674,7 +677,7 @@
     .dashboard-focus-title {
       font-size: 1rem;
       font-weight: 800;
-      color: #00478c;
+      color: #2e7d32;
     }
 
     .dashboard-focus-toolbar {
@@ -708,15 +711,15 @@
     .dashboard-focus-buttons .dashboard-action-btn {
       padding: 12px 20px;
       min-width: 180px;
-      background: linear-gradient(135deg, #f4faff, #eaf5ff);
-      color: #00478c;
-      border: 1px solid rgba(0, 102, 255, 0.16);
+      background: linear-gradient(135deg, #f4fff7, #eaf8ee);
+      color: #2e7d32;
+      border: 1px solid rgba(46, 125, 50, 0.16);
       box-shadow: none;
     }
 
     .dashboard-focus-buttons .dashboard-action-btn.active,
     .dashboard-focus-buttons .dashboard-action-btn:hover {
-      background: linear-gradient(135deg, #0066ff, #00b4d8);
+      background: linear-gradient(135deg, #2e7d32, #43a047);
       color: white;
     }
     
@@ -728,13 +731,13 @@
       padding: 14px 20px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.24);
-      background: linear-gradient(135deg, rgba(13, 76, 141, 0.92), rgba(23, 135, 255, 0.88));
+      background: linear-gradient(135deg, rgba(46, 125, 50, 0.92), rgba(102, 187, 106, 0.88));
       color: white;
       font-weight: 700;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 18px 42px rgba(14, 83, 152, 0.24);
+      box-shadow: 0 18px 42px rgba(46, 125, 50, 0.24);
       backdrop-filter: blur(16px);
       min-width: 150px;
       white-space: nowrap;
@@ -743,7 +746,7 @@
     
     .dashboard-action-btn:hover,
     .dashboard-action-btn.active {
-      background: linear-gradient(135deg, #4db7ff, #0077ff);
+      background: linear-gradient(135deg, #66bb6a, #2e7d32);
       color: white;
       border-color: rgba(255, 255, 255, 0.65);
       transform: translateY(-2px);
@@ -973,7 +976,7 @@
     /* ===== FOOTER ===== */
     footer {
       background: white;
-      border-top: 1px solid rgba(0, 102, 255, 0.1);
+      border-top: 1px solid rgba(46, 125, 50, 0.1);
       padding: 30px;
       margin-top: 60px;
       text-align: center;
@@ -998,8 +1001,8 @@
     .spinner {
       width: 50px;
       height: 50px;
-      border: 4px solid rgba(0, 102, 255, 0.1);
-      border-top-color: #0066ff;
+      border: 4px solid rgba(46, 125, 50, 0.1);
+      border-top-color: #2e7d32;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -1704,7 +1707,7 @@
         <div class="header-brand">
           <img src="images/logo_mangrove.png" alt="Logo" class="logo">
           <div>
-            <h1 class="header-title">Sistem Informasi Monitoring Mangrove</h1>
+            <h1 class="header-title">Mangrove Geospasial</h1>
             <p class="header-subtitle">Monitoring Mangrove 2016-2026 Sulawesi Selatan</p>
           </div>
         </div>
@@ -1738,8 +1741,8 @@
               <img src="images/logo/LogoWeb.png" alt="Logo Hiliriset" class="hero-sublogo">
             </div>
           </div>
-          <h1 class="hero-title">GeoMangrove DSS </h1>
-          <p class="hero-copy">(Decision Support System) Mangrove Sulawesi Selatan</p>
+          <h1 class="hero-title">Mangrove Governance</h1>
+          <p class="hero-copy">Pemetaan Spasial Ekosistem Mangrove Sulawesi Selatan</p>
         </div>
         <div class="hero-buttons hero-main-buttons">
           <div class="dashboard-menu-wrapper">
@@ -1794,12 +1797,13 @@
       <div class="about-hero">
         <div class="about-header">
           <div class="hero-badge"><i class="fas fa-seedling"></i> Tentang Penelitian</div>
-          <h2>Pengembangan Model Sistem Informasi Mangrove Berbasis Teknologi Geospasial sebagai Decision Support System dalam Mendukung Strategi Keberlanjutan Ekonomi Biru</h2>
-          <p class="about-intro">Penelitian <strong>Hiliriset Sinergi Luaran Model</strong> ini bertujuan mengembangkan <strong>Sistem Informasi Mangrove berbasis teknologi geospasial</strong> sebagai <em>Decision Support System (DSS)</em> yang mendukung pengambilan keputusan dalam pengelolaan, konservasi, dan pemanfaatan ekosistem mangrove secara berkelanjutan.</p>
+          <h2>Pengembangan Model Adaptive Governance Ekosistem Mangrove Berbasis Spatial Decision Support System untuk Restorasi, Rehabilitasi, dan Mitigasi Bencana Pesisir Berkelanjutan</h2>
+          <p class="about-intro">Adaptive Mangrove SDSS merupakan platform berbasis teknologi geospasial yang dikembangkan untuk mendukung pengelolaan ekosistem mangrove secara adaptif melalui integrasi Sistem Informasi Geografis (SIG), penginderaan jauh, kecerdasan buatan, dan pemodelan spasial. Platform ini menyediakan analisis dan visualisasi data untuk mendukung restorasi, rehabilitasi, konservasi, serta mitigasi bencana pesisir secara berkelanjutan melalui pendekatan pengambilan keputusan berbasis spasial (Spatial Decision Support System).</p>
         </div>
         <div class="about-media">
           <div class="about-slider">
-            <img id="about-slider-image" src="images/WEBIMG/Tentang/Pengembangan%20Model%20Sistem%20Informasi%20Mangrove%20Berbasis%20Teknologi%20Geospasial%20sebagai%20Decision%20Support%20System%20dalam%20Mendukung%20Strategi%20Keberlanjutan%20Ekonomi%20Biru.jpg" alt="Galeri penelitian mangrove berbasis geospasial" />
+            <img id="about-slider-image" src="images/WEBIMG/Tentang/
+            bangan%20Model%20Sistem%20Informasi%20Mangrove%20Berbasis%20Teknologi%20Geospasial%20sebagai%20Decision%20Support%20System%20dalam%20Mendukung%20Strategi%20Keberlanjutan%20Ekonomi%20Biru.jpg" alt="Galeri penelitian mangrove berbasis geospasial" />
             <div class="about-slider-controls">
               <button class="about-slider-btn" type="button" data-direction="prev" aria-label="Foto sebelumnya">
                 <i class="fas fa-chevron-left"></i>
@@ -1815,23 +1819,22 @@
           <div class="about-card">
             <h3>Lokasi Penelitian</h3>
             <ul>
-              <li>Kabupaten Barru</li>
               <li>Kabupaten Maros</li>
-              <li>Kabupaten Jeneponto</li>
-              <li>Kabupaten Sinjai</li>
+              <li>Kota Makassar</li>
+              <li>Kabupaten Takalar</li>
             </ul>
           </div>
           <div class="about-card">
             <h3>Mitra Hiliriset</h3>
-            <p><strong>Kelompok Kerja Mangrove Daerah Provinsi Sulawesi Selatan</strong></p>
+            <p><strong>Kelompok Kerja Mangrove Daerah Provinsi Sulawesi Selatan & CV TENGKONINDO TEKNIK GEOSPASIAL</strong></p>
           </div>
           <div class="about-card">
             <h3>Tim Peneliti</h3>
             <ul>
               <li>Amal, S.Pi., M.Si., Ph.D.</li>
               <li>Prof. Uca, S.Si., M.P., Ph.D.</li>
-              <li>Prof. Drs. H. Sukri Nyompa, S.H., M.Si., Ph.D.</li>
-              <li>Nurul Afdal Haris, S.Si., M.Sc.</li>
+              <li>Moh. Tauhid Umar, S.Pi, M.Si</li>
+              <li>Aldhila Gusta Handiarya Yoga, S.Si., M.Sc</li>
             </ul>
           </div>
           <p class="about-summary">Melalui pengembangan platform ini, diharapkan pengelolaan mangrove dapat dilakukan secara lebih efektif, berbasis data, dan kolaboratif sehingga mampu mendukung pelestarian ekosistem pesisir sekaligus meningkatkan kesejahteraan masyarakat melalui pemanfaatan sumber daya pesisir yang berkelanjutan.</p>
@@ -1862,13 +1865,13 @@
     <!-- Peta Section -->
     <section id="peta" class="dashboard-section" data-section="peta">
       <div style="padding: 30px; background: white; border-radius: 12px; border: 1px solid rgba(0, 102, 255, 0.1); box-shadow: 0 2px 8px rgba(0, 102, 255, 0.05);">
-        <h2 style="color: #0066ff; margin-bottom: 20px; font-weight: 700;">
+        <h2 style="color: #2e7d32; margin-bottom: 20px; font-weight: 700;">
           <i class="fas fa-map-location-dot"></i> Peta Interaktif
         </h2>
         <p style="color: #666; margin-bottom: 20px; line-height: 1.6;">
           Akses peta interaktif dengan layer GeoJSON, filter spatial, time slider untuk analisis perubahan 2016-2026, dan statistik real-time yang komprehensif.
         </p>
-        <a href="map.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #0066ff, #00b4d8); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);">
+        <a href="map.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #2e7d32, #66bb6a); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);">
           <i class="fas fa-map"></i> Buka Peta Interaktif →
         </a>
       </div>
@@ -1884,7 +1887,7 @@
   <!-- LOADING OVERLAY -->
   <div id="loading-overlay" class="loading-overlay" style="display: flex; align-items: center; justify-content: center;">
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-      <div class="spinner" style="width: 48px; height: 48px; border: 5px solid rgba(0,102,255,0.15); border-top-color: #0066ff; border-radius: 50%; animation: spin 0.9s linear infinite;"></div>
+      <div class="spinner" style="width: 48px; height: 48px; border: 5px solid rgba(46,125,50,0.15); border-top-color: #2e7d32; border-radius: 50%; animation: spin 0.9s linear infinite;"></div>
       <p style="margin-top: 16px; color: #1f2937; font-weight: 700; letter-spacing: 0.02em;">Memuat data...</p>
     </div>
   </div>
@@ -2213,7 +2216,7 @@
       if (!container) return;
 
       container.innerHTML = `
-        <div style="padding: 24px; background: rgba(255,255,255,0.96); border-radius: 22px; border: 1px solid rgba(0,102,255,0.14); box-shadow: 0 18px 42px rgba(0, 86, 179, 0.08);">
+        <div style="padding: 24px; background: rgba(255,255,255,0.96); border-radius: 22px; border: 1px solid rgba(46,125,50,0.14); box-shadow: 0 18px 42px rgba(46, 125, 50, 0.08);">
           <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
             <img src="images/WEBIMG/Matrix Perubahan.png" alt="Matrix Perubahan" style="width: 100%; max-width: 1600px; height: auto; object-fit: contain; border-radius: 18px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08); display: block;" />
           </div>

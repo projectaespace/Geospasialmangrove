@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -48,13 +49,13 @@
 
     /* HEADER - FIXED 70px */
     .map-header {
-      background: rgba(255, 255, 255, 0.12);
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
       color: white;
       padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.19);
+      box-shadow: 0 18px 50px rgba(27, 94, 32, 0.22);
       z-index: 1000;
       height: 70px;
       flex-shrink: 0;
@@ -70,12 +71,12 @@
       align-items: center;
       gap: 12px;
       letter-spacing: 0.03em;
-      text-shadow: 0 10px 20px rgba(3, 25, 68, 0.22);
+      text-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
     }
 
     .header-btn {
       padding: 10px 18px;
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.18);
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 999px;
@@ -90,7 +91,7 @@
     .btn-story {
       display: inline-block;
       padding: 8px 10px;
-      background: linear-gradient(90deg,#ff7043,#ff5722);
+      background: linear-gradient(90deg, #397d2d, #1b5e20);
       color: white;
       border-radius: 12px;
       text-decoration: none;
@@ -98,7 +99,7 @@
       font-size: 0.85rem;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 18px rgba(255,87,34,0.18);
+      box-shadow: 0 8px 18px rgba(27, 94, 32, 0.2);
     }
     .btn-story:hover { transform: translateY(-2px); }
     .hiliriset-label {
@@ -112,6 +113,27 @@
       font-size: 12px;
     }
     .leaflet-tooltip.hiliriset-label.leaflet-tooltip-right { margin-left: 8px; }
+    .elevasi-interval-label {
+      background: rgba(255,255,255,0.98) !important;
+      border: 1px solid #666 !important;
+      border-radius: 3px;
+      color: #222 !important;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 5px;
+      box-shadow: none !important;
+      pointer-events: none !important;
+      opacity: 1 !important;
+    }
+    .elevasi-interval-label:before,
+    .elevasi-interval-label:after {
+      display: none !important;
+    }
+    .leaflet-container .leaflet-interactive:focus,
+    .leaflet-container .leaflet-interactive:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+    }
     .popup-card { font-size:13px; color:#142533 }
     .popup-card .title { font-weight:800; font-size:14px; margin-bottom:6px }
     .popup-card .meta { color:#4b6b82; font-size:12px; margin-top:4px }
@@ -190,7 +212,7 @@
     }
 
     .hiliriset-popup-meta strong {
-      color: #0b66d1;
+      color: #1b5e20;
       font-weight: 600;
     }
 
@@ -222,7 +244,7 @@
     }
 
     .hiliriset-popup-gallery-section::-webkit-scrollbar-thumb {
-      background: rgba(11, 102, 209, 0.25);
+      background: rgba(30, 115, 50, 0.25);
       border-radius: 999px;
     }
 
@@ -233,7 +255,7 @@
     .hiliriset-popup-gallery-title {
       font-size: 12px;
       font-weight: 700;
-      color: #0b66d1;
+      color: #1b5e20;
       margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -311,7 +333,7 @@
       border: none;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.96);
-      color: #0b66d1;
+      color: #1b5e20;
       font-size: 22px;
       font-weight: 700;
       cursor: pointer;
@@ -330,7 +352,7 @@
       width: 100%;
       justify-content: center;
       padding: 10px 12px;
-      background: linear-gradient(135deg, #0b66d1, #3fa1ff);
+      background: linear-gradient(135deg, #1b5e20, #2e7d32);
       color: white;
       border-radius: 14px;
       text-decoration: none;
@@ -374,7 +396,7 @@
       top: 24px;
       width: 360px;
       height: 360px;
-      background: radial-gradient(circle at 30% 30%, rgba(0, 166, 255, 0.16), transparent 42%);
+      background: radial-gradient(circle at 30% 30%, rgba(30, 115, 50, 0.16), transparent 42%);
       filter: blur(18px);
       pointer-events: none;
     }
@@ -388,8 +410,8 @@
       grid-column: 1 / 2;
       grid-row: 1 / 2;
       position: relative;
-      background: radial-gradient(circle at 20% 20%, rgba(0, 102, 255, 0.18), transparent 30%),
-                  radial-gradient(circle at 80% 30%, rgba(0, 179, 216, 0.14), transparent 24%),
+      background: radial-gradient(circle at 20% 20%, rgba(30, 115, 50, 0.18), transparent 30%),
+                  radial-gradient(circle at 80% 30%, rgba(46, 125, 50, 0.14), transparent 24%),
                   linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.3));
       border-radius: 24px;
       box-shadow: 0 16px 40px rgba(0, 37, 78, 0.14);
@@ -438,7 +460,7 @@
     }
 
     .section-header {
-      background: linear-gradient(135deg, #0b66d1 0%, #3fa1ff 100%);
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
       color: white;
       padding: 14px 16px;
       font-weight: 700;
@@ -465,7 +487,7 @@
     .filter-label {
       font-size: 0.7rem;
       font-weight: 700;
-      color: #0066ff;
+      color: #1b5e20;
       text-transform: uppercase;
       margin-bottom: 6px;
       display: block;
@@ -475,7 +497,7 @@
     .filter-select {
       width: 100%;
       padding: 10px 12px;
-      border: 1px solid rgba(11, 102, 209, 0.2);
+      border: 1px solid rgba(30, 115, 50, 0.2);
       border-radius: 16px;
       font-family: 'Poppins', sans-serif;
       font-size: 0.85rem;
@@ -487,7 +509,7 @@
     }
 
     .filter-select:hover {
-      border-color: rgba(11, 102, 209, 0.35);
+      border-color: rgba(30, 115, 50, 0.35);
       background: rgba(255,255,255,1);
     }
 
@@ -510,23 +532,23 @@
     }
 
     .btn-apply {
-      background: linear-gradient(135deg, #0b66d1 0%, #3fa1ff 100%);
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
       color: white;
     }
 
     .btn-apply:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 34px rgba(11, 102, 209, 0.22);
+      box-shadow: 0 16px 34px rgba(27, 94, 32, 0.22);
     }
 
     .btn-reset {
-      background: rgba(11, 102, 209, 0.08);
-      color: #0b66d1;
-      border: 1px solid rgba(11, 102, 209, 0.22);
+      background: rgba(30, 115, 50, 0.08);
+      color: #1b5e20;
+      border: 1px solid rgba(30, 115, 50, 0.22);
     }
 
     .btn-reset:hover {
-      background: rgba(11, 102, 209, 0.14);
+      background: rgba(30, 115, 50, 0.14);
       transform: translateY(-1px);
     }
 
@@ -536,7 +558,7 @@
       align-items: center;
       padding: 12px 0;
       font-size: 0.84rem;
-      border-bottom: 1px solid rgba(11, 102, 209, 0.1);
+      border-bottom: 1px solid rgba(30, 115, 50, 0.1);
     }
 
     .layer-item:last-child {
@@ -548,7 +570,7 @@
       height: 16px;
       cursor: pointer;
       margin-right: 8px;
-      accent-color: #0066ff;
+      accent-color: #2e7d32;
     }
 
     .layer-item label {
@@ -566,7 +588,7 @@
       height: 18px;
       cursor: pointer;
       margin-right: 10px;
-      accent-color: #0b66d1;
+      accent-color: #2e7d32;
     }
 
     .layer-color {
@@ -627,9 +649,9 @@
       height: 36px;
       border: none;
       border-radius: 50%;
-      background: linear-gradient(135deg, #0b66d1 0%, #3fa1ff 100%);
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
       color: white;
-      box-shadow: 0 6px 14px rgba(0, 102, 255, 0.22);
+      box-shadow: 0 6px 14px rgba(27, 94, 32, 0.22);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -659,7 +681,7 @@
     .basemap-control button {
       border: none;
       background: transparent;
-      color: #0f172a;
+      color: #1b5e20;
       padding: 6px 10px;
       border-radius: 6px;
       cursor: pointer;
@@ -670,12 +692,12 @@
 
     .basemap-control button:hover,
     .basemap-control button.active {
-      background: #0066ff;
+      background: #1b5e20;
       color: white;
     }
 
     .analysis-header {
-      background: linear-gradient(135deg, #0c4b9d 0%, #1788cf 100%);
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
       color: white;
       padding: 16px 18px;
       font-weight: 700;
@@ -702,8 +724,8 @@
       position: relative;
       min-width: 0;
       height: 100%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(238,244,255,0.96));
-      border: 1px solid rgba(0, 102, 255, 0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(238,244,235,0.96));
+      border: 1px solid rgba(30, 115, 50, 0.12);
       border-radius: 24px;
       padding: 18px;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8);
@@ -732,7 +754,7 @@
       display: flex;
       flex-direction: column;
       background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(0, 102, 255, 0.14);
+      border: 1px solid rgba(30, 115, 50, 0.14);
       border-radius: 20px;
       padding: 14px;
       min-height: 260px;
@@ -743,7 +765,7 @@
     .comparison-chart-title {
       font-size: 0.88rem;
       font-weight: 700;
-      color: #0c4b9d;
+      color: #1b5e20;
       margin-bottom: 12px;
     }
 
@@ -786,14 +808,14 @@
       line-height: 1.6;
       overflow-y: auto;
       padding: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(239,248,255,0.94));
-      border: 1px solid rgba(11, 102, 209, 0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(239,248,235,0.94));
+      border: 1px solid rgba(30, 115, 50, 0.12);
       border-radius: 22px;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
     }
 
     .analysis-stats strong {
-      color: #0066ff;
+      color: #1b5e20;
     }
 
     /* LEGEND PANEL - Shared with Analysis */
@@ -825,11 +847,11 @@
     }
 
     .section-content::-webkit-scrollbar-track {
-      background: rgba(0, 102, 255, 0.05);
+      background: rgba(30, 115, 50, 0.05);
     }
 
     .section-content::-webkit-scrollbar-thumb {
-      background: rgba(0, 102, 255, 0.2);
+      background: rgba(30, 115, 50, 0.2);
       border-radius: 2px;
     }
 
@@ -838,7 +860,7 @@
     }
 
     .analysis-stats::-webkit-scrollbar-thumb {
-      background: rgba(0, 102, 255, 0.2);
+      background: rgba(30, 115, 50, 0.2);
       border-radius: 2px;
     }
 
@@ -958,7 +980,7 @@
 
       .right-panel-section {
         flex: 1;
-        border-right: 1px solid rgba(0, 102, 255, 0.1);
+        border-right: 1px solid rgba(30, 115, 50, 0.1);
         border-bottom: none;
       }
 
@@ -1044,7 +1066,7 @@
 
       .right-panel-section {
         border-right: none;
-        border-bottom: 1px solid rgba(0, 102, 255, 0.1);
+        border-bottom: 1px solid rgba(30, 115, 50, 0.1);
         flex: 0 0 auto;
         max-height: 100px;
       }
@@ -1466,7 +1488,8 @@
       currentFilter: { provinsi: '', kabupaten: '', kecamatan: '', desa: '' },
       charts: {},
       baseLayers: {},
-      currentBasemap: 'osm'
+      currentBasemap: 'osm',
+      elevasiLabels: []
     };
 
     const LayerConfigs = {
@@ -1523,6 +1546,27 @@
         min: 0,
         max: 45,
         dataField: 'karbon'
+      },
+      pantai: {
+        name: 'Garis Pantai',
+        files: ['data/Pantai2016.geojson', 'data/Pantai2026.geojson'],
+        years: [2016, 2026],
+        visible: false,
+        field: 'Panjangkm',
+        type: 'pantai',
+        dataField: 'pantai'
+      },
+      elevasi: {
+        name: 'Elevasi',
+        file: 'data/Elevasi.geojson',
+        visible: false,
+        field: 'Interval',
+        type: 'elevasi',
+        areaField: 'Luas',
+        min: -27,
+        max: null,
+        interval: 1,
+        dataField: 'elevasi'
       }
     };
 
@@ -1554,6 +1598,11 @@
 
         // Map
         AppState.map = L.map('map').setView([-5.2, 119.5], 8);
+        AppState.map.on('zoomend moveend', () => {
+          if (typeof updateElevasiLabels === 'function') {
+            updateElevasiLabels();
+          }
+        });
         initializeBasemapLayers();
         createBasemapControl();
 
@@ -1583,8 +1632,8 @@
         populateFilters();
         createLayerControls();
         updateAnalysisPanel();
-        // Load Hiliriset points from Excel and add to map
-        await loadHilirisetPoints();
+        // Load Terapan points from Excel and add to map
+        await loadTerapanPoints();
 
         const toggleBtn = document.getElementById('analysis-toggle');
         if (toggleBtn) {
@@ -1661,7 +1710,7 @@
         .trim();
     }
 
-    const ALLOWED_KABUPATEN = ['Jeneponto', 'Maros', 'Barru', 'Sinjai'].map(normalizeKabupaten);
+    const ALLOWED_KABUPATEN = ['Maros', 'Makassar', 'Takalar'].map(normalizeKabupaten);
 
     function isAllowedKabupaten(value) {
       if (!value && value !== 0) return false;
@@ -2079,6 +2128,11 @@
     }
 
     function getFeatureFilter(layerId) {
+      // Pantai and Elevasi don't use kabupaten filtering
+      if (layerId === 'pantai' || layerId === 'elevasi') {
+        return (feature) => true;
+      }
+
       const baseMatcher = getFilterMatcher();
       return (feature) => {
         if (!isAllowedFeatureKabupaten(feature)) return false;
@@ -2271,6 +2325,11 @@
     }
 
     function getFilteredExcelRows(layerId) {
+      // Pantai and Elevasi don't use Excel data, they use GeoJSON directly
+      if (layerId === 'pantai' || layerId === 'elevasi') {
+        return [];
+      }
+
       const prov = document.getElementById('filter-provinsi').value;
       const kab = document.getElementById('filter-kabupaten').value;
       const kec = document.getElementById('filter-kecamatan').value;
@@ -2486,15 +2545,46 @@
 
       for (const [layerId, config] of Object.entries(LayerConfigs)) {
         try {
-          const response = await fetch(config.file);
-          const geojson = await response.json();
+          let geojson;
+          
+          if (layerId === 'pantai') {
+            // Pantai: merge both years
+            const year2016 = await fetch(config.files[0]).then(r => r.json());
+            const year2026 = await fetch(config.files[1]).then(r => r.json());
+            
+            // Add year property to features
+            year2016.features.forEach(f => { f.properties.tahun = 2016; });
+            year2026.features.forEach(f => { f.properties.tahun = 2026; });
+            
+            geojson = {
+              type: 'FeatureCollection',
+              features: [...year2016.features, ...year2026.features]
+            };
+          } else {
+            const response = await fetch(config.file);
+            geojson = await response.json();
+          }
 
           const layer = L.geoJSON(geojson, {
             style: (feature) => getStyle(layerId, feature),
             onEachFeature: (feature, leafletLayer) => {
               leafletLayer.bindPopup(formatPopup(feature));
+              
+              if (layerId === 'elevasi' && (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')) {
+                const intervalValue = parseFloat(feature.properties.Interval);
+                const intervalLabel = Number.isFinite(intervalValue) ? `${intervalValue.toFixed(0)} m` : 'n/a';
+                const labelOptions = {
+                  permanent: false,
+                  direction: 'center',
+                  className: 'elevasi-interval-label',
+                  sticky: false,
+                  opacity: 1
+                };
+                leafletLayer.bindTooltip(intervalLabel, labelOptions);
+              }
+              
               leafletLayer.on('mouseover', function() {
-                this.setStyle({ weight: 3, opacity: 0.9, color: '#000000' });
+                this.setStyle({ weight: 2, opacity: 0.95, color: '#555555' });
               });
               leafletLayer.on('mouseout', function() {
                 this.setStyle(getStyle(layerId, feature));
@@ -2516,7 +2606,7 @@
 
           console.log(`Loaded: ${config.name}`);
         } catch (error) {
-          console.error(`Error loading ${config.file}:`, error);
+          console.error(`Error loading ${layerId}:`, error);
         }
       }
     }
@@ -2524,24 +2614,40 @@
     function getStyle(layerId, feature) {
       const config = LayerConfigs[layerId];
       const props = feature.properties || {};
-      let color = '#0066ff';
+      let color = '#1b5e20';
+      let weight = 2;
+      let opacity = 0.8;
 
-      if (config.type === 'discrete') {
+      if (layerId === 'pantai') {
+        // Garis pantai: warna berbeda untuk tahun
+        const tahun = props.tahun;
+        color = tahun === 2016 ? '#1e90ff' : '#ff6347'; // Blue for 2016, Tomato for 2026
+        weight = 2.5;
+        opacity = 0.85;
+      } else if (layerId === 'elevasi') {
+        // Elevasi: kategori warna dari biru ke merah berdasarkan interval 3m
+        const interval = parseFloat(props.Interval) || 0;
+        color = getElevasiColor(interval);
+        weight = 0.4; // Outline thickness - tipis
+        opacity = 0.9;
+      } else if (config.type === 'discrete') {
         let fieldValue = '';
         if (layerId.includes('mangrove')) {
           fieldValue = getFeatureProperty(feature, ['Ket', 'ket', 'kelas_ndvi', 'Keterangan', 'keterangan']) || props[config.field] || '';
           const colorMap = { 'Lebat': '#00b300', 'Sedang': '#ffaa00', 'Jarang': '#ff6600', 'Rusak': '#ff3333' };
-          color = colorMap[fieldValue] || colorMap[fieldValue?.toString().trim()] || '#0066ff';
+          color = colorMap[fieldValue] || colorMap[fieldValue?.toString().trim()] || '#1b5e20';
         } else if (layerId === 'zona') {
           fieldValue = getFeatureProperty(feature, ['Zona', 'zona', 'zona_kawasan', 'jenis']) || props[config.field] || '';
           const normalized = String(fieldValue || '').trim().toLowerCase();
           if (normalized.includes('konservasi')) color = '#27ae60';
           else if (normalized.includes('rehabilitasi')) color = '#f39c12';
-          else color = '#0066ff';
+          else color = '#1b5e20';
         } else if (layerId === 'perubahan') {
           fieldValue = getFeatureProperty(feature, ['Ketereanga', 'ketereanga', 'Keterangan', 'keterangan', 'Ket', 'ket', 'K_2016', 'k_2016']) || props[config.field] || '';
           color = getTutupanColor(fieldValue);
         }
+        weight = 0;
+        opacity = 0.25;
       } else if (config.type === 'continuous') {
         const value = parseFloat(getFeatureProperty(feature, [
           'ChgTahunHa', 'PerubahanPertahun(Ha)', 'PerubahanPertahun', 'Perubahan Pertahun (Ha)', 'Perubahan_Pertahun_Ha',
@@ -2566,18 +2672,119 @@
           else if (value < interval * 4) color = '#ffb74d';
           else color = '#ff6f00';
         }
+        weight = 0;
+        opacity = 0.25;
       }
 
       return {
-        color: 'rgba(255,255,255,0.2)',
-        weight: 0,
-        opacity: 0.25,
-        fillOpacity: 0.78,
+        color: layerId === 'pantai' ? color : (layerId === 'elevasi' ? '#555555' : 'rgba(255,255,255,0.2)'),
+        weight: weight,
+        opacity: opacity,
+        fillOpacity: layerId === 'pantai' ? 0.6 : (layerId === 'elevasi' ? 0.85 : 0.78),
         fillColor: color
       };
     }
 
+    function updateElevasiLabels() {
+      // Label elevasi dinonaktifkan untuk menjaga performa peta.
+      // Fungsi ini disediakan agar event handler peta tidak memicu error.
+    }
+
+    function getElevasiColor(interval) {
+      // Categorical color scheme for elevation with 3m intervals
+      // Groups colors by 3 meter intervals from blue to red gradient
+      const intervalValue = parseFloat(interval) || 0;
+      
+      // Color palette - gradient from blue to red
+      const colors = [
+        '#0047AB', // Deep Blue (interval < 0)
+        '#1E90FF', // Dodger Blue (0-3)
+        '#00CED1', // Dark Turquoise (3-6)
+        '#20B2AA', // Light Sea Green (6-9)
+        '#32CD32', // Lime Green (9-12)
+        '#90EE90', // Light Green (12-15)
+        '#FFFFE0', // Light Yellow (15-18)
+        '#FFD700', // Gold (18-21)
+        '#FFA500', // Orange (21-24)
+        '#FF8C00', // Dark Orange (24-27)
+        '#FF6347', // Tomato (27-30)
+        '#FF4500', // Orange Red (30-33)
+        '#DC143C'  // Crimson Red (≥33)
+      ];
+      
+      let colorIndex = 0;
+      if (intervalValue < 0) colorIndex = 0;
+      else if (intervalValue < 3) colorIndex = 1;
+      else if (intervalValue < 6) colorIndex = 2;
+      else if (intervalValue < 9) colorIndex = 3;
+      else if (intervalValue < 12) colorIndex = 4;
+      else if (intervalValue < 15) colorIndex = 5;
+      else if (intervalValue < 18) colorIndex = 6;
+      else if (intervalValue < 21) colorIndex = 7;
+      else if (intervalValue < 24) colorIndex = 8;
+      else if (intervalValue < 27) colorIndex = 9;
+      else if (intervalValue < 30) colorIndex = 10;
+      else if (intervalValue < 33) colorIndex = 11;
+      else colorIndex = 12;
+      
+      return colors[colorIndex];
+    }
+
+    function getElevasiCategory(interval) {
+      // Returns category label and color for legend (3m intervals)
+      const intervalValue = parseFloat(interval) || 0;
+      
+      const categories = [
+        { min: -100, max: 0, label: '< 0 m', color: '#0047AB' },
+        { min: 0, max: 3, label: '0 - 3 m', color: '#1E90FF' },
+        { min: 3, max: 6, label: '3 - 6 m', color: '#00CED1' },
+        { min: 6, max: 9, label: '6 - 9 m', color: '#20B2AA' },
+        { min: 9, max: 12, label: '9 - 12 m', color: '#32CD32' },
+        { min: 12, max: 15, label: '12 - 15 m', color: '#90EE90' },
+        { min: 15, max: 18, label: '15 - 18 m', color: '#FFFFE0' },
+        { min: 18, max: 21, label: '18 - 21 m', color: '#FFD700' },
+        { min: 21, max: 24, label: '21 - 24 m', color: '#FFA500' },
+        { min: 24, max: 27, label: '24 - 27 m', color: '#FF8C00' },
+        { min: 27, max: 30, label: '27 - 30 m', color: '#FF6347' },
+        { min: 30, max: 33, label: '30 - 33 m', color: '#FF4500' },
+        { min: 33, max: 999, label: '≥ 33 m', color: '#DC143C' }
+      ];
+      
+      for (const cat of categories) {
+        if (intervalValue >= cat.min && intervalValue < cat.max) {
+          return { label: cat.label, color: cat.color };
+        }
+      }
+      
+      return { label: '≥ 33 m', color: '#DC143C' };
+    }
+
     function formatPopup(feature) {
+      // Special handling for Pantai layer
+      if (feature.properties.tahun !== undefined && feature.properties.Panjangkm !== undefined) {
+        const panjang = parseFloat(feature.properties.Panjangkm) || 0;
+        const tahun = feature.properties.tahun || '';
+        return `<div style="max-width: 320px; font-size: 12px; color: #222;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="font-weight: 700; padding: 4px 6px;">Panjang</td><td style="padding: 4px 6px;">${panjang.toFixed(2)} km</td></tr>
+            <tr><td style="font-weight: 700; padding: 4px 6px;">Tahun</td><td style="padding: 4px 6px;">${tahun}</td></tr>
+          </table>
+        </div>`;
+      }
+
+      // Special handling for Elevasi layer
+      if (feature.properties.Interval !== undefined && feature.properties.Luas !== undefined) {
+        const interval = parseFloat(feature.properties.Interval) || 0;
+        const luas = parseFloat(feature.properties.Luas) || 0;
+        return `<div style="max-width: 320px; font-size: 12px; color: #222;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="font-weight: 700; padding: 4px 6px;">Elevasi</td><td style="padding: 4px 6px;">${interval} m</td></tr>
+            <tr><td style="font-weight: 700; padding: 4px 6px;">Luas</td><td style="padding: 4px 6px;">${luas.toLocaleString('id', { maximumFractionDigits: 2 })} ha</td></tr>
+          </table>
+        </div>`;
+      }
+
+      // Standard popup for other layers
       const labelMap = {
         wadmkc: 'Kecamatan',
         wadmkd: 'Desa/Kelurahan',
@@ -2626,7 +2833,7 @@
             if (normalizedKey.toLowerCase() === 'zona' || normalizedKey.toLowerCase() === 'zona_kawasan' || normalizedKey.toLowerCase() === 'jenis') {
               const zonaText = String(display || '').trim();
               const normalizedZona = zonaText.toLowerCase();
-              let zonaColor = '#0066ff';
+              let zonaColor = '#1b5e20';
               if (normalizedZona.includes('konservasi')) zonaColor = '#27ae60';
               else if (normalizedZona.includes('rehabilitasi')) zonaColor = '#f39c12';
               display = `<strong style="color: ${zonaColor};">${zonaText}</strong>`;
@@ -2662,7 +2869,9 @@
       if (layerId === 'laju') return '#ff6f00';
       if (layerId === 'perubahan') return '#e74c3c';
       if (layerId === 'karbon') return '#f39c12';
-      return '#0066ff';
+      if (layerId === 'pantai') return '#1e90ff';
+      if (layerId === 'elevasi') return '#6f42c1';
+      return '#1b5e20';
     }
 
     function toggleLayer(layerId) {
@@ -2782,6 +2991,12 @@
       setTimeout(() => {
         if (layerId === 'perubahan') {
           renderPerubahanComparisonCharts(chartContainer, statsContainer);
+          return;
+        } else if (layerId === 'pantai') {
+          renderPantaiChart(chartContainer, statsContainer, layerId);
+          return;
+        } else if (layerId === 'elevasi') {
+          renderElevasiChart(chartContainer, statsContainer, layerId);
           return;
         }
 
@@ -3148,6 +3363,216 @@
       container.innerHTML = html;
     }
 
+    // PANTAI CHARTS - Side by side with table and chart
+    function renderPantaiChart(chartContainer, statsContainer, layerId) {
+      const layerObj = AppState.geoJsonLayers[layerId];
+      const geojson = layerObj.data;
+      
+      // Group by year and sum panjang
+      const dataPantai = {};
+      geojson.features.forEach(feature => {
+        const tahun = feature.properties.tahun;
+        const panjang = parseFloat(feature.properties.Panjangkm) || 0;
+        if (!dataPantai[tahun]) {
+          dataPantai[tahun] = 0;
+        }
+        dataPantai[tahun] += panjang;
+      });
+
+      const years = Object.keys(dataPantai).sort().map(y => parseInt(y));
+      const panjangValues = years.map(y => dataPantai[y]);
+
+      // Create side-by-side layout
+      const chartHtml = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; height: 100%;">
+          <div style="display: flex; flex-direction: column;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; flex: 1;">
+              <thead>
+                <tr style="background: #1b5e20; color: white; font-weight: 700;">
+                  <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Tahun</th>
+                  <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Panjang (km)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${years.map(y => `
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="border: 1px solid #ddd; padding: 8px;">${y}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-weight: 600;">${dataPantai[y].toFixed(2)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <canvas id="chart-pantai" style="max-height: 300px;"></canvas>
+          </div>
+        </div>
+      `;
+
+      chartContainer.innerHTML = chartHtml;
+
+      // Create chart
+      setTimeout(() => {
+        const ctx = document.getElementById('chart-pantai');
+        if (ctx) {
+          AppState.charts[layerId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: years.map(y => `${y}`),
+              datasets: [{
+                label: 'Panjang Garis Pantai (km)',
+                data: panjangValues,
+                backgroundColor: ['#1e90ff', '#ff6347'],
+                borderRadius: 4,
+                borderWidth: 1,
+                borderColor: 'rgba(0,0,0,0.1)'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              indexAxis: 'x',
+              plugins: {
+                legend: { display: true, position: 'bottom' },
+                title: { display: true, text: 'Panjang Garis Pantai per Tahun' }
+              },
+              scales: {
+                y: { 
+                  beginAtZero: true,
+                  title: { display: true, text: 'Panjang (km)' }
+                },
+                x: {
+                  title: { display: true, text: 'Tahun' }
+                }
+              }
+            }
+          });
+        }
+      }, 50);
+
+      // Stats
+      let statsHtml = `<strong>Statistik Garis Pantai</strong><br/>`;
+      let totalPanjang = 0;
+      years.forEach(year => {
+        const panjang = dataPantai[year];
+        totalPanjang += panjang;
+        statsHtml += `Tahun ${year}: ${panjang.toFixed(2)} km<br/>`;
+      });
+      statsHtml += `<br/><strong>Total Panjang: ${totalPanjang.toFixed(2)} km</strong><br/>`;
+      
+      if (years.length === 2) {
+        const perubahan = dataPantai[years[1]] - dataPantai[years[0]];
+        const persentase = (perubahan / dataPantai[years[0]] * 100).toFixed(2);
+        statsHtml += `Perubahan: ${perubahan > 0 ? '+' : ''}${perubahan.toFixed(2)} km (${persentase}%)<br/>`;
+      }
+
+      statsContainer.innerHTML = statsHtml;
+    }
+
+    // ELEVASI CHARTS
+    function renderElevasiChart(chartContainer, statsContainer, layerId) {
+      const layerObj = AppState.geoJsonLayers[layerId];
+      const geojson = layerObj.data;
+
+      // Group by interval and sum luas
+      const dataElevasi = {};
+      const intervals = [];
+      
+      geojson.features.forEach(feature => {
+        const interval = feature.properties.Interval;
+        const luas = parseFloat(feature.properties.Luas) || 0;
+        
+        if (interval !== null && interval !== undefined) {
+          if (!dataElevasi[interval]) {
+            dataElevasi[interval] = 0;
+            intervals.push(interval);
+          }
+          dataElevasi[interval] += luas;
+        }
+      });
+
+      intervals.sort((a, b) => parseFloat(a) - parseFloat(b));
+      const luasValues = intervals.map(i => dataElevasi[i]);
+
+      // Create chart
+      chartContainer.innerHTML = '<canvas id="chart-elevasi"></canvas>';
+      
+      setTimeout(() => {
+        const ctx = document.getElementById('chart-elevasi');
+        if (ctx) {
+          const colors = intervals.map(interval => {
+            const val = parseFloat(interval);
+            return getElevasiColorValue(val);
+          });
+
+          AppState.charts[layerId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: intervals.map(i => `${i} m`),
+              datasets: [{
+                label: 'Luas (ha)',
+                data: luasValues,
+                backgroundColor: colors,
+                borderRadius: 3,
+                borderWidth: 1,
+                borderColor: 'rgba(0,0,0,0.1)'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: 'Luas (ha)' }
+                },
+                x: {
+                  title: { display: true, text: 'Interval Elevasi' }
+                }
+              }
+            }
+          });
+        }
+      }, 50);
+
+      // Stats - calculate area per class
+      let statsHtml = `<strong>Statistik Elevasi</strong><br/>`;
+      let totalLuas = 0;
+      
+      intervals.forEach(interval => {
+        const luas = dataElevasi[interval];
+        totalLuas += luas;
+        const category = getElevasiCategory(interval);
+        const colorBox = `<span style="display: inline-block; width: 12px; height: 12px; background: ${category.color}; border-radius: 2px; margin-right: 4px; border: 1px solid rgba(0,0,0,0.2); vertical-align: middle;"></span>`;
+        statsHtml += `${colorBox} ${interval} m: ${luas.toFixed(2)} ha<br/>`;
+      });
+      
+      statsHtml += `<br/><strong>Total Luas: ${totalLuas.toFixed(2)} ha</strong>`;
+      
+      // Add legend with categories
+      statsHtml += `<div class="legend-section"><strong>Kategori Elevasi</strong><br/>`;
+      const categorySet = new Set();
+      intervals.forEach(interval => {
+        const category = getElevasiCategory(interval);
+        categorySet.add(JSON.stringify(category));
+      });
+      Array.from(categorySet).forEach(catStr => {
+        const category = JSON.parse(catStr);
+        statsHtml += `<div class="legend-item" style="margin-bottom: 4px;"><div class="legend-color" style="background: ${category.color}; width: 14px; height: 14px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.2);"></div> ${category.label}</div>`;
+      });
+      statsHtml += '</div>';
+
+      statsContainer.innerHTML = statsHtml;
+    }
+
+    function getElevasiColorValue(interval) {
+      // Same categorical function for chart consistency
+      return getElevasiColor(interval);
+    }
+
     // ============= FILTER APPLICATION =============
     function zoomToFilteredLayers() {
       if (!AppState.map) return;
@@ -3290,6 +3715,131 @@
         }
       }
     }
+
+    // ============= TERAPAN POINTS (LOAD FROM data/terapan.json) =============
+    async function loadTerapanPoints() {
+      const dataUrl = 'data/terapan.json';
+
+      const createMarker = (entry) => {
+        const marker = L.marker(entry.coords, { icon: createHilirisetIcon() });
+        marker.bindPopup(renderHilirisetPopupHtml(entry));
+        marker.bindTooltip(escapeHtml(entry.name || ''), {
+          permanent: false,
+          direction: 'right',
+          className: 'hiliriset-label'
+        });
+        return marker;
+      };
+
+      const createLayer = (entries) => {
+        const layerGroup = L.layerGroup();
+        (entries || []).filter(entry => isAllowedKabupaten(entry.kabupaten || getFeatureProperty({ properties: entry }, ['Kabupaten','kabupaten']) )).forEach((entry) => {
+          if (Array.isArray(entry.coords) && entry.coords.length === 2) {
+            const marker = createMarker(entry);
+            marker.addTo(layerGroup);
+          }
+        });
+        return layerGroup;
+      };
+
+      const addLayerControl = (layerGroup) => {
+        const container = document.getElementById('layer-control-content');
+        if (!container) return;
+        const html = `
+          <div class="layer-item">
+            <input type="checkbox" id="layer-hiliriset" checked onchange="toggleHilirisetLayer(this)">
+            <label for="layer-hiliriset">Lokasi Kegiatan<div class="layer-color" style="background:#ff5722"></div></label>
+          </div>
+        `;
+        container.insertAdjacentHTML('afterbegin', html);
+        window.toggleHilirisetLayer = function(cb) {
+          if (cb.checked) {
+            AppState.map.addLayer(layerGroup);
+            AppState.hilirisetLayer.isVisible = true;
+            layerGroup.eachLayer(layer => { try { if (typeof layer.openTooltip === 'function') layer.openTooltip(); } catch (ignore) {} });
+          } else {
+            layerGroup.eachLayer(layer => { try { if (typeof layer.closeTooltip === 'function') layer.closeTooltip(); } catch (ignore) {} });
+            AppState.map.removeLayer(layerGroup);
+            AppState.hilirisetLayer.isVisible = false;
+          }
+          updateAnalysisPanel();
+        };
+      };
+
+      const addTerapanLayer = (layerGroup) => {
+        if (!layerGroup) return;
+        layerGroup.addTo(AppState.map);
+        layerGroup.eachLayer(layer => { try { if (typeof layer.openTooltip === 'function') layer.openTooltip(); } catch (ignore) {} });
+        AppState.hilirisetLayer = { layer: layerGroup, name: 'Terapan Points', isVisible: true };
+      };
+
+      try {
+        const res = await fetch(dataUrl);
+        if (!res.ok) throw new Error('Failed to fetch ' + dataUrl);
+        const entries = await res.json();
+        if (!Array.isArray(entries) || entries.length === 0) throw new Error('No terapan entries');
+
+        const layerGroup = createLayer(entries);
+        if (layerGroup.getLayers().length > 0) {
+          addTerapanLayer(layerGroup);
+          addLayerControl(layerGroup);
+        }
+      } catch (err) {
+        console.warn('loadTerapanPoints error:', err);
+        // Fallback: try to load workbook from images/WEBIMG/Terapan/Terapan.xlsx
+        try {
+          const fallbackXlsx = 'images/WEBIMG/Terapan/Terapan.xlsx';
+          const res2 = await fetch(fallbackXlsx);
+          if (!res2.ok) throw new Error('Failed to fetch ' + fallbackXlsx);
+          const ab = await res2.arrayBuffer();
+          const workbook = XLSX.read(ab, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+
+          const entries = rows.map((row) => {
+            const name = row['Nama'] || row['Kawasan'] || row['nama'] || '';
+            const kabupaten = row['Kabupaten'] || row['kabupaten'] || row['Kab'] || '';
+            const kecamatan = row['Kecamatan'] || row['kecamatan'] || '';
+            const kelurahan = row['Kelurahan'] || row['kelurahan'] || row['Desa'] || '';
+            const lon = parseFloat(row['Longitude'] || row['longitude'] || row['Lon'] || row['Long'] || '');
+            const lat = parseFloat(row['Latitude'] || row['latitude'] || row['Lat'] || '');
+            const ket = row['Keterangan'] || row['Ket'] || row['ket'] || row['Deskripsi'] || '';
+            const folder = row['Folder'] || row['folder'] || '';
+
+            return {
+              name: String(name || (`${kabupaten} ${kecamatan} ${kelurahan}`)).trim(),
+              kabupaten: String(kabupaten || '').trim(),
+              kecamatan: String(kecamatan || '').trim(),
+              kelurahan: String(kelurahan || '').trim(),
+              folder: folder,
+              coords: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null,
+              images: [],
+              peta: '',
+              ket: String(ket || '')
+            };
+          }).filter(entry => Array.isArray(entry.coords) && entry.coords.length === 2)
+            .map((entry) => {
+              // attempt to resolve images/peta from folder
+              if (entry.folder) {
+                const folderPath = `images/WEBIMG/Terapan/${entry.folder}`;
+                // try to construct peta and topografi paths (will be validated in marker creation if needed)
+                entry.peta = `${folderPath}/Peta.jpg`;
+                entry.images = [`${folderPath}/Topografi.jpg`];
+              }
+              return entry;
+            });
+
+          const layerGroup2 = createLayer(entries);
+          if (layerGroup2.getLayers().length > 0) {
+            addTerapanLayer(layerGroup2);
+            addLayerControl(layerGroup2);
+          }
+        } catch (fallbackErr) {
+          console.warn('loadTerapanPoints fallback error:', fallbackErr);
+        }
+      }
+    }
+
 
     function applyFilters() {
       const prov = document.getElementById('filter-provinsi').value;

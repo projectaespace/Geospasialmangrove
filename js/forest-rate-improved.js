@@ -10,6 +10,22 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
         // Get data from Excel
         const forestRateData = stateManager.getSheetData('LajuForestasiKab');
         const mangroveData = stateManager.getSheetData('2026Mangrove');
+        const normalizeKabupatenName = (value = '') => String(value || '').trim().toLowerCase()
+            .replace(/^kabupaten\s*/i, '')
+            .replace(/^kab\.\s*/i, '')
+            .replace(/^kota\s*/i, '')
+            .replace(/^kot\.\s*/i, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        const kabupatenPercentOverrides = { maros: -0.003, makassar: 0.075, takalar: -0.33 };
+        const kabupatenHaPerYearOverrides = { maros: -0.037, makassar: 0.54, takalar: -6.56 };
+        const getDisplayKabupatenName = (value = '') => {
+            const normalized = normalizeKabupatenName(value);
+            if (normalized === 'maros') return 'Maros';
+            if (normalized === 'makassar') return 'Makassar';
+            if (normalized === 'takalar') return 'Takalar';
+            return String(value || '').trim() || 'Tidak Diketahui';
+        };
 
         console.log('🌳 Forest Rate Data:', forestRateData.length, 'records');
         console.log('Sample:', forestRateData[0]);
@@ -24,31 +40,21 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
             // Normalize column names using exact headers from Dashboard.xlsx
             const area2016 = parseFloat(row['2016'] || row['Tahun_2016'] || row['2016 Ha'] || 0) || 0;
             const area2026 = parseFloat(row['2026'] || row['Tahun_2026'] || row['2026 Ha'] || 0) || 0;
-            const changePercent = parseFloat(row['Perubahan Pertahun %'] || row['perubahan_persen'] || row['Perubahan %'] || 0) || 0;
-            const changeHa = parseFloat(row['PerubahanPertahun(Ha)'] || row['perubahan_ha'] || row['Perubahan Ha'] || 0) || 0;
+            const rawChangePercent = parseFloat(row['Perubahan Pertahun %'] || row['perubahan_persen'] || row['Perubahan %'] || 0) || 0;
+            const rawChangeHa = parseFloat(row['PerubahanPertahun(Ha)'] || row['perubahan_ha'] || row['Perubahan Ha'] || 0) || 0;
 
             // Get kabupaten name
             const kabupaten = row['KabupatenKota'] || row['Kabupaten'] || row['KabKota'] || row['kabupaten'] || row['kabkota'] || 'Tidak Diketahui';
-
-            // Calculate derived metrics
-            const baseChangeHaPerYear = changeHa * 10;
-            
-            // Specific value overrides for kabupaten Ha/Tahun
-            const kabupatenHaPerYearOverrides = {
-                'Barru': 0.18,
-                'Jeneponto': -2.18,
-                'Maros': -0.03,
-                'Sinjai': -1.83
-            };
-            
-            const kabupatenNormalized = kabupaten.trim();
-            const changeHaPerYear = kabupatenHaPerYearOverrides[kabupatenNormalized] !== undefined 
-                ? kabupatenHaPerYearOverrides[kabupatenNormalized] 
-                : baseChangeHaPerYear;
+            const kabupatenKey = normalizeKabupatenName(kabupaten);
+            const changePercent = kabupatenPercentOverrides[kabupatenKey] !== undefined ? kabupatenPercentOverrides[kabupatenKey] : rawChangePercent;
+            const baseChangeHaPerYear = rawChangeHa * 10;
+            const changeHaPerYear = kabupatenHaPerYearOverrides[kabupatenKey] !== undefined ? kabupatenHaPerYearOverrides[kabupatenKey] : baseChangeHaPerYear;
+            const changeHa = changeHaPerYear;
             const isMinus = changeHaPerYear < 0 ? true : false;
 
             return {
-                kabupaten: kabupatenNormalized,
+                kabupaten: getDisplayKabupatenName(kabupaten),
+                kabupatenKey,
                 area2016: area2016,
                 area2026: area2026,
                 changePercent: changePercent,
@@ -71,9 +77,9 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
             const badgeText = data.isMinus ? 'Degradasi' : 'Agradasi';
 
             html += `
-            <div class="forest-rate-card" style="animation-delay: ${index * 0.05}s; background: linear-gradient(145deg, #f7fbff 0%, #eff7ff 100%); border: 1px solid rgba(0, 102, 255, 0.16); box-shadow: 0 18px 32px rgba(0, 102, 255, 0.08);">
-                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:16px 16px 14px; background:linear-gradient(120deg, rgba(0,102,255,0.08), rgba(0,180,216,0.09));">
-                    <div class="card-name" style="font-size: 0.95rem; font-weight: 800; color: #0b5fff; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.2;">${data.kabupaten}</div>
+            <div class="forest-rate-card" style="animation-delay: ${index * 0.05}s; background: linear-gradient(145deg, #f7fcf8 0%, #eef9ee 100%); border: 1px solid rgba(46, 125, 50, 0.16); box-shadow: 0 18px 32px rgba(46, 125, 50, 0.08);">
+                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:16px 16px 14px; background:linear-gradient(120deg, rgba(46,125,50,0.08), rgba(102,187,106,0.12));">
+                    <div class="card-name" style="font-size: 0.95rem; font-weight: 800; color: #2e7d32; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.2;">${data.kabupaten}</div>
                     <span class="card-badge ${badgeClass}" style="font-weight:700; font-size:0.78rem; padding:5px 8px; white-space:nowrap;">
                         ${changeIcon} ${badgeText}
                     </span>
@@ -108,7 +114,7 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
                     </div>
                 </div>
 
-                <button class="detail-btn" onclick="showKabupatenDetail('${data.kabupaten}')">
+                <button class="detail-btn" onclick="showKabupatenDetail('${data.kabupaten}')" style="margin-top: 16px; width: 100%; padding: 12px 14px; background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%); color: white; border: none; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 20px rgba(46, 125, 50, 0.16); transition: transform 0.2s ease, box-shadow 0.2s ease;">
                     📊 Lihat Detail
                 </button>
             </div>
@@ -119,7 +125,7 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
 
         // Summary section
         let summaryHtml = `
-        <div style="margin-top: 35px; padding: 25px; background: linear-gradient(135deg, #f5f9f7 0%, #ffffff 100%); border-radius: 18px; border: 2px solid #e8f4f1; box-shadow: 0 18px 42px rgba(0, 102, 255, 0.08);">
+        <div style="margin-top: 35px; padding: 25px; background: linear-gradient(135deg, #f7fcf8 0%, #ffffff 100%); border-radius: 18px; border: 2px solid #eaf7eb; box-shadow: 0 18px 42px rgba(46, 125, 50, 0.08);">
             <h3 style="color: #1a472a; margin-bottom: 20px;">📊 Ringkasan Laju Deforestasi</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
                 <div style="text-align: center; padding: 18px; background: white; border-radius: 18px; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);">
@@ -140,14 +146,14 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
 
         const chartSection = `
         <div style="margin-top: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-            <div style="background: white; border-radius: 20px; border: 1px solid #e8f4f1; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.04);">
-                <h4 style="margin: 0 0 14px; color: #0066ff; font-size: 1rem;">Laju Perubahan Tahunan %</h4>
+            <div style="background: white; border-radius: 20px; border: 1px solid #eaf7eb; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.04);">
+                <h4 style="margin: 0 0 14px; color: #2e7d32; font-size: 1rem;">Laju Perubahan Tahunan %</h4>
                 <div style="height: 280px;">
                     <canvas id="forest-rate-pct-chart" style="width:100%;height:100%;"></canvas>
                 </div>
             </div>
-            <div style="background: white; border-radius: 20px; border: 1px solid #e8f4f1; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.04);">
-                <h4 style="margin: 0 0 14px; color: #0066ff; font-size: 1rem;">Laju Perubahan Mangrove Ha/Tahun</h4>
+            <div style="background: white; border-radius: 20px; border: 1px solid #eaf7eb; padding: 22px; box-shadow: 0 12px 30px rgba(0,0,0,0.04);">
+                <h4 style="margin: 0 0 14px; color: #2e7d32; font-size: 1rem;">Laju Perubahan Mangrove Ha/Tahun</h4>
                 <div style="height: 280px;">
                     <canvas id="forest-rate-ha-chart" style="width:100%;height:100%;"></canvas>
                 </div>
@@ -174,10 +180,10 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
                         datasets: [{
                             label: 'Laju Perubahan Tahunan %',
                             data: pctData,
-                            backgroundColor: 'rgba(37, 99, 235, 0.22)',
-                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(46, 125, 50, 0.22)',
+                            borderColor: '#2e7d32',
                             borderWidth: 2,
-                            pointBackgroundColor: '#1d4ed8',
+                            pointBackgroundColor: '#388e3c',
                             pointBorderColor: '#fff',
                             pointHoverRadius: 6,
                             pointRadius: 4
@@ -220,8 +226,8 @@ function renderForestRateImproved(containerId, stateManager, statsCalculator) {
                         datasets: [{
                             label: 'Laju Perubahan Mangrove Ha/Tahun',
                             data: haData,
-                            backgroundColor: ['#2563eb', '#3b82f6', '#60a5fa', '#38bdf8', '#0ea5e9', '#0284c7', '#0369a1', '#1d4ed8'],
-                            borderColor: '#1d4ed8',
+                            backgroundColor: ['#2e7d32', '#43a047', '#66bb6a', '#81c784', '#a5d6a7', '#c8e6c9', '#dcedc8', '#388e3c'],
+                            borderColor: '#388e3c',
                             borderWidth: 1,
                             borderRadius: 6,
                             maxBarThickness: 34
@@ -268,51 +274,60 @@ function showKabupatenDetail(kabupaten) {
         return;
     }
 
-    // Kecamatan to Kabupaten mapping for data validation
-    const kecamatan_to_kabupaten = {
-        'Sinjai Utara': 'Sinjai', 'Sinjai Timur': 'Sinjai', 'Sinjai Barat': 'Sinjai', 'Sinjai Tengah': 'Sinjai',
-        'Tallo': 'Kota Makassar', 'Tamalanrea': 'Kota Makassar', 'Panakkukang': 'Kota Makassar', 'Biringkanaya': 'Kota Makassar',
-        'Manggala': 'Kota Makassar', 'Tamalate': 'Kota Makassar', 'Mariso': 'Kota Makassar', 'Moncong Loe': 'Kota Makassar',
-        'Marusu': 'Kota Makassar', 'Galesong Utara': 'Kota Makassar',
-        'Mangarabombang': 'Takalar', 'Mappakasunggu': 'Takalar', 'Sanrobone': 'Takalar', 'Tellu Limpoe': 'Takalar',
-        'Pattallassang': 'Takalar', 'Kepulauan Tanakeke': 'Takalar', 'Polombangkeng Selatan': 'Takalar',
-        'Soppeng Riaja': 'Barru', 'Balusu': 'Barru', 'Mallusetasi': 'Barru', 'Tanete Rilau': 'Barru',
-        'Binamu': 'Barru', 'Arungkeke': 'Barru', 'Liukang Tangaya': 'Barru', 'Tamalatea': 'Barru',
-        'Tarowang': 'Jeneponto', 'Bangkala': 'Jeneponto', 'Bangkala Barat': 'Jeneponto',
-        'Bontoa': 'Maros', 'Bantimurung': 'Maros', 'Maros Baru': 'Maros', 'Lau': 'Maros',
-        'Pangkajene': 'Pangkajene Kepulauan', 'Minasa Tene': 'Pangkajene Kepulauan', 'Labakkang': 'Pangkajene Kepulauan',
-        'Bungoro': 'Pangkajene Kepulauan', 'Segeri': 'Pangkajene Kepulauan', 'Marang': 'Pangkajene Kepulauan',
-        'Liukang Tupabbiring Utara': 'Pangkajene Kepulauan'
-    };
+    const normalizeKabupatenName = (value = '') => String(value || '').trim().toLowerCase()
+        .replace(/^kabupaten\s*/i, '')
+        .replace(/^kab\.\s*/i, '')
+        .replace(/^kota\s*/i, '')
+        .replace(/^kot\.\s*/i, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    const kabupatenPercentOverrides = { maros: -0.003, makassar: 0.075, takalar: -0.33 };
+    const kabupatenHaPerYearOverrides = { maros: -0.037, makassar: 0.54, takalar: -6.56 };
 
-    const stateManager = window.stateManager;
-    const desaData = stateManager ? stateManager.getSheetData('LajuForestasiDesa') : [];
-    const kabdesa = desaData.filter(row => {
-        const kecValue = row['Kecamatan'] || row['kecamatan'] || '';
-        const kecStr = kecValue.toString().trim();
-        const kabValue = row['Kabupaten'] || row['KabupatenKota'] || row['KabKota'] || row['kabupaten'] || row['kabkota'] || '';
-        
-        // Use kecamatan as source of truth for kabupaten
-        const actualKab = kecamatan_to_kabupaten[kecStr] || kabValue;
-        return actualKab.toString().trim().toLowerCase() === kabupaten.toString().trim().toLowerCase();
-    });
+    const kabupatenKey = normalizeKabupatenName(kabupaten);
+    const isSupported = Object.prototype.hasOwnProperty.call(kabupatenPercentOverrides, kabupatenKey);
 
-    if (kabdesa.length === 0) {
-        detailPanel.innerHTML = `<div style="color: #e74c3c; padding: 20px; background: #fff2f2; border: 1px solid #f5c2c2; border-radius: 12px;">Tidak ada data desa untuk Kabupaten ${kabupaten} pada sheet LajuForestasiDesa.</div>`;
+    if (!isSupported) {
+        detailPanel.innerHTML = `<div style="color: #666; padding: 20px; background: #fcfcfc; border: 1px solid #e8f4f1; border-radius: 12px;">Informasi detail belum tersedia untuk kabupaten ini.</div>`;
         return;
     }
 
+    const title = kabupatenKey === 'makassar' ? 'Makassar' : kabupatenKey === 'takalar' ? 'Takalar' : 'Maros';
+    const changePercent = kabupatenPercentOverrides[kabupatenKey];
+    const changeHaPerYear = kabupatenHaPerYearOverrides[kabupatenKey];
+    const isMinus = changeHaPerYear < 0;
+
+    const stateManager = window.stateManager;
+    const desaData = stateManager ? stateManager.getSheetData('LajuForestasiDesa') : [];
+    const parseNumeric = (value) => {
+        const parsed = parseFloat(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const kabdesa = (desaData || []).filter(row => {
+        const rowKabupatenRaw = String(row['Kabupaten'] || row['kabupaten'] || row['KabKota'] || row['kabkota'] || row['KabupatenKota'] || '').trim();
+        const rowKabNormalized = normalizeKabupatenName(rowKabupatenRaw);
+        if (rowKabNormalized === kabupatenKey) return true;
+        if (rowKabNormalized.includes(kabupatenKey)) return true;
+        // fallback: check other combined fields for loose matches
+        const alt = String(row['KabupatenKota'] || row['KabKota'] || row['kabkota'] || '').trim();
+        if (normalizeKabupatenName(alt).includes(kabupatenKey)) return true;
+        return false;
+    });
+
     const desaSummary = kabdesa.map(row => {
-        const desa = row['Desa'] || row['desa'] || 'Unknown';
-        const kecamatan = row['Kecamatan'] || row['kecamatan'] || 'Unknown';
-        const changePercent = parseFloat(row['Perubahan Pertahun %'] || row['Perubahan'] || row['perubahan_persen'] || row['Perubahan %'] || 0) || 0;
-        const changeHa = parseFloat(row['PerubahanPertahun(Ha)'] || row['Perubahan Ha'] || row['perubahan_ha'] || 0) || 0;
+        const desa = String(row['Desa'] || row['desa'] || 'Unknown').trim();
+        const kecamatan = String(row['Kecamatan'] || row['kecamatan'] || 'Unknown').trim();
+        const kabupatenName = String(row['Kabupaten'] || row['kabupaten'] || row['KabKota'] || row['kabkota'] || row['KabupatenKota'] || title).trim();
+        const changePercentValue = parseNumeric(row['Perubahan Pertahun %'] || row['Perubahan %'] || row['perubahan_persen'] || 0);
+        const changeHaValue = parseNumeric(row['PerubahanPertahun(Ha)'] || row['Perubahan Ha'] || row['perubahan_ha'] || 0);
 
         return {
             desa,
             kecamatan,
-            changePercent,
-            changeHa
+            kabupaten: kabupatenName || title,
+            changePercent: changePercentValue,
+            changeHa: changeHaValue
         };
     });
 
@@ -322,35 +337,54 @@ function showKabupatenDetail(kabupaten) {
 
     const totalVillages = topDesa.length;
     const totalChange = topDesa.reduce((sum, item) => sum + item.changeHa, 0);
+    const avgPercent = totalVillages > 0 ? topDesa.reduce((sum, item) => sum + item.changePercent, 0) / totalVillages : 0;
 
     let html = `
-        <div style="background: white; border: 1px solid #d6e4ff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(0, 102, 255, 0.08);">
+        <div style="background: white; border: 1px solid #d7ebd8; border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(46, 125, 50, 0.08);">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
             <div>
-              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0066ff;">Detail Kabupaten ${kabupaten}</h3>
-              <p style="margin: 8px 0 0; color: #546e7a;">Ringkasan data desa dari sheet LajuForestasiDesa.</p>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #2e7d32;">Detail Kabupaten/Kota ${title}</h3>
+              <p style="margin: 8px 0 0; color: #546e7a;">Ringkasan data desa dari sheet LajuForestasiDesa untuk wilayah terpilih.</p>
             </div>
             <div style="text-align: right; min-width: 210px;">
-              <div style="font-size: 1.4rem; font-weight: 800; color: #1a472a;">${totalVillages}</div>
-              <div style="font-size: 0.85rem; color: #666;">Desa terdeteksi</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: ${isMinus ? '#b71c1c' : '#1a472a'};">${isMinus ? 'Penurunan' : 'Peningkatan'}</div>
+              <div style="font-size: 0.85rem; color: #666;">Status perubahan</div>
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 22px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px;">
             <div style="background: #f0f8ff; border-radius: 12px; padding: 14px;">
-              <div style="font-size: 0.75rem; color: #666;">Total Perubahan Ha</div>
-              <div style="font-size: 1.2rem; font-weight: 700; color: #0066ff;">${totalChange.toFixed(1)} Ha</div>
+              <div style="font-size: 0.75rem; color: #666;">Laju perubahan tahunan</div>
+              <div style="font-size: 1.2rem; font-weight: 700; color: #2e7d32;">${changePercent.toFixed(3)}%</div>
             </div>
             <div style="background: #f7fff4; border-radius: 12px; padding: 14px;">
-              <div style="font-size: 0.75rem; color: #666;">Rata-rata % Perubahan</div>
-              <div style="font-size: 1.2rem; font-weight: 700; color: #1a472a;">${(topDesa.reduce((sum, item) => sum + item.changePercent, 0) / totalVillages).toFixed(2)}%</div>
+              <div style="font-size: 0.75rem; color: #666;">Perubahan luas</div>
+              <div style="font-size: 1.2rem; font-weight: 700; color: ${isMinus ? '#b71c1c' : '#1a472a'};">${changeHaPerYear.toFixed(2)} Ha/Tahun</div>
+            </div>
+          </div>
+          <div style="padding: 14px 16px; border-radius: 12px; background: ${isMinus ? '#fff5f5' : '#f4fff7'}; color: ${isMinus ? '#b71c1c' : '#1b5e20'}; font-weight: 600; margin-bottom: 18px;">
+            Informasi ini khusus menampilkan data desa untuk ${title} sesuai pengaturan dashboard yang aktif.
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px;">
+            <div style="background: #f8fbff; border-radius: 12px; padding: 14px;">
+              <div style="font-size: 0.75rem; color: #666;">Desa terdeteksi</div>
+              <div style="font-size: 1.2rem; font-weight: 700; color: #2e7d32;">${totalVillages}</div>
+            </div>
+            <div style="background: #f9fff8; border-radius: 12px; padding: 14px;">
+              <div style="font-size: 0.75rem; color: #666;">Rata-rata % perubahan</div>
+              <div style="font-size: 1.2rem; font-weight: 700; color: #1a472a;">${avgPercent.toFixed(2)}%</div>
+            </div>
+            <div style="background: #fffaf5; border-radius: 12px; padding: 14px;">
+              <div style="font-size: 0.75rem; color: #666;">Total perubahan Ha</div>
+              <div style="font-size: 1.2rem; font-weight: 700; color: ${isMinus ? '#b71c1c' : '#1a472a'};">${totalChange.toFixed(2)} Ha</div>
             </div>
           </div>
           <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; font-size: 0.92rem; table-layout: fixed;">
               <thead>
-                <tr style="background: #eff6ff; color: #1a237e; text-align: left;">
+                <tr style="background: #eef9ee; color: #1b5e20; text-align: left;">
                   <th style="padding: 12px 14px; text-align: justify;">Desa</th>
                   <th style="padding: 12px 14px; text-align: justify;">Kecamatan</th>
+                  <th style="padding: 12px 14px; text-align: justify;">Kabupaten</th>
                   <th style="padding: 12px 14px; text-align: justify;">Perubahan %</th>
                   <th style="padding: 12px 14px; text-align: justify;">Perubahan Ha</th>
                 </tr>
@@ -358,17 +392,26 @@ function showKabupatenDetail(kabupaten) {
               <tbody>
     `;
 
-    topDesa.forEach(item => {
-        const isGain = item.changeHa >= 0;
+    if (topDesa.length === 0) {
         html += `
+                <tr>
+                  <td colspan="5" style="padding: 16px; color: #666; text-align: center;">Tidak ada data desa untuk ${title} pada sheet LajuForestasiDesa.</td>
+                </tr>
+        `;
+    } else {
+        topDesa.forEach(item => {
+            const isGain = item.changeHa >= 0;
+            html += `
                 <tr style="border-bottom: 1px solid #e8eef8;">
                   <td style="padding: 12px 14px; font-weight: 600; color: #10375c; text-align: justify; word-break: break-word;">${item.desa}</td>
                   <td style="padding: 12px 14px; color: #4f5b69; text-align: justify; word-break: break-word;">${item.kecamatan}</td>
+                  <td style="padding: 12px 14px; color: #4f5b69; text-align: justify; word-break: break-word;">${item.kabupaten}</td>
                   <td style="padding: 12px 14px; color: ${isGain ? '#1b5e20' : '#b71c1c'}; text-align: justify;">${item.changePercent.toFixed(2)}%</td>
-                  <td style="padding: 12px 14px; color: ${isGain ? '#1b5e20' : '#b71c1c'}; text-align: justify;">${item.changeHa.toFixed(1)} Ha</td>
+                  <td style="padding: 12px 14px; color: ${isGain ? '#1b5e20' : '#b71c1c'}; text-align: justify;">${item.changeHa.toFixed(2)} Ha</td>
                 </tr>
-        `;
-    });
+            `;
+        });
+    }
 
     html += `
               </tbody>

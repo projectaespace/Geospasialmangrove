@@ -844,8 +844,8 @@ function updateRegencyTrendChart(year) {
       datasets: [{
         label: 'Luas (Sq_ha)',
         data: areas,
-        backgroundColor: 'rgba(0, 102, 255, 0.8)',
-        borderColor: 'rgba(0, 102, 255, 1)',
+        backgroundColor: 'rgba(46, 125, 50, 0.8)',
+        borderColor: 'rgba(46, 125, 50, 1)',
         borderWidth: 2,
         borderRadius: 6,
         hoverBackgroundColor: 'rgba(0, 180, 216, 1)',
@@ -1050,14 +1050,14 @@ function updateOverview() {
     const percentage = (area / stats[2026].total_area * 100);
     trendHtml += `
       <div style="display: flex; align-items: center; gap: 8px;">
-        <div style="font-weight: 700; color: #0066ff; min-width: 20px;">${idx + 1}.</div>
+        <div style="font-weight: 700; color: #2e7d32; min-width: 20px;">${idx + 1}.</div>
         <div style="flex: 1;">
           <div style="font-weight: 600; color: #333; margin-bottom: 2px;">${reg}</div>
-          <div style="background: rgba(0, 102, 255, 0.1); height: 6px; border-radius: 3px; overflow: hidden;">
-            <div style="background: #0066ff; height: 100%; width: ${percentage}%; border-radius: 3px;"></div>
+          <div style="background: rgba(46, 125, 50, 0.1); height: 6px; border-radius: 3px; overflow: hidden;">
+            <div style="background: #2e7d32; height: 100%; width: ${percentage}%; border-radius: 3px;"></div>
           </div>
         </div>
-        <div style="font-weight: 700; color: #0066ff; min-width: 40px; text-align: right;">${area.toFixed(0)} ha</div>
+        <div style="font-weight: 700; color: #2e7d32; min-width: 40px; text-align: right;">${area.toFixed(0)} ha</div>
       </div>
     `;
   });
@@ -1066,18 +1066,18 @@ function updateOverview() {
       </div>
     </div>
 
-    <div style="background: linear-gradient(135deg, rgba(0, 102, 255, 0.05) 0%, rgba(0, 180, 216, 0.05) 100%);
-                border: 1px solid rgba(0, 102, 255, 0.1); border-radius: 10px; padding: 12px;">
-      <h3 style="color: #0066ff; font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">📈 Statistik Umum</h3>
+    <div style="background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(102, 187, 106, 0.05) 100%);
+                border: 1px solid rgba(46, 125, 50, 0.1); border-radius: 10px; padding: 12px;">
+      <h3 style="color: #2e7d32; font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">📈 Statistik Umum</h3>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem;">
         <div>
           <div style="color: #666; margin-bottom: 2px;">2026 Total</div>
-          <div style="font-weight: 700; color: #0066ff; font-size: 1.1rem;">${stats[2026].total_area.toFixed(0)}</div>
+          <div style="font-weight: 700; color: #2e7d32; font-size: 1.1rem;">${stats[2026].total_area.toFixed(0)}</div>
           <div style="color: #999; font-size: 0.75rem;">Sq_ha</div>
         </div>
         <div>
           <div style="color: #666; margin-bottom: 2px;">2016 Total</div>
-          <div style="font-weight: 700; color: #0066ff; font-size: 1.1rem;">${stats[2016].total_area.toFixed(0)}</div>
+          <div style="font-weight: 700; color: #2e7d32; font-size: 1.1rem;">${stats[2016].total_area.toFixed(0)}</div>
           <div style="color: #999; font-size: 0.75rem;">Sq_ha</div>
         </div>
       </div>

@@ -132,7 +132,7 @@ class CoreStateManager {
    * Check whether a kabupaten is part of the allowed list
    */
   isAllowedKabupaten(value) {
-    const allowed = ['jeneponto', 'maros', 'barru', 'sinjai'];
+    const allowed = ['maros', 'makassar', 'takalar'];
     const normalized = this.normalizeKabupaten(value);
     return allowed.includes(normalized);
   }

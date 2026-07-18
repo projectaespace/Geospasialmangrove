@@ -1,4 +1,0 @@
-﻿=== EXCEL FILE ANALYSIS ===
-File: e:\ProjectWebKonservasiMangrove\mangrove-carbon-webgis\data\Dashboard.xlsx
-Sheet Count: 0
-

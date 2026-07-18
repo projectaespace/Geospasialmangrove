@@ -22,8 +22,8 @@ class ChartRenderer {
   constructor() {
     this.charts = new Map();
     this.colors = {
-      primary: '#0066ff',
-      secondary: '#00b4d8',
+      primary: '#2e7d32',
+      secondary: '#66bb6a',
       success: '#00b300',
       warning: '#ffaa00',
       danger: '#ff3333',
@@ -437,7 +437,7 @@ class ChartRenderer {
    */
   generateColors(count) {
     const colors = [
-      '#0066ff', '#00b4d8', '#00b300', '#ffaa00', '#ff6600', '#ff3333',
+      '#2e7d32', '#66bb6a', '#43a047', '#a5d6a7', '#ffb300', '#ff7043',
       '#4fc3f7', '#ff1744', '#9c27b0', '#00bcd4', '#8bc34a', '#ffc107'
     ];
     

@@ -1,214 +1,134 @@
-﻿const STORY_DATA = [
+﻿let STORY_DATA = [
   {
-    id: 'monro-monro',
-    name: 'Monro Monro',
-    kabupaten: 'Jeneponto',
-    coords: [-5.699398, 119.732943],
-    ket: 'Mangrove Monro Monro berkembang pada pesisir Jeneponto yang relatif kering dan menjadi benteng alami terhadap abrasi, angin laut, serta intrusi air asin ke daratan.',
-    folder: '1. Monro Monro Jeneponto',
+    id: 'lantebung',
+    name: 'Lantebung',
+    kabupaten: 'Makassar',
+    coords: [-5.07833216327299, 119.465955202181],
+    ket: 'Kawasan Mangrove Lantebung merupakan salah satu ekowisata mangrove unggulan di Kota Makassar. Ekosistem ini berperan sebagai pelindung pesisir dari abrasi, penyerap karbon biru (blue carbon), serta habitat berbagai jenis burung dan biota pesisir.',
+    folder: '01. Lantebung Makassar',
     images: [
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro01.jpg',
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro02.jpg',
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro03.jpg',
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro04.jpg',
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro05.jpg',
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro06.jpg',
-      'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Monro Monro07.jpg'
+      'images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung01.jpg',
+      'images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung02.jpg',
+      'images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung03.jpg',
+      'images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung04.jpg',
+      'images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung05.jpg',
+      'images/WEBIMG/Terapan/01. Lantebung Makassar/Lantebung06.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/1. Monro Monro Jeneponto/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/01. Lantebung Makassar/Peta.jpg'
   },
   {
-    id: 'balang-baru',
-    name: 'Balang Baru',
-    kabupaten: 'Jeneponto',
-    coords: [-5.609592, 119.865669],
-    ket: 'Kawasan mangrove yang mendukung produktivitas perikanan pesisir melalui fungsi sebagai daerah pemijahan dan pembesaran ikan, udang, serta kepiting. Vegetasi mangrove juga membantu menjaga stabilitas sedimen pantai.',
-    folder: '2. Balang Baru Jeneponto',
+    id: 'untia',
+    name: 'Untia',
+    kabupaten: 'Makassar',
+    coords: [-5.06100210264415, 119.477205331289],
+    ket: 'Mangrove Untia merupakan kawasan konservasi pesisir yang berfungsi menjaga stabilitas garis pantai, meningkatkan kualitas lingkungan pesisir, serta menjadi habitat penting bagi ikan, kepiting, dan berbagai organisme laut.',
+    folder: '02. Untia Makassar',
     images: [
-      'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru01.jpg',
-      'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru02.jpg',
-      'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru03.jpg',
-      'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru04.jpg',
-      'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Balang Baru05.jpg'
+      'images/WEBIMG/Terapan/02. Untia Makassar/Untia01.jpg',
+      'images/WEBIMG/Terapan/02. Untia Makassar/Untia02.jpg',
+      'images/WEBIMG/Terapan/02. Untia Makassar/Untia03.jpg',
+      'images/WEBIMG/Terapan/02. Untia Makassar/Untia04.jpg',
+      'images/WEBIMG/Terapan/02. Untia Makassar/Untia05.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/2. Balang Baru Jeneponto/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/02. Untia Makassar/Peta.jpg'
   },
   {
-    id: 'bontomarannu',
-    name: 'Bontomarannu',
-    kabupaten: 'Jeneponto',
-    coords: [-5.615763, 119.584668],
-    ket: 'Mangrove Bontomarannu berperan dalam melindungi kawasan pesisir dari erosi dan menjadi penyerap karbon alami yang mendukung upaya mitigasi perubahan iklim di wilayah pesisir Jeneponto.',
-    folder: '3. Bontomarannu Jeneponto',
-    images: [
-      'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu01.jpg',
-      'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu02.jpg',
-      'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu03.jpg',
-      'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Bontomarannu04.jpg'
-    ],
-    peta: 'images/WEBIMG/Hiliriset/3. Bontomarannu Jeneponto/Peta.jpg'
-  },
-  {
-    id: 'bonto-bahari',
-    name: 'Bonto Bahari',
+    id: 'ampekale',
+    name: 'Ampekale',
     kabupaten: 'Maros',
-    coords: [-4.934979, 119.520142],
-    ket: 'Kawasan mangrove yang mendukung kestabilan ekosistem pesisir Maros melalui perlindungan garis pantai, penyimpanan karbon, serta penyediaan habitat bagi beragam flora dan fauna pesisir.',
-    folder: '4. Bontobahari maros',
+    coords: [-4.888602, 119.5133],
+    ket: 'Kawasan mangrove Ampekale berkembang di wilayah muara dan pesisir Maros, berfungsi sebagai pelindung alami pantai, penyimpan karbon, serta habitat berbagai biota yang mendukung produktivitas perikanan pesisir.',
+    folder: '03. Ampekale Maros',
     images: [
-      'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari01.jpg',
-      'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari02.jpg',
-      'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari03.jpg',
-      'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari04.jpg',
-      'images/WEBIMG/Hiliriset/4. Bontobahari maros/Bontobahari05.jpg'
+      'images/WEBIMG/Terapan/03. Ampekale Maros/Topografi.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/4. Bontobahari maros/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/03. Ampekale Maros/Peta.jpg'
   },
   {
-    id: 'binanga-sangkara',
-    name: 'Binanga Sangkara',
+    id: 'pajakukang',
+    name: 'Pajakukang',
     kabupaten: 'Maros',
-    coords: [-4.88424, 119.517219],
-    ket: 'Berlokasi di kawasan muara sungai, mangrove Binanga Sangkara memiliki peran strategis dalam menahan sedimentasi, menjaga kualitas air, serta menjadi habitat berbagai jenis ikan, udang, dan kepiting.',
-    folder: '5. BinangaSangkara Maros',
+    coords: [-4.92456, 119.52389],
+    ket: 'Mangrove Pajakukang memiliki peran penting dalam menjaga keseimbangan ekosistem pesisir melalui perlindungan pantai, pengendalian sedimentasi, serta penyedia habitat bagi berbagai spesies flora dan fauna pesisir.',
+    folder: '04. Pajakukang Maros',
     images: [
-      'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara01.jpg',
-      'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara02.jpg',
-      'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara03.jpg',
-      'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Binangasangkara04.jpg'
+      'images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang01.jpg',
+      'images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang02.jpg',
+      'images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang03.jpg',
+      'images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang04.jpg',
+      'images/WEBIMG/Terapan/04. Pajakukang Maros/Pajakukang05.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/5. BinangaSangkara Maros/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/04. Pajakukang Maros/Peta.jpg'
   },
   {
-    id: 'kalibone',
-    name: 'Kalibone',
+    id: 'kuri-lompo',
+    name: 'Kuri Lompo',
     kabupaten: 'Maros',
-    coords: null,
-    ket: 'Kalibone merupakan salah satu lokasi mangrove di Maros yang mendukung konservasi garis pantai dan keanekaragaman ekosistem pesisir.',
-    folder: '6. Kalibone Maros',
+    coords: [-5.018566, 119.472262],
+    ket: 'Kawasan mangrove Kuri Lompo merupakan bagian penting dari pesisir Maros yang berfungsi sebagai pelindung alami terhadap abrasi, penyerap karbon biru, serta daerah pembesaran berbagai jenis ikan dan kepiting.',
+    folder: '05. Kuri Lompo Maros',
     images: [
-      'images/WEBIMG/Hiliriset/6. Kalibone Maros/Kalibone01.jpg',
-      'images/WEBIMG/Hiliriset/6. Kalibone Maros/Kalibone02.jpg',
-      'images/WEBIMG/Hiliriset/6. Kalibone Maros/Kalibone03.jpg',
-      'images/WEBIMG/Hiliriset/6. Kalibone Maros/Kalibone04.jpg'
+      'images/WEBIMG/Terapan/05. Kuri Lompo Maros/Kurilompo01.jpg',
+      'images/WEBIMG/Terapan/05. Kuri Lompo Maros/Kurilompo02.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/6. Kalibone Maros/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/05. Kuri Lompo Maros/Peta.jpg'
   },
   {
-    id: 'coppo',
-    name: 'Coppo',
-    kabupaten: 'Barru',
-    coords: [-4.426105, 119.600788],
-    ket: 'Kawasan mangrove pesisir yang berfungsi sebagai pelindung alami garis pantai dari abrasi serta habitat berbagai jenis ikan, kepiting, dan burung air. Mangrove Coppo berperan penting dalam menjaga kualitas lingkungan pesisir Barru.',
-    folder: '7. Coppo Barru',
+    id: 'kuri-caddi',
+    name: 'Kuri Caddi',
+    kabupaten: 'Maros',
+    coords: [-5.03378502358571, 119.468219],
+    ket: 'Mangrove Kuri Caddi mendukung kelestarian ekosistem pesisir melalui fungsi perlindungan garis pantai, penyaring alami kualitas air, serta habitat berbagai biota laut yang bernilai ekologis dan ekonomis.',
+    folder: '06. Kuri Caddi Maros',
     images: [
-      'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo01.jpg',
-      'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo02.jpg',
-      'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo03.jpg',
-      'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo04.jpg',
-      'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo05.jpg',
-      'images/WEBIMG/Hiliriset/7. Coppo Barru/Coppo06.jpg'
+      'images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi01.jpg',
+      'images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi02.jpg',
+      'images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi03.jpg',
+      'images/WEBIMG/Terapan/06. Kuri Caddi Maros/KuriCaddi04.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/7. Coppo Barru/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/06. Kuri Caddi Maros/Peta.jpg'
   },
   {
-    id: 'garongkong',
-    name: 'Garongkong',
-    kabupaten: 'Barru',
-    coords: [-4.377131, 119.615248],
-    ket: 'Berada di sekitar kawasan pelabuhan dan pesisir Barru, mangrove Garongkong memiliki fungsi ekologis sebagai penahan gelombang, penyerap karbon biru (blue carbon), dan tempat pembesaran berbagai biota laut yang bernilai ekonomi.',
-    folder: '8. Garongkong Barru',
+    id: 'paria-lau',
+    name: 'Paria Lau',
+    kabupaten: 'Takalar',
+    coords: [-5.481309, 119.408506],
+    ket: 'Kawasan mangrove Paria Lau berperan sebagai benteng alami pesisir Kabupaten Takalar, menjaga stabilitas pantai, mendukung keanekaragaman hayati, serta menjadi penyimpan karbon yang penting bagi mitigasi perubahan iklim.',
+    folder: '07. Paria Lau Takalar',
     images: [
-      'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong01.jpg',
-      'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong02.jpg',
-      'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong03.jpg',
-      'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong04.jpg',
-      'images/WEBIMG/Hiliriset/8. Garongkong Barru/Garongkong05.jpg'
+      'images/WEBIMG/Terapan/07. Paria Lau Takalar/PariaLau01.jpg',
+      'images/WEBIMG/Terapan/07. Paria Lau Takalar/PariaLau02.jpg',
+      'images/WEBIMG/Terapan/07. Paria Lau Takalar/PariaLau03.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/8. Garongkong Barru/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/07. Paria Lau Takalar/Peta.jpg'
   },
   {
-    id: 'pannikiang',
-    name: 'Pannikiang',
-    kabupaten: 'Barru',
-    coords: [-4.349567, 119.59972],
-    ket: 'Kawasan mangrove yang terhubung dengan ekosistem Pulau Pannikiang, salah satu habitat penting burung air dan satwa pesisir. Mangrove di kawasan ini mendukung keanekaragaman hayati sekaligus menjadi daya tarik ekowisata.',
-    folder: '9. Pannikiang Barru',
+    id: 'panyangkalang',
+    name: 'Panyangkalang',
+    kabupaten: 'Takalar',
+    coords: [-5.5416159065734, 119.506383861658],
+    ket: 'Mangrove Panyangkalang merupakan ekosistem pesisir yang berfungsi melindungi wilayah pantai dari abrasi, mendukung produktivitas perikanan, dan menjadi habitat berbagai jenis biota pesisir serta burung air.',
+    folder: '08. Panyangkalan Takalar',
     images: [
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang01.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang02.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang03.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang04.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang05.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang06.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang07.jpg',
-      'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Pannikiang08.jpg'
+      'images/WEBIMG/Terapan/08. Panyangkalan Takalar/Panyangkalan01.jpg',
+      'images/WEBIMG/Terapan/08. Panyangkalan Takalar/Panyangkalan02.jpg',
+      'images/WEBIMG/Terapan/08. Panyangkalan Takalar/Panyangkalan03.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/9. Pannikiang Barru/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/08. Panyangkalan Takalar/Peta.jpg'
   },
   {
-    id: 'hubat',
-    name: 'Hubat',
-    kabupaten: 'Sinjai',
-    coords: [-5.220539, 120.3114581],
-    ket: 'Kawasan mangrove yang menjadi bagian dari ekosistem pesisir Sinjai dengan fungsi utama sebagai pelindung pantai, habitat biota laut, dan penunjang keberlanjutan sumber daya perikanan lokal.',
-    folder: '10. Hubat Sinjai',
+    id: 'bontoloe',
+    name: 'Bontoloe',
+    kabupaten: 'Takalar',
+    coords: [-5.341477, 119.361329],
+    ket: 'Kawasan mangrove Bontoloe memiliki fungsi ekologis sebagai pelindung pesisir, penyerap karbon biru (blue carbon), serta kawasan penyangga yang menjaga keseimbangan ekosistem pesisir Kabupaten Takalar.',
+    folder: '09. Bontoloe Takalar',
     images: [
-      'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Hubat01.jpg',
-      'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Hubat02.jpg',
-      'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Hubat03.jpg'
+      'images/WEBIMG/Terapan/09. Bontoloe Takalar/Bontoloe01.jpg',
+      'images/WEBIMG/Terapan/09. Bontoloe Takalar/Bontoloe02.jpg',
+      'images/WEBIMG/Terapan/09. Bontoloe Takalar/Bontoloe03.jpg'
     ],
-    peta: 'images/WEBIMG/Hiliriset/10. Hubat Sinjai/Peta.jpg'
-  },
-  {
-    id: 'lappa',
-    name: 'Lappa',
-    kabupaten: 'Sinjai',
-    coords: [-5.120989, 120.277545],
-    ket: 'Mangrove Lappa berperan penting dalam menjaga keseimbangan ekosistem muara, mengurangi sedimentasi, dan menjadi tempat berkembang biaknya berbagai organisme laut yang mendukung ekonomi masyarakat nelayan.',
-    folder: '11. Lappa Sinjai',
-    images: [
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa01.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa02.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa03.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa04.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa05.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa06.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa07.jpg',
-      'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Lappa08.jpg'
-    ],
-    peta: 'images/WEBIMG/Hiliriset/11. Lappa Sinjai/Peta.jpg'
-  },
-  {
-    id: 'tongke-tongke',
-    name: 'Tongke Tongke',
-    kabupaten: 'Sinjai',
-    coords: [-5.15117159080346, 120.273580957228],
-    ket: 'Kawasan Mangrove Tongke Tongke merupakan salah satu ikon konservasi mangrove di Indonesia. Dikelola bersama masyarakat, kawasan ini berfungsi sebagai pelindung pantai dari abrasi, penyerap karbon biru (blue carbon), habitat berbagai biota pesisir, serta destinasi ekowisata unggulan di Kabupaten Sinjai.',
-    folder: '12. Tongke Tongke Sinjai',
-    images: [
-      'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke01.jpg',
-      'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke02.jpg',
-      'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke03.jpg',
-      'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke04.jpg',
-      'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/TongkeTongke05.jpg'
-    ],
-    peta: 'images/WEBIMG/Hiliriset/12. Tongke Tongke Sinjai/Peta.jpg'
-  },
-  {
-    id: 'panaikang',
-    name: 'Panaikang',
-    kabupaten: 'Sinjai',
-    coords: [-5.161957, 120.276125],
-    ket: 'Kawasan mangrove yang memiliki fungsi ekologis sebagai penahan abrasi, penyaring polutan alami, dan penyerap karbon. Keberadaannya menjadi bagian penting dalam menjaga ketahanan pesisir Kabupaten Sinjai.',
-    folder: '13. Panaikang Sinjai',
-    images: [
-      'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang01.jpg',
-      'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang02.jpg',
-      'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang03.jpg',
-      'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Panaikang04.jpg'
-    ],
-    peta: 'images/WEBIMG/Hiliriset/13. Panaikang Sinjai/Peta.jpg'
+    peta: 'images/WEBIMG/Terapan/09. Bontoloe Takalar/Peta01.jpg'
   }
 ];
 
@@ -264,8 +184,21 @@ const buildSlides = () => {
               <div class="info-item"><span>Koordinat</span><strong>${item.coords ? `${item.coords[0].toFixed(6)}, ${item.coords[1].toFixed(6)}` : 'Belum tersedia'}</strong></div>
             </div>
             <div class="map-preview-label">Peta lokasi</div>
-            <div class="map-preview" data-peta="${item.peta || ''}" data-name="${item.name}">
-              ${item.peta ? `<img src="${item.peta}" alt="Peta ${item.name}" />` : `<div class="map-empty"><i class="fa-solid fa-map-location-dot"></i><p>Peta.jpg tidak tersedia</p></div>`}
+            <div class="map-preview-wrapper">
+              <div class="map-preview" data-peta="${item.peta || ''}" data-topo="images/WEBIMG/Terapan/${item.folder}/Topografi.jpg" data-topo-lower="images/WEBIMG/Terapan/${item.folder}/topografi.jpg" data-name="${item.name}">
+                <div class="map-slider">
+                  <div class="map-item active">
+                    ${item.peta ? `<img src="${item.peta}" alt="Peta ${item.name}" />` : `<div class="map-empty"><i class="fa-solid fa-map-location-dot"></i><p>Peta.jpg tidak tersedia</p></div>`}
+                  </div>
+                  <div class="map-item">
+                    <img src="images/WEBIMG/Terapan/${item.folder}/Topografi.jpg" alt="Topografi ${item.name}" data-fallback="images/WEBIMG/Terapan/${item.folder}/topografi.jpg" />
+                  </div>
+                </div>
+                <div class="map-nav">
+                  <button class="map-nav-btn map-prev" type="button">‹</button>
+                  <button class="map-nav-btn map-next" type="button">›</button>
+                </div>
+              </div>
             </div>
             <div class="map-note">Klik peta untuk memperbesar.</div>
           </aside>
@@ -374,15 +307,93 @@ const initSlideActions = () => {
     });
   });
 
+  // Map preview slider navigation (peta <-> topografi)
   document.querySelectorAll('.map-preview').forEach((preview) => {
-    preview.addEventListener('click', () => {
-      const src = preview.dataset.peta;
-      const name = preview.dataset.name;
-      if (src) {
-        openMapModal(src, name);
-      }
+    const slider = preview.querySelector('.map-slider');
+    if (!slider) return;
+    const items = Array.from(slider.querySelectorAll('.map-item'));
+    const prevBtn = preview.querySelector('.map-prev');
+    const nextBtn = preview.querySelector('.map-next');
+
+    const updateActive = (index) => {
+      items.forEach((it, i) => it.classList.toggle('active', i === index));
+    };
+
+    let current = 0;
+
+    // Try to validate topo image; if it fails, hide nav buttons
+    const topoImg = slider.querySelector('.map-item:nth-child(2) img');
+    if (topoImg) {
+      const primaryTopo = topoImg.getAttribute('src');
+      const fallbackTopo = topoImg.dataset.fallback;
+      const check = new Image();
+      check.onload = () => {
+        // topo exists, enable nav
+      };
+      check.onerror = () => {
+        if (fallbackTopo) {
+          const check2 = new Image();
+          check2.onload = () => {
+            topoImg.src = fallbackTopo;
+          };
+          check2.onerror = () => {
+            if (prevBtn) prevBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'none';
+            topoImg.style.display = 'none';
+          };
+          check2.src = fallbackTopo;
+        } else {
+          if (prevBtn) prevBtn.style.display = 'none';
+          if (nextBtn) nextBtn.style.display = 'none';
+          topoImg.style.display = 'none';
+        }
+      };
+      check.src = primaryTopo;
+    } else {
+      if (prevBtn) prevBtn.style.display = 'none';
+      if (nextBtn) nextBtn.style.display = 'none';
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      current = Math.max(0, current - 1);
+      updateActive(current);
+    });
+    if (nextBtn) nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      current = Math.min(items.length - 1, current + 1);
+      updateActive(current);
+    });
+
+    // Open modal for currently visible image when clicking preview area
+    preview.addEventListener('click', (e) => {
+      // ignore clicks on nav buttons
+      if (e.target.closest('.map-nav')) return;
+      const activeImg = preview.querySelector('.map-item.active img');
+      const name = preview.dataset.name || '';
+      if (activeImg && activeImg.src) openMapModal(activeImg.src, name || activeImg.alt || 'Peta');
     });
   });
+};
+
+const tryLoadImageThenOpen = (primary, fallback, name) => {
+  if (!primary) {
+    alert('Topografi tidak tersedia untuk lokasi ini.');
+    return;
+  }
+  const img = new Image();
+  img.onload = () => openMapModal(primary, name || 'Topografi');
+  img.onerror = () => {
+    if (fallback && fallback !== primary) {
+      const img2 = new Image();
+      img2.onload = () => openMapModal(fallback, name || 'Topografi');
+      img2.onerror = () => alert('Gambar topografi tidak ditemukan.');
+      img2.src = fallback;
+    } else {
+      alert('Gambar topografi tidak ditemukan.');
+    }
+  };
+  img.src = primary;
 };
 
 const openMapModal = (src, name) => {
@@ -410,4 +421,19 @@ const openMapModal = (src, name) => {
   modal.classList.add('active');
 };
 
-window.addEventListener('DOMContentLoaded', buildSlides);
+const loadAndBuild = async () => {
+  try {
+    const res = await fetch('data/terapan.json');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length) {
+        STORY_DATA = data;
+      }
+    }
+  } catch (e) {
+    // ignore and use embedded STORY_DATA
+  }
+  buildSlides();
+};
+
+window.addEventListener('DOMContentLoaded', loadAndBuild);
